@@ -1,0 +1,95 @@
+{
+  "execution_id": "16c-serial-9b8ca252-cb51-4375-83d7-a667db655774",
+  "event_count": 5,
+  "seq_sequence": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "duplicate_seq": [],
+  "seq_gaps": [],
+  "evidence_chain_tip_prefix": "70d5b3935907",
+  "verifier_result": {
+    "pass": true,
+    "reason": null
+  },
+  "trajectory_summary": {
+    "total_events": 5,
+    "authorized_count": 5,
+    "decisions_in_order": [
+      "ALLOW",
+      "ALLOW",
+      "ALLOW",
+      "ALLOW",
+      "ALLOW"
+    ],
+    "authorized_decisions": [
+      "ALLOW",
+      "ALLOW",
+      "ALLOW",
+      "ALLOW",
+      "ALLOW"
+    ],
+    "last_valid_progress": {
+      "seq": 5,
+      "resource_kind": "crm",
+      "action": "READ"
+    }
+  },
+  "cross_tenant_scope_check": {
+    "queried_with_org_id": "9a1eae8d-1f87-4109-bb6d-f242945bb2a0",
+    "queried_with_agent_id": "c6bc8583-0dd2-408e-bf16-457e5df63dda",
+    "actual_org_id": "350b2b7c-94dc-414c-9166-4a17556a3483",
+    "actual_agent_id": "1bf86060-079c-456f-83a7-aa4f6cc6313e",
+    "result": "None (correctly scoped out)"
+  },
+  "rows": [
+    {
+      "seq": 1,
+      "decision": "ALLOW",
+      "id": "7b3b8708-74bc-4b5a-86d4-ad64f3e4bf21",
+      "request_id": "0a7231ab-8f09-4785-bd12-8e8d5692c05e",
+      "created_at": "2026-09-13T15:25:35.863911",
+      "evidence_hash_prefix": "248ab5cb19c6",
+      "previous_evidence_hash_prefix": "000000000000"
+    },
+    {
+      "seq": 2,
+      "decision": "ALLOW",
+      "id": "82562171-6be5-433e-af8b-ae08cb752147",
+      "request_id": "6c4e7862-ed12-40e3-8dd8-82c6d21512b7",
+      "created_at": "2026-09-13T15:25:36.069634",
+      "evidence_hash_prefix": "afd093036e84",
+      "previous_evidence_hash_prefix": "248ab5cb19c6"
+    },
+    {
+      "seq": 3,
+      "decision": "ALLOW",
+      "id": "6ad60bfa-27c2-465a-b7de-a8095ffa91d5",
+      "request_id": "d1693efe-27cb-45c8-b8e6-923cd78a5fcd",
+      "created_at": "2026-09-13T15:25:36.372735",
+      "evidence_hash_prefix": "377740ee992d",
+      "previous_evidence_hash_prefix": "afd093036e84"
+    },
+    {
+      "seq": 4,
+      "decision": "ALLOW",
+      "id": "6d6d1dc1-ad66-435d-8e3d-38f00d830c1f",
+      "request_id": "5c07fcc6-8d4e-46bf-a96f-b366eaa4cbc6",
+      "created_at": "2026-09-13T15:25:36.632381",
+      "evidence_hash_prefix": "a84b74696b84",
+      "previous_evidence_hash_prefix": "377740ee992d"
+    },
+    {
+      "seq": 5,
+      "decision": "ALLOW",
+      "id": "b43d3d30-8ba8-4544-93a5-8a48504dc165",
+      "request_id": "f21d49a5-dbf6-4144-a049-8cc241aaeaff",
+      "created_at": "2026-09-13T15:25:36.654392",
+      "evidence_hash_prefix": "70d5b3935907",
+      "previous_evidence_hash_prefix": "a84b74696b84"
+    }
+  ]
+}

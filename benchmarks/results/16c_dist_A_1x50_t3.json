@@ -1,0 +1,52 @@
+{
+  "label": "A_1x50",
+  "clients_used": 1,
+  "requests_per_client": 50,
+  "weights": null,
+  "concurrency": 50,
+  "mix": "60,30,10",
+  "total_requests": 50,
+  "actual_count": 50,
+  "started_at": "2026-09-13T15:17:31.029664+00:00",
+  "finished_at": "2026-09-13T15:17:33.273489+00:00",
+  "wall_seconds": 2.2465154180000013,
+  "throughput_rps": 22.256691229171867,
+  "latency_ms": {
+    "min": 663.8859900000114,
+    "mean": 1253.6264317800005,
+    "p50": 1206.1853364999847,
+    "p90": 1847.6571700000022,
+    "p95": 2019.2410172999955,
+    "p99": 2116.731383410008,
+    "max": 2185.8243679999987
+  },
+  "kind_counts": {
+    "ALLOW": 30,
+    "BLOCK": 15,
+    "APPROVAL": 5
+  },
+  "decision_counts": {
+    "ALLOW": 30,
+    "BLOCK": 15,
+    "APPROVAL": 5
+  },
+  "error_count": 0,
+  "error_rate": 0.0,
+  "error_samples": {},
+  "per_tenant": {
+    "1": {
+      "org_id": "0c752629-e12c-4ec3-b5a6-a76fcd104023",
+      "requests": 50,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1206.1853364999847,
+      "p95": 2019.2410172999955,
+      "mean": 1253.6264317800005,
+      "decision_counts": {
+        "APPROVAL": 5,
+        "ALLOW": 30,
+        "BLOCK": 15
+      }
+    }
+  }
+}

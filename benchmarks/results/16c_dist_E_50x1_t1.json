@@ -1,0 +1,638 @@
+{
+  "label": "E_50x1",
+  "clients_used": 50,
+  "requests_per_client": 1,
+  "weights": null,
+  "concurrency": 50,
+  "mix": "60,30,10",
+  "total_requests": 50,
+  "actual_count": 50,
+  "started_at": "2026-09-13T15:17:51.170363+00:00",
+  "finished_at": "2026-09-13T15:17:53.324215+00:00",
+  "wall_seconds": 2.1538357339999834,
+  "throughput_rps": 23.214398020569003,
+  "latency_ms": {
+    "min": 715.1750379999839,
+    "mean": 1259.186789739998,
+    "p50": 1234.2337555,
+    "p90": 1791.8303886999922,
+    "p95": 1970.7495710500039,
+    "p99": 2063.5844538699953,
+    "max": 2109.415446000014
+  },
+  "kind_counts": {
+    "ALLOW": 30,
+    "BLOCK": 15,
+    "APPROVAL": 5
+  },
+  "decision_counts": {
+    "ALLOW": 30,
+    "BLOCK": 15,
+    "APPROVAL": 5
+  },
+  "error_count": 0,
+  "error_rate": 0.0,
+  "error_samples": {},
+  "per_tenant": {
+    "8": {
+      "org_id": "982e9e3e-1f8d-4f3b-80aa-901eb6803e0f",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 715.1750379999839,
+      "p95": 715.1750379999839,
+      "mean": 715.1750379999839,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "6": {
+      "org_id": "7fec65ae-e735-481d-8c2f-a54f49e1a20f",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 724.9760059999915,
+      "p95": 724.9760059999915,
+      "mean": 724.9760059999915,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "10": {
+      "org_id": "4b19949a-6d2e-49f9-a81d-c5abda8c5f97",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 729.0004039999758,
+      "p95": 729.0004039999758,
+      "mean": 729.0004039999758,
+      "decision_counts": {
+        "APPROVAL": 1
+      }
+    },
+    "1": {
+      "org_id": "0c752629-e12c-4ec3-b5a6-a76fcd104023",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 787.697100999992,
+      "p95": 787.697100999992,
+      "mean": 787.697100999992,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "13": {
+      "org_id": "b9a961c3-5908-4dce-bdf7-170f649ec451",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 733.1111089999922,
+      "p95": 733.1111089999922,
+      "mean": 733.1111089999922,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "14": {
+      "org_id": "3ee7cf06-5484-4c81-b4f7-9d042947f5c6",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 738.8061719999826,
+      "p95": 738.8061719999826,
+      "mean": 738.8061719999826,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "17": {
+      "org_id": "8e80281e-43ef-4b56-abdb-a21cfd689383",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 751.364011999982,
+      "p95": 751.364011999982,
+      "mean": 751.364011999982,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "9": {
+      "org_id": "d5af33c5-05a8-4835-a385-ee233036d87f",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 770.4762999999843,
+      "p95": 770.4762999999843,
+      "mean": 770.4762999999843,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "3": {
+      "org_id": "7c90d37b-77e0-47d3-ab5c-0923d8b84e1e",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 800.9231069999885,
+      "p95": 800.9231069999885,
+      "mean": 800.9231069999885,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "7": {
+      "org_id": "27430801-ffcf-4a4d-a71a-b36b5e9cc24c",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 794.3505580000192,
+      "p95": 794.3505580000192,
+      "mean": 794.3505580000192,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "2": {
+      "org_id": "da595b5c-a152-43d0-a615-57f8b3ad783c",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 808.7005760000068,
+      "p95": 808.7005760000068,
+      "mean": 808.7005760000068,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "11": {
+      "org_id": "350b2b7c-94dc-414c-9166-4a17556a3483",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 832.2193979999781,
+      "p95": 832.2193979999781,
+      "mean": 832.2193979999781,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "39": {
+      "org_id": "45cc52e3-a9dd-4afa-9d4a-ebe16c883739",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 823.740660999988,
+      "p95": 823.740660999988,
+      "mean": 823.740660999988,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "12": {
+      "org_id": "9a1eae8d-1f87-4109-bb6d-f242945bb2a0",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 890.8283869999991,
+      "p95": 890.8283869999991,
+      "mean": 890.8283869999991,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "26": {
+      "org_id": "ae69a8b6-cafe-44ca-9a35-1e392e767201",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 935.2965790000098,
+      "p95": 935.2965790000098,
+      "mean": 935.2965790000098,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "24": {
+      "org_id": "aac55210-5f5f-411d-ad7d-ee3bc51b1b1d",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 952.1858469999813,
+      "p95": 952.1858469999813,
+      "mean": 952.1858469999813,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "34": {
+      "org_id": "d5fbe51e-b186-4fd1-8453-18f3634ab284",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 952.331762,
+      "p95": 952.331762,
+      "mean": 952.331762,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "20": {
+      "org_id": "623c2a2c-3c5a-4a0e-b34f-7b510e309467",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 991.8961699999898,
+      "p95": 991.8961699999898,
+      "mean": 991.8961699999898,
+      "decision_counts": {
+        "APPROVAL": 1
+      }
+    },
+    "38": {
+      "org_id": "7e53430f-4861-44d9-9401-9db99a658ac7",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1030.654697000017,
+      "p95": 1030.654697000017,
+      "mean": 1030.654697000017,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "44": {
+      "org_id": "b44f951c-4efb-445d-8afe-b7b329070500",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1051.90069599999,
+      "p95": 1051.90069599999,
+      "mean": 1051.90069599999,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "47": {
+      "org_id": "54dbf079-188b-4d7f-be39-c7d2d7121018",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1075.6646429999819,
+      "p95": 1075.6646429999819,
+      "mean": 1075.6646429999819,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "19": {
+      "org_id": "31c5d89b-d487-4faa-8ce2-a833de59bc52",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1140.5399509999938,
+      "p95": 1140.5399509999938,
+      "mean": 1140.5399509999938,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "18": {
+      "org_id": "2246f75f-8dd9-441b-9e2a-2709a9604c20",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1151.8179650000206,
+      "p95": 1151.8179650000206,
+      "mean": 1151.8179650000206,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "29": {
+      "org_id": "cef801a2-7971-4ff1-a16e-a925a1f5ca16",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1173.845540000002,
+      "p95": 1173.845540000002,
+      "mean": 1173.845540000002,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "35": {
+      "org_id": "77892d69-2a78-42f1-994a-a19d701807e4",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1209.9229039999955,
+      "p95": 1209.9229039999955,
+      "mean": 1209.9229039999955,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "33": {
+      "org_id": "acd6980b-4655-4a55-8dba-169118ffceba",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1258.5446070000046,
+      "p95": 1258.5446070000046,
+      "mean": 1258.5446070000046,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "31": {
+      "org_id": "df3e9021-4a02-4646-99f6-42bbd948b7cf",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1280.6094850000136,
+      "p95": 1280.6094850000136,
+      "mean": 1280.6094850000136,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "32": {
+      "org_id": "22de2300-3d89-4c57-865c-43e42cf19d85",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1290.695482000018,
+      "p95": 1290.695482000018,
+      "mean": 1290.695482000018,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "49": {
+      "org_id": "728118e8-e180-4355-80ae-627f6b59b464",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1285.0270220000084,
+      "p95": 1285.0270220000084,
+      "mean": 1285.0270220000084,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "28": {
+      "org_id": "967c103e-c453-4964-9459-4706a59052ed",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1384.542850999992,
+      "p95": 1384.542850999992,
+      "mean": 1384.542850999992,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "43": {
+      "org_id": "32a33d23-9e99-468a-85b2-4842370ac3b9",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1373.6803789999783,
+      "p95": 1373.6803789999783,
+      "mean": 1373.6803789999783,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "4": {
+      "org_id": "12ff6c3a-47f6-4858-8780-8d2f43d91170",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1462.5500559999978,
+      "p95": 1462.5500559999978,
+      "mean": 1462.5500559999978,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "45": {
+      "org_id": "e87f3397-5517-4d02-84f7-b7f3a59a07e3",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1455.5802669999878,
+      "p95": 1455.5802669999878,
+      "mean": 1455.5802669999878,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "16": {
+      "org_id": "2c8e94d6-35d7-4824-b145-d7cba906af2a",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1518.8769190000073,
+      "p95": 1518.8769190000073,
+      "mean": 1518.8769190000073,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "48": {
+      "org_id": "c9632e55-0515-49d9-ae8e-707cb331d582",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1480.7006479999814,
+      "p95": 1480.7006479999814,
+      "mean": 1480.7006479999814,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "23": {
+      "org_id": "6656a7a8-178b-445e-9363-fab2b65d409c",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1565.2299980000066,
+      "p95": 1565.2299980000066,
+      "mean": 1565.2299980000066,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "46": {
+      "org_id": "ac56d875-38f7-4e80-bb7a-57510a2cdfcd",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1567.8282540000055,
+      "p95": 1567.8282540000055,
+      "mean": 1567.8282540000055,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "27": {
+      "org_id": "06f069d5-e5b5-47be-b531-49b91b2d810f",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1603.26185400001,
+      "p95": 1603.26185400001,
+      "mean": 1603.26185400001,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "40": {
+      "org_id": "0d8158b9-74c5-4720-a531-1af614f9f638",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1609.5545759999936,
+      "p95": 1609.5545759999936,
+      "mean": 1609.5545759999936,
+      "decision_counts": {
+        "APPROVAL": 1
+      }
+    },
+    "21": {
+      "org_id": "75a5fe58-0d1e-4cb6-aafa-0cff3bf4b4a5",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1685.3774649999878,
+      "p95": 1685.3774649999878,
+      "mean": 1685.3774649999878,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "41": {
+      "org_id": "5bb97cb5-c9ba-41e3-910f-66e66412c79a",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1675.3616750000049,
+      "p95": 1675.3616750000049,
+      "mean": 1675.3616750000049,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "36": {
+      "org_id": "7b4075db-8d8d-47e6-9144-78eb846fd628",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1686.1677420000092,
+      "p95": 1686.1677420000092,
+      "mean": 1686.1677420000092,
+      "decision_counts": {
+        "BLOCK": 1
+      }
+    },
+    "22": {
+      "org_id": "ed673709-c5e9-4567-a0b6-71e52512c279",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1769.9107140000194,
+      "p95": 1769.9107140000194,
+      "mean": 1769.9107140000194,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "30": {
+      "org_id": "253d66ee-8dfc-4d50-85d2-099bb0921f2a",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1796.8160710000234,
+      "p95": 1796.8160710000234,
+      "mean": 1796.8160710000234,
+      "decision_counts": {
+        "APPROVAL": 1
+      }
+    },
+    "37": {
+      "org_id": "5d0dfd1c-3d70-430f-aefd-0f1fd8f4782b",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1789.1228109999986,
+      "p95": 1789.1228109999986,
+      "mean": 1789.1228109999986,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "50": {
+      "org_id": "aef735dc-0519-48cc-93cb-e7be7fbb3a2b",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1791.2764239999888,
+      "p95": 1791.2764239999888,
+      "mean": 1791.2764239999888,
+      "decision_counts": {
+        "APPROVAL": 1
+      }
+    },
+    "25": {
+      "org_id": "b8bbdbb1-51cb-46b9-83c1-dbb90733e3f4",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1939.9562090000018,
+      "p95": 1939.9562090000018,
+      "mean": 1939.9562090000018,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "15": {
+      "org_id": "68d0e894-1e9d-4feb-9c41-a1ce93b7c92c",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1995.944140000006,
+      "p95": 1995.944140000006,
+      "mean": 1995.944140000006,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "42": {
+      "org_id": "f8eaec93-5d40-4083-88d4-44b5cc78d3fe",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 2015.8828089999759,
+      "p95": 2015.8828089999759,
+      "mean": 2015.8828089999759,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    },
+    "5": {
+      "org_id": "c7cf69c5-be11-4c3a-9248-8530363773aa",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 2109.415446000014,
+      "p95": 2109.415446000014,
+      "mean": 2109.415446000014,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    }
+  }
+}

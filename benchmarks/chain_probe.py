@@ -40,9 +40,11 @@ from app import models
 
 def main() -> None:
     if len(sys.argv) < 2:
-        print(json.dumps({"error": "usage: chain_probe.py <execution_id>"}))
+        print(json.dumps({"error": "usage: chain_probe.py <execution_id> [wrong_org_id] [wrong_agent_id]"}))
         sys.exit(1)
     execution_id = sys.argv[1]
+    wrong_org_id = sys.argv[2] if len(sys.argv) > 2 else None
+    wrong_agent_id = sys.argv[3] if len(sys.argv) > 3 else None
 
     db = SessionLocal()
     try:
@@ -103,6 +105,22 @@ def main() -> None:
                 ),
             }
 
+        cross_tenant_check = None
+        if wrong_org_id or wrong_agent_id:
+            wrong_state = reconstruct_trajectory_state(
+                db,
+                execution_id,
+                organization_id=wrong_org_id or execution.organization_id,
+                agent_id=wrong_agent_id or execution.agent_id,
+            )
+            cross_tenant_check = {
+                "queried_with_org_id": wrong_org_id or execution.organization_id,
+                "queried_with_agent_id": wrong_agent_id or execution.agent_id,
+                "actual_org_id": execution.organization_id,
+                "actual_agent_id": execution.agent_id,
+                "result": "None (correctly scoped out)" if wrong_state is None else "LEAKED (returned data for wrong tenant!)",
+            }
+
         out = {
             "execution_id": execution_id,
             "event_count": len(events),
@@ -112,6 +130,7 @@ def main() -> None:
             "evidence_chain_tip_prefix": (execution.evidence_chain_tip or "")[:12],
             "verifier_result": verifier_result,
             "trajectory_summary": trajectory_summary,
+            "cross_tenant_scope_check": cross_tenant_check,
             "rows": rows,
         }
         print(json.dumps(out, indent=2))

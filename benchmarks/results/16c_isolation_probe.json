@@ -1,0 +1,128 @@
+{
+  "test1_execution_id_cross_tenant": {
+    "tenant_b_legit_call": {
+      "status": 200,
+      "body": {
+        "request_id": "fd6cb8e7-85ce-4e99-9397-7af478cf9015",
+        "decision": "ALLOW",
+        "risk_score": 10.0,
+        "risk_level": "low",
+        "reason": "Permission granted and no matching restrictive policy.",
+        "approval_id": null,
+        "agent_id": "906a1461-d54a-44f8-84ea-131dbb2047b9",
+        "organization_id": "ed673709-c5e9-4567-a0b6-71e52512c279",
+        "execution_id": "tenant-b-owned-exec-067c4da9-354f-45e8-a762-497f53b792d0",
+        "tool": "crm",
+        "operation": "read",
+        "executed": true,
+        "result": {
+          "ok": true,
+          "operation": "read",
+          "scope": "customers",
+          "records": [
+            {
+              "id": "c-1",
+              "name": "Acme Customer",
+              "email": "buyer@example.test"
+            },
+            {
+              "id": "c-2",
+              "name": "Beta Buyer",
+              "email": "ops@beta.test"
+            }
+          ]
+        }
+      }
+    },
+    "tenant_a_using_b_execution_id": {
+      "status": 403,
+      "body": {
+        "detail": "Execution does not belong to this agent"
+      }
+    },
+    "expected": "tenant_a call rejected (403 execution not owned), NOT a 200 that adopts B's execution",
+    "verdict": "FAIL_CLOSED"
+  },
+  "test2_shared_request_id": {
+    "tenant_a_call": {
+      "status": 200,
+      "body": {
+        "request_id": "tenant-isolation-shared-d85b71e5-fdec-45d2-96cc-41b6647da52c",
+        "decision": "ALLOW",
+        "risk_score": 10.0,
+        "risk_level": "low",
+        "reason": "Permission granted and no matching restrictive policy.",
+        "approval_id": null,
+        "agent_id": "4e934e58-f3ab-40ce-8a10-84c9af4a8d38",
+        "organization_id": "75a5fe58-0d1e-4cb6-aafa-0cff3bf4b4a5",
+        "execution_id": "ebca8c14-4cc9-4755-938f-e4955187090e",
+        "tool": "crm",
+        "operation": "read",
+        "executed": true,
+        "result": {
+          "ok": true,
+          "operation": "read",
+          "scope": "customers",
+          "records": [
+            {
+              "id": "c-1",
+              "name": "Acme Customer",
+              "email": "buyer@example.test"
+            },
+            {
+              "id": "c-2",
+              "name": "Beta Buyer",
+              "email": "ops@beta.test"
+            }
+          ]
+        }
+      }
+    },
+    "tenant_b_call": {
+      "status": 200,
+      "body": {
+        "request_id": "tenant-isolation-shared-d85b71e5-fdec-45d2-96cc-41b6647da52c",
+        "decision": "ALLOW",
+        "risk_score": 10.0,
+        "risk_level": "low",
+        "reason": "Permission granted and no matching restrictive policy.",
+        "approval_id": null,
+        "agent_id": "906a1461-d54a-44f8-84ea-131dbb2047b9",
+        "organization_id": "ed673709-c5e9-4567-a0b6-71e52512c279",
+        "execution_id": "740c5acf-fab9-4611-a914-a14625d6c2f5",
+        "tool": "crm",
+        "operation": "read",
+        "executed": true,
+        "result": {
+          "ok": true,
+          "operation": "read",
+          "scope": "customers",
+          "records": [
+            {
+              "id": "c-1",
+              "name": "Acme Customer",
+              "email": "buyer@example.test"
+            },
+            {
+              "id": "c-2",
+              "name": "Beta Buyer",
+              "email": "ops@beta.test"
+            }
+          ]
+        }
+      }
+    },
+    "expected": "both succeed independently with their own agent_id/organization_id -- no cross-tenant idempotency collision",
+    "verdict": "OK"
+  },
+  "tenant_a": {
+    "org_id": "75a5fe58-0d1e-4cb6-aafa-0cff3bf4b4a5",
+    "agent_id": "4e934e58-f3ab-40ce-8a10-84c9af4a8d38"
+  },
+  "tenant_b": {
+    "org_id": "ed673709-c5e9-4567-a0b6-71e52512c279",
+    "agent_id": "906a1461-d54a-44f8-84ea-131dbb2047b9"
+  },
+  "shared_request_id": "tenant-isolation-shared-d85b71e5-fdec-45d2-96cc-41b6647da52c",
+  "b_execution_id": "tenant-b-owned-exec-067c4da9-354f-45e8-a762-497f53b792d0"
+}

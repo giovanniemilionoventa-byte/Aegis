@@ -1,0 +1,35 @@
+{
+  "scenario": "authorize_only",
+  "concurrency": 1,
+  "execution_id": "16c-serial-9b8ca252-cb51-4375-83d7-a667db655774",
+  "requested_count": 20,
+  "warmup": 0,
+  "actual_count": 20,
+  "started_at": "2026-09-13T15:21:11.928420+00:00",
+  "finished_at": "2026-09-13T15:25:36.665676+00:00",
+  "wall_seconds": 264.767545451,
+  "throughput_rps": 0.07553795902716241,
+  "latency_ms": {
+    "min": 22.203966999995828,
+    "mean": 13238.279766300006,
+    "p50": 15026.47618750001,
+    "p90": 15037.16325969997,
+    "p95": 15040.938570750046,
+    "p99": 15063.078324549988,
+    "max": 15068.613262999974
+  },
+  "status_counts": {
+    "-1": 17,
+    "200": 2,
+    "409": 1
+  },
+  "decision_counts": {
+    "ALLOW": 2
+  },
+  "error_count": 18,
+  "error_rate": 0.9,
+  "error_samples": {
+    "EXCEPTION:ReadTimeout": 17,
+    "HTTP 409: {\"detail\":\"Execution evidence integrity failure: chain tip does not match predecessor\"}": 1
+  }
+}

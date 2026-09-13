@@ -1,0 +1,66 @@
+{
+  "label": "noisy_95_5_clean",
+  "clients_used": 2,
+  "requests_per_client": null,
+  "weights": "2:95,3:5",
+  "concurrency": 50,
+  "mix": "60,30,10",
+  "total_requests": 100,
+  "actual_count": 100,
+  "started_at": "2026-09-13T15:30:01.531547+00:00",
+  "finished_at": "2026-09-13T15:30:04.370225+00:00",
+  "wall_seconds": 2.8396275650000007,
+  "throughput_rps": 35.2158857846557,
+  "latency_ms": {
+    "min": 328.65457799994147,
+    "mean": 1109.4793486699973,
+    "p50": 1055.9170610000024,
+    "p90": 1687.3655621000125,
+    "p95": 2148.3673746999443,
+    "p99": 2567.4104376299233,
+    "max": 2721.019692000027
+  },
+  "kind_counts": {
+    "ALLOW": 60,
+    "BLOCK": 30,
+    "APPROVAL": 10
+  },
+  "decision_counts": {
+    "BLOCK": 30,
+    "ALLOW": 60,
+    "APPROVAL": 10
+  },
+  "error_count": 0,
+  "error_rate": 0.0,
+  "error_samples": {},
+  "per_tenant": {
+    "3": {
+      "org_id": "7c90d37b-77e0-47d3-ab5c-0923d8b84e1e",
+      "requests": 95,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1064.8357589999478,
+      "p95": 2077.728424899976,
+      "mean": 1096.4298291263133,
+      "decision_counts": {
+        "BLOCK": 28,
+        "APPROVAL": 9,
+        "ALLOW": 58
+      }
+    },
+    "4": {
+      "org_id": "12ff6c3a-47f6-4858-8780-8d2f43d91170",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 776.999448999959,
+      "p95": 2588.757571200017,
+      "mean": 1357.4202199999945,
+      "decision_counts": {
+        "BLOCK": 2,
+        "APPROVAL": 1,
+        "ALLOW": 2
+      }
+    }
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "label": "C_10x5",
+  "clients_used": 10,
+  "requests_per_client": 5,
+  "weights": null,
+  "concurrency": 50,
+  "mix": "60,30,10",
+  "total_requests": 50,
+  "actual_count": 50,
+  "started_at": "2026-09-13T15:17:44.777859+00:00",
+  "finished_at": "2026-09-13T15:17:47.198087+00:00",
+  "wall_seconds": 2.4202093290000164,
+  "throughput_rps": 20.659369997825365,
+  "latency_ms": {
+    "min": 722.098950000003,
+    "mean": 1296.25993546,
+    "p50": 1259.734727999998,
+    "p90": 1888.674532999977,
+    "p95": 2059.3914079500023,
+    "p99": 2272.7636394700016,
+    "max": 2337.986900999994
+  },
+  "kind_counts": {
+    "ALLOW": 30,
+    "BLOCK": 15,
+    "APPROVAL": 5
+  },
+  "decision_counts": {
+    "BLOCK": 15,
+    "ALLOW": 30,
+    "APPROVAL": 5
+  },
+  "error_count": 0,
+  "error_rate": 0.0,
+  "error_samples": {},
+  "per_tenant": {
+    "2": {
+      "org_id": "da595b5c-a152-43d0-a615-57f8b3ad783c",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 791.6132140000229,
+      "p95": 1385.8545942000146,
+      "mean": 931.0248866000109,
+      "decision_counts": {
+        "APPROVAL": 1,
+        "ALLOW": 2,
+        "BLOCK": 2
+      }
+    },
+    "6": {
+      "org_id": "7fec65ae-e735-481d-8c2f-a54f49e1a20f",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1059.7873480000146,
+      "p95": 2190.3607757999907,
+      "mean": 1304.5275557999958,
+      "decision_counts": {
+        "APPROVAL": 1,
+        "ALLOW": 2,
+        "BLOCK": 2
+      }
+    },
+    "1": {
+      "org_id": "0c752629-e12c-4ec3-b5a6-a76fcd104023",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1264.090914999997,
+      "p95": 1701.2592863999998,
+      "mean": 1250.305356399997,
+      "decision_counts": {
+        "ALLOW": 4,
+        "BLOCK": 1
+      }
+    },
+    "3": {
+      "org_id": "7c90d37b-77e0-47d3-ab5c-0923d8b84e1e",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 838.8251290000142,
+      "p95": 1803.948056599995,
+      "mean": 1069.2307313999947,
+      "decision_counts": {
+        "ALLOW": 4,
+        "BLOCK": 1
+      }
+    },
+    "5": {
+      "org_id": "c7cf69c5-be11-4c3a-9248-8530363773aa",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1255.378540999999,
+      "p95": 1571.5242848000003,
+      "mean": 1206.4386128000024,
+      "decision_counts": {
+        "ALLOW": 4,
+        "BLOCK": 1
+      }
+    },
+    "8": {
+      "org_id": "982e9e3e-1f8d-4f3b-80aa-901eb6803e0f",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1499.0464569999915,
+      "p95": 2178.1547522000096,
+      "mean": 1536.890718999996,
+      "decision_counts": {
+        "APPROVAL": 1,
+        "ALLOW": 2,
+        "BLOCK": 2
+      }
+    },
+    "7": {
+      "org_id": "27430801-ffcf-4a4d-a71a-b36b5e9cc24c",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1334.618603000024,
+      "p95": 1790.8043374000044,
+      "mean": 1349.7671890000106,
+      "decision_counts": {
+        "ALLOW": 4,
+        "BLOCK": 1
+      }
+    },
+    "10": {
+      "org_id": "4b19949a-6d2e-49f9-a81d-c5abda8c5f97",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1292.119568000004,
+      "p95": 1814.8036133999767,
+      "mean": 1373.4747493999976,
+      "decision_counts": {
+        "APPROVAL": 1,
+        "ALLOW": 2,
+        "BLOCK": 2
+      }
+    },
+    "9": {
+      "org_id": "d5af33c5-05a8-4835-a385-ee233036d87f",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1720.2710090000153,
+      "p95": 1867.3033804,
+      "mean": 1505.771065600004,
+      "decision_counts": {
+        "ALLOW": 4,
+        "BLOCK": 1
+      }
+    },
+    "4": {
+      "org_id": "12ff6c3a-47f6-4858-8780-8d2f43d91170",
+      "requests": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1406.4631519999864,
+      "p95": 1755.6847108,
+      "mean": 1435.1684885999873,
+      "decision_counts": {
+        "APPROVAL": 1,
+        "ALLOW": 2,
+        "BLOCK": 2
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "label": "sweep_c1",
+  "clients_used": 1,
+  "requests_per_client": 1,
+  "weights": null,
+  "concurrency": 1,
+  "mix": "60,30,10",
+  "total_requests": 1,
+  "actual_count": 1,
+  "started_at": "2026-09-13T15:18:25.321738+00:00",
+  "finished_at": "2026-09-13T15:18:25.453636+00:00",
+  "wall_seconds": 0.13187816799995744,
+  "throughput_rps": 7.5827562299798,
+  "latency_ms": {
+    "min": 131.59924199999296,
+    "mean": 131.59924199999296,
+    "p50": 131.59924199999296,
+    "p90": 131.59924199999296,
+    "p95": 131.59924199999296,
+    "p99": 131.59924199999296,
+    "max": 131.59924199999296
+  },
+  "kind_counts": {
+    "ALLOW": 1,
+    "BLOCK": 0,
+    "APPROVAL": 0
+  },
+  "decision_counts": {
+    "ALLOW": 1
+  },
+  "error_count": 0,
+  "error_rate": 0.0,
+  "error_samples": {},
+  "per_tenant": {
+    "1": {
+      "org_id": "0c752629-e12c-4ec3-b5a6-a76fcd104023",
+      "requests": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 131.59924199999296,
+      "p95": 131.59924199999296,
+      "mean": 131.59924199999296,
+      "decision_counts": {
+        "ALLOW": 1
+      }
+    }
+  }
+}

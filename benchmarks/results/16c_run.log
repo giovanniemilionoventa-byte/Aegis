@@ -1,0 +1,311 @@
+ Image aegis-bench-runner Building 
+ Image aegis-control-plane Building 
+ Image aegis-enforcement-gateway Building 
+ Image aegis-credential-broker Building 
+ Image aegis-protected-tool Building 
+ Image aegis-agent Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.85kB 0.1s done
+#1 DONE 0.1s
+
+#2 [bench-runner internal] load build definition from Dockerfile
+#2 transferring dockerfile: 148B 0.0s done
+#2 DONE 0.0s
+
+#3 [agent internal] load build definition from Dockerfile
+#3 transferring dockerfile: 492B 0.0s done
+#3 DONE 0.1s
+
+#4 [protected-tool internal] load build definition from Dockerfile
+#4 transferring dockerfile: 372B 0.0s done
+#4 DONE 0.1s
+
+#5 [control-plane internal] load metadata for docker.io/library/python:3.11-slim
+#5 DONE 0.0s
+
+#6 [credential-broker internal] load .dockerignore
+#6 transferring context: 33B
+#6 transferring context: 186B 0.0s done
+#6 DONE 0.0s
+
+#7 [bench-runner internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [protected-tool internal] load build context
+#8 transferring context: 2.13kB 0.0s done
+#8 DONE 0.0s
+
+#9 [bench-runner 2/3] RUN pip install --no-cache-dir httpx==0.28.1
+#9 CACHED
+
+#10 [bench-runner 3/3] WORKDIR /bench
+#10 CACHED
+
+#11 [bench-runner 1/3] FROM docker.io/library/python:3.11-slim@sha256:9534e5a8e315485d4061ed659af0fd78a284c015f9b73661b41d6bab25604534
+#11 resolve docker.io/library/python:3.11-slim@sha256:9534e5a8e315485d4061ed659af0fd78a284c015f9b73661b41d6bab25604534 0.1s done
+#11 DONE 0.1s
+
+#12 [control-plane 3/5] COPY backend/requirements.txt /app/requirements.txt
+#12 CACHED
+
+#13 [control-plane 2/5] WORKDIR /app
+#13 CACHED
+
+#14 [control-plane 4/5] RUN pip install --no-cache-dir --break-system-packages -r /app/requirements.txt
+#14 CACHED
+
+#15 [enforcement-gateway 5/5] COPY backend/app /app/app
+#15 CACHED
+
+#16 [bench-runner] exporting to image
+#16 exporting layers
+#16 ...
+
+#17 [agent internal] load build context
+#17 transferring context: 401B 0.0s done
+#17 DONE 0.0s
+
+#18 [agent 2/6] WORKDIR /agent
+#18 CACHED
+
+#19 [agent 3/6] COPY sdk/python /agent/sdk/python
+#19 CACHED
+
+#20 [agent 4/6] COPY demo-agent/agent.py /agent/agent.py
+#20 CACHED
+
+#21 [agent 5/6] COPY infra/agent/probe.py /agent/probe.py
+#21 CACHED
+
+#22 [agent 6/6] RUN pip install --no-cache-dir --break-system-packages httpx     && useradd --uid 10001 --create-home --shell /usr/sbin/nologin aegis     && chown -R aegis:aegis /agent
+#22 CACHED
+
+#16 [bench-runner] exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:f7cae65647b1501257dcba78b36eb29ad7f861dd8260f3ab5b8f9b0b2bbe59b0 0.0s done
+#16 exporting config sha256:f5a7888805daeb3a5d76b0425f7ddb402e6dd2e7b42abad7364244e2f31ca2a8 done
+#16 exporting attestation manifest sha256:bfc919172ddc927eed54db7eab0fcb99b3fa8103eb3cc9550736ea1b61da8bee
+#16 exporting attestation manifest sha256:bfc919172ddc927eed54db7eab0fcb99b3fa8103eb3cc9550736ea1b61da8bee 0.1s done
+#16 exporting manifest list sha256:112ab8b9d1184b937cfe2f9e8839d06ef52fb6ba2ec731246c0de0c48be57bca 0.1s done
+#16 naming to docker.io/library/aegis-bench-runner:latest
+#16 naming to docker.io/library/aegis-bench-runner:latest 0.0s done
+#16 unpacking to docker.io/library/aegis-bench-runner:latest 0.0s done
+#16 DONE 0.4s
+
+#23 [control-plane] exporting to image
+#23 exporting layers 0.0s done
+#23 exporting manifest sha256:dcd5bb8a977cf8fac04462979b390eebbfbf89f64cb71a2b0ae768723486bbe3 done
+#23 exporting config sha256:832284597ca9b4250cf25860e6962a75137aaf346ddc254bb38aa28c2cd8a6bd 0.0s done
+#23 exporting attestation manifest sha256:2a97c12757fe8a0be5841336fdb4074de238b83ca0d79657f6c59ca0ec83fff9 0.1s done
+#23 exporting manifest list sha256:c9be46e39d713d067249630a222edc7322f8315981ed31f53065495c17e46090 0.1s done
+#23 naming to docker.io/library/aegis-control-plane:latest 0.0s done
+#23 unpacking to docker.io/library/aegis-control-plane:latest 0.0s done
+#23 DONE 0.4s
+
+#24 [credential-broker] exporting to image
+#24 exporting layers 0.0s done
+#24 exporting manifest sha256:2efe594a60736ae7d04e428a7713f214ffa6cc2a2cfc3c76ed8c7baed633b818 0.0s done
+#24 exporting config sha256:c28261cdbdc7407c869322af04a940fce90feaa5dc4191a23dc87876fb4bdb53 0.0s done
+#24 exporting attestation manifest sha256:5c000a418dc92d4f2d2d70674bf814ac1289de85247d5cd6f43000008168b311 0.1s done
+#24 exporting manifest list sha256:c57f588fd0f6baff330a8b6c0bac1fbc50e2ec32f7f0364eac6385a92e840b7c 0.1s done
+#24 naming to docker.io/library/aegis-credential-broker:latest 0.0s done
+#24 unpacking to docker.io/library/aegis-credential-broker:latest 0.0s done
+#24 DONE 0.4s
+
+#25 [protected-tool] exporting to image
+#25 exporting layers 0.0s done
+#25 exporting manifest sha256:3294f59c858e55a5368a1edc2e58582a0a0b8dc920c67008e6c87995ee1bcf63 done
+#25 exporting config sha256:bd795c8e99f1fc34f18ac3ef2d9179dd50e9184922899ee59bf2fd8057af6861 0.0s done
+#25 exporting attestation manifest sha256:9cc619bf01e2b69a63a6403d8c952bd8c646235b8f71b3166c481f33b9869783 0.1s done
+#25 exporting manifest list sha256:7b4471ecba7f39af8078bc165efc6da29134dcf8b041063933b82ff4aa03ec54 0.1s done
+#25 naming to docker.io/library/aegis-protected-tool:latest 0.0s done
+#25 unpacking to docker.io/library/aegis-protected-tool:latest 0.0s done
+#25 DONE 0.4s
+
+#26 [enforcement-gateway] exporting to image
+#26 exporting layers 0.0s done
+#26 exporting manifest sha256:b2cf9aec7782abefb9eea3bd3d4926e984be912931808c1042d3a9bf2f6efc53 0.0s done
+#26 exporting config sha256:74cbd2de7f4ff1298d8da08a32de55adaffdcf59a952239574659fa521459963 0.0s done
+#26 exporting attestation manifest sha256:1d2b1551057ac0e8b691ff77a8d23ff82718987acf9c9a74b73c84ee54d0c91c 0.1s done
+#26 exporting manifest list sha256:617e78492659783fe4bf97d8738c9c14ac13c1f2bc3e44cd9347265b901f800d 0.1s done
+#26 naming to docker.io/library/aegis-enforcement-gateway:latest 0.0s done
+#26 unpacking to docker.io/library/aegis-enforcement-gateway:latest 0.0s done
+#26 DONE 0.4s
+
+#27 [agent] exporting to image
+#27 exporting layers done
+#27 exporting manifest sha256:97df050a2af876d3c2c034bec9c3853d3660a7b31e2373b8a74f7a868d0a17ec 0.0s done
+#27 exporting config sha256:3dd6ddcbace07e655fbed97d34c15bd38da40a7f002c657a8161e7e0e8e0d6aa 0.0s done
+#27 exporting attestation manifest sha256:8b5feae637a64f0822ad81c6cff285cbb2eb4eeb495d3709f6c91f140e08b2d7 0.1s done
+#27 exporting manifest list sha256:3cb670e28c22dbe5d90a1dac6ff47f4c007c6971372d5e62799e4367bac9056e 0.0s done
+#27 naming to docker.io/library/aegis-agent:latest 0.0s done
+#27 unpacking to docker.io/library/aegis-agent:latest 0.0s done
+#27 DONE 0.4s
+
+#28 [bench-runner] resolving provenance for metadata file
+#28 DONE 0.3s
+
+#29 [enforcement-gateway] resolving provenance for metadata file
+#29 DONE 0.2s
+
+#30 [control-plane] resolving provenance for metadata file
+#30 DONE 0.3s
+
+#31 [credential-broker] resolving provenance for metadata file
+#31 DONE 0.1s
+
+#32 [protected-tool] resolving provenance for metadata file
+#32 DONE 0.2s
+
+#33 [agent] resolving provenance for metadata file
+#33 DONE 0.0s
+ Image aegis-protected-tool Built 
+ Image aegis-agent Built 
+ Image aegis-bench-runner Built 
+ Image aegis-control-plane Built 
+ Image aegis-credential-broker Built 
+ Image aegis-enforcement-gateway Built 
+ Network aegis_public_net Creating 
+ Volume aegis_aegis-data Creating 
+ Volume aegis_aegis-data Creating 
+ Network aegis_broker_net Creating 
+ Network aegis_tool_net Creating 
+ Network aegis_public_net Creating 
+ Network aegis_agent_net Creating 
+ Network aegis_broker_net Creating 
+ Network aegis_tool_net Creating 
+ Network aegis_agent_net Creating 
+ Volume aegis_aegis-data Created 
+ Volume aegis_aegis-data Created 
+ Network aegis_broker_net Created 
+ Network aegis_broker_net Created 
+ Network aegis_public_net Created 
+ Network aegis_public_net Created 
+ Container aegis-control-plane Creating 
+ Network aegis_tool_net Created 
+ Network aegis_tool_net Created 
+ Container aegis-protected-tool Creating 
+ Container aegis-credential-broker Creating 
+ Network aegis_agent_net Created 
+ Network aegis_agent_net Created 
+ Container aegis-bench-runner Creating 
+ Container aegis-control-plane Created 
+ Container aegis-credential-broker Created 
+ Container aegis-enforcement-gateway Creating 
+ Container aegis-protected-tool Created 
+ Container aegis-bench-runner Created 
+ Container aegis-enforcement-gateway Created 
+ Container aegis-agent Creating 
+ Container aegis-agent Created 
+ Container aegis-protected-tool Starting 
+ Container aegis-bench-runner Starting 
+ Container aegis-control-plane Starting 
+ Container aegis-credential-broker Starting 
+ Container aegis-protected-tool Started 
+ Container aegis-bench-runner Started 
+ Container aegis-control-plane Started 
+ Container aegis-credential-broker Started 
+ Container aegis-control-plane Waiting 
+ Container aegis-control-plane Healthy 
+ Container aegis-enforcement-gateway Starting 
+ Container aegis-enforcement-gateway Started 
+ Container aegis-enforcement-gateway Waiting 
+ Container aegis-enforcement-gateway Healthy 
+ Container aegis-agent Starting 
+ Container aegis-agent Started 
+provisioned 10/100
+provisioned 20/100
+provisioned 30/100
+provisioned 40/100
+provisioned 50/100
+provisioned 60/100
+provisioned 70/100
+provisioned 80/100
+provisioned 90/100
+provisioned 100/100
+Wrote 100 tenants to C:\Users\giova\aegis-repo\benchmarks\runtime\tenants_16c.json
+=== fresh environment (down -v, up --build) ===
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml down -v
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml up -d --build
+healthy: http://127.0.0.1:8000/api/health
+healthy: aegis-enforcement-gateway
+
+=== provisioning 100 tenants via real /api/auth/register etc. ===
++ C:\Users\giova\AppData\Local\Programs\Python\Python314\python.exe C:\Users\giova\aegis-repo\benchmarks\provision_tenants.py --count 100
+
+=== Section 7/4: workload distribution scenarios A-E (total=50, concurrency=50) ===
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label A_1x50 --warmup-per-client 0 --out /bench/results/16c_dist_A_1x50_t1.json --clients 1 --requests-per-client 50
+[dist] A_1x50 trial=1 rps=18.53 p95=2374.76 errors=0/50
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label A_1x50 --warmup-per-client 0 --out /bench/results/16c_dist_A_1x50_t2.json --clients 1 --requests-per-client 50
+[dist] A_1x50 trial=2 rps=21.65 p95=1969.52 errors=0/50
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label A_1x50 --warmup-per-client 0 --out /bench/results/16c_dist_A_1x50_t3.json --clients 1 --requests-per-client 50
+[dist] A_1x50 trial=3 rps=22.26 p95=2019.24 errors=0/50
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label B_5x10 --warmup-per-client 0 --out /bench/results/16c_dist_B_5x10_t1.json --clients 5 --requests-per-client 10
+[dist] B_5x10 trial=1 rps=22.13 p95=1977.13 errors=0/50
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label C_10x5 --warmup-per-client 0 --out /bench/results/16c_dist_C_10x5_t1.json --clients 10 --requests-per-client 5
+[dist] C_10x5 trial=1 rps=19.80 p95=2160.35 errors=0/50
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label C_10x5 --warmup-per-client 0 --out /bench/results/16c_dist_C_10x5_t2.json --clients 10 --requests-per-client 5
+[dist] C_10x5 trial=2 rps=21.71 p95=1964.80 errors=0/50
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label C_10x5 --warmup-per-client 0 --out /bench/results/16c_dist_C_10x5_t3.json --clients 10 --requests-per-client 5
+[dist] C_10x5 trial=3 rps=20.66 p95=2059.39 errors=0/50
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label D_25x2 --warmup-per-client 0 --out /bench/results/16c_dist_D_25x2_t1.json --clients 25 --requests-per-client 2
+[dist] D_25x2 trial=1 rps=22.84 p95=1981.39 errors=0/50
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label E_50x1 --warmup-per-client 0 --out /bench/results/16c_dist_E_50x1_t1.json --clients 50 --requests-per-client 1
+[dist] E_50x1 trial=1 rps=23.21 p95=1970.75 errors=0/50
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label E_50x1 --warmup-per-client 0 --out /bench/results/16c_dist_E_50x1_t2.json --clients 50 --requests-per-client 1
+[dist] E_50x1 trial=2 rps=21.40 p95=2016.49 errors=0/50
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label E_50x1 --warmup-per-client 0 --out /bench/results/16c_dist_E_50x1_t3.json --clients 50 --requests-per-client 1
+[dist] E_50x1 trial=3 rps=21.41 p95=2073.31 errors=0/50
+
+=== Section 4: size variants (total=25 and total=100) ===
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 25 --mix 60,30,10 --label A25_1x25 --warmup-per-client 0 --out /bench/results/16c_size_A25_1x25.json --clients 1 --requests-per-client 25
+[size] A25_1x25 rps=15.73 p95=1388.82 errors=0
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 25 --mix 60,30,10 --label E25_25x1 --warmup-per-client 0 --out /bench/results/16c_size_E25_25x1.json --clients 25 --requests-per-client 1
+[size] E25_25x1 rps=11.82 p95=1895.95 errors=0
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label E100_50x2 --warmup-per-client 0 --out /bench/results/16c_size_E100_50x2_t1.json --clients 50 --requests-per-client 2
+[size] E100_50x2 trial=1 rps=19.47 p95=3549.24 errors=0
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label E100_50x2 --warmup-per-client 0 --out /bench/results/16c_size_E100_50x2_t2.json --clients 50 --requests-per-client 2
+[size] E100_50x2 trial=2 rps=20.83 p95=3146.72 errors=0
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label E100_50x2 --warmup-per-client 0 --out /bench/results/16c_size_E100_50x2_t3.json --clients 50 --requests-per-client 2
+[size] E100_50x2 trial=3 rps=17.58 p95=4314.91 errors=0
+
+=== Section 7: concurrency sweep (1 request/client model) ===
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 1 --mix 60,30,10 --label sweep_c1 --warmup-per-client 0 --out /bench/results/16c_sweep_c1.json --clients 1 --requests-per-client 1
+[sweep] c=  1 rps=7.58 p95=131.60 p99=131.60 errors=0/1
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 5 --mix 60,30,10 --label sweep_c5 --warmup-per-client 0 --out /bench/results/16c_sweep_c5.json --clients 5 --requests-per-client 1
+[sweep] c=  5 rps=14.69 p95=316.42 p99=335.43 errors=0/5
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 10 --mix 60,30,10 --label sweep_c10 --warmup-per-client 0 --out /bench/results/16c_sweep_c10.json --clients 10 --requests-per-client 1
+[sweep] c= 10 rps=14.53 p95=581.47 p99=628.34 errors=0/10
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 25 --mix 60,30,10 --label sweep_c25 --warmup-per-client 0 --out /bench/results/16c_sweep_c25.json --clients 25 --requests-per-client 1
+[sweep] c= 25 rps=13.55 p95=1640.86 p99=1807.18 errors=0/25
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 75 --mix 60,30,10 --label sweep_c75 --warmup-per-client 0 --out /bench/results/16c_sweep_c75.json --clients 75 --requests-per-client 1
+[sweep] c= 75 rps=4.84 p95=15381.84 p99=15391.98 errors=75/75
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 100 --mix 60,30,10 --label sweep_c100 --warmup-per-client 0 --out /bench/results/16c_sweep_c100.json --clients 100 --requests-per-client 1
+[sweep] c=100 rps=6.41 p95=15401.41 p99=15417.53 errors=100/100
+
+=== Section 8: noisy neighbor (total=100, concurrency=50) ===
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label noisy_80_20 --warmup-per-client 0 --out /bench/results/16c_noisy_80_20_t1.json --weights 0:80,1:20
+[noisy 80/20] trial=1 tenant0=None tenant1=15198.856919449969
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label noisy_80_20 --warmup-per-client 0 --out /bench/results/16c_noisy_80_20_t2.json --weights 0:80,1:20
+[noisy 80/20] trial=2 tenant0=None tenant1=15250.44229635
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label noisy_80_20 --warmup-per-client 0 --out /bench/results/16c_noisy_80_20_t3.json --weights 0:80,1:20
+[noisy 80/20] trial=3 tenant0=None tenant1=15228.668167549995
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --concurrency 50 --mix 60,30,10 --label noisy_95_5 --warmup-per-client 0 --out /bench/results/16c_noisy_95_5.json --weights 2:95,3:5
+
+=== Section 10: execution_id pattern (embedded in background multi-tenant load) ===
++ (background) docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --clients 30 --requests-per-client 2 --concurrency 30 --mix 60,30,10 --label bg_noise_1 --out /bench/results/16c_execid_bg1.json
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python bench_client.py --scenario authorize_only --concurrency 1 --count 20 --warmup 0 --out /bench/results/16c_execid_serial_same.json --execution-id 16c-serial-9b8ca252-cb51-4375-83d7-a667db655774 --token aegis_uU3xsf_ElayuEe8n0hd9rEpDMtV6KsoMV99Q5ulyXWs
++ docker cp C:\Users\giova\aegis-repo\benchmarks\chain_probe.py aegis-control-plane:/tmp/chain_probe.py
++ (background) docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python multitenant_client.py --clients 30 --requests-per-client 2 --concurrency 30 --mix 60,30,10 --label bg_noise_2 --out /bench/results/16c_execid_bg2.json
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python bench_client.py --scenario authorize_only --concurrency 20 --count 20 --warmup 0 --out /bench/results/16c_execid_concurrent_same.json --execution-id 16c-concurrent-c049de2e-0385-43a0-9e1e-db89e664a91f --token aegis_v8xhow7U7LUygN9NVatpj8qMjMY-mSIs-srOWFJ_ujc
++ docker cp C:\Users\giova\aegis-repo\benchmarks\chain_probe.py aegis-control-plane:/tmp/chain_probe.py
+[execid] serial_same errors=18 verifier_pass=True
+[execid] concurrent_same errors=12 verifier_pass=True
+
+=== Section 6: cross-tenant isolation adversarial probe ===
++ docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml exec -T bench-runner python tenant_isolation_probe.py --tenant-a 20 --tenant-b 21 --out /bench/results/16c_isolation_probe.json
++ docker cp C:\Users\giova\aegis-repo\benchmarks\eat_cross_tenant_probe.py aegis-enforcement-gateway:/tmp/eat_cross_tenant_probe.py
+[isolation] test1=FAIL_CLOSED test2=OK
+
+Wrote C:\Users\giova\aegis-repo\benchmarks\results\16c_index.json

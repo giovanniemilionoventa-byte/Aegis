@@ -183,8 +183,12 @@ async def run(
     count: int,
     warmup: int,
     execution_id: str | None = None,
+    token_override: str | None = None,
 ) -> dict:
-    agent_token = _agent_token() if scenario != "baseline" else ""
+    if scenario == "baseline":
+        agent_token = ""
+    else:
+        agent_token = token_override or _agent_token()
 
     limits = httpx.Limits(max_connections=concurrency + 5, max_keepalive_connections=concurrency + 5)
     async with httpx.AsyncClient(timeout=15.0, limits=limits) as client:
@@ -280,11 +284,12 @@ def main() -> None:
     parser.add_argument("--count", type=int, required=True, help="requests measured (excludes warmup)")
     parser.add_argument("--warmup", type=int, default=0)
     parser.add_argument("--execution-id", default=None, help="pin every measured request to this execution_id")
+    parser.add_argument("--token", default=None, help="use this agent token instead of /bench/runtime/token.json (Phase 16.C multi-tenant probes)")
     parser.add_argument("--out", required=True)
     args = parser.parse_args()
 
     summary = asyncio.run(
-        run(args.scenario, args.concurrency, args.count, args.warmup, args.execution_id)
+        run(args.scenario, args.concurrency, args.count, args.warmup, args.execution_id, args.token)
     )
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)

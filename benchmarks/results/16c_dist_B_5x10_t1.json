@@ -1,0 +1,108 @@
+{
+  "label": "B_5x10",
+  "clients_used": 5,
+  "requests_per_client": 10,
+  "weights": null,
+  "concurrency": 50,
+  "mix": "60,30,10",
+  "total_requests": 50,
+  "actual_count": 50,
+  "started_at": "2026-09-13T15:17:34.388844+00:00",
+  "finished_at": "2026-09-13T15:17:36.648231+00:00",
+  "wall_seconds": 2.2593691600000056,
+  "throughput_rps": 22.130071032747864,
+  "latency_ms": {
+    "min": 748.1727290000038,
+    "mean": 1306.1803066800012,
+    "p50": 1279.7063360000038,
+    "p90": 1947.5121277999933,
+    "p95": 1977.1315022000094,
+    "p99": 2111.7617791399975,
+    "max": 2158.240981000006
+  },
+  "kind_counts": {
+    "ALLOW": 30,
+    "BLOCK": 15,
+    "APPROVAL": 5
+  },
+  "decision_counts": {
+    "ALLOW": 30,
+    "BLOCK": 15,
+    "APPROVAL": 5
+  },
+  "error_count": 0,
+  "error_rate": 0.0,
+  "error_samples": {},
+  "per_tenant": {
+    "2": {
+      "org_id": "da595b5c-a152-43d0-a615-57f8b3ad783c",
+      "requests": 10,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 839.926552999998,
+      "p95": 1955.453700499987,
+      "mean": 1137.4169634999957,
+      "decision_counts": {
+        "ALLOW": 6,
+        "BLOCK": 3,
+        "APPROVAL": 1
+      }
+    },
+    "1": {
+      "org_id": "0c752629-e12c-4ec3-b5a6-a76fcd104023",
+      "requests": 10,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1105.2595790000196,
+      "p95": 1773.2802166500046,
+      "mean": 1169.9943394000086,
+      "decision_counts": {
+        "ALLOW": 6,
+        "BLOCK": 3,
+        "APPROVAL": 1
+      }
+    },
+    "3": {
+      "org_id": "7c90d37b-77e0-47d3-ab5c-0923d8b84e1e",
+      "requests": 10,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1270.1534450000054,
+      "p95": 1862.26164709999,
+      "mean": 1274.5991541999986,
+      "decision_counts": {
+        "ALLOW": 6,
+        "BLOCK": 3,
+        "APPROVAL": 1
+      }
+    },
+    "5": {
+      "org_id": "c7cf69c5-be11-4c3a-9248-8530363773aa",
+      "requests": 10,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1355.2958109999906,
+      "p95": 1872.0077609000055,
+      "mean": 1357.6245071999977,
+      "decision_counts": {
+        "ALLOW": 6,
+        "BLOCK": 3,
+        "APPROVAL": 1
+      }
+    },
+    "4": {
+      "org_id": "12ff6c3a-47f6-4858-8780-8d2f43d91170",
+      "requests": 10,
+      "errors": 0,
+      "error_rate": 0.0,
+      "p50": 1637.5106490000064,
+      "p95": 2073.730245700001,
+      "mean": 1591.2665691000059,
+      "decision_counts": {
+        "ALLOW": 6,
+        "BLOCK": 3,
+        "APPROVAL": 1
+      }
+    }
+  }
+}
