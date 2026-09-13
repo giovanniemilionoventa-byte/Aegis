@@ -1,0 +1,36 @@
+# Phase 16.A benchmark overlay.
+#
+# Additive only: this file does NOT modify any service, network, volume, or
+# environment variable defined in the top-level docker-compose.yml. It adds
+# one extra container (bench-runner) used purely to generate load and is not
+# part of the production Aegis deployment.
+#
+# bench-runner is deliberately attached to BOTH agent_net and tool_net so the
+# same benchmark process can:
+#   - call protected-tool directly over tool_net (the "no Aegis" baseline)
+#   - call enforcement-gateway over agent_net (the real Aegis ALLOW/BLOCK path)
+# under identical container placement, host, and Docker network driver.
+#
+# NOTE: in the production topology (see README "Isolated trust domains"),
+# agent_net and tool_net are isolated from each other on purpose. Bridging
+# them here, in a benchmark-only container, is a deliberate and documented
+# exception used solely to obtain a same-environment baseline; it does not
+# change any production service's network membership.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml up -d --build
+#   docker compose -f docker-compose.yml -f benchmarks/docker-compose.bench.yml down
+
+services:
+  bench-runner:
+    build:
+      context: ./benchmarks
+      dockerfile: Dockerfile
+    container_name: aegis-bench-runner
+    volumes:
+      - ./benchmarks:/bench
+    working_dir: /bench
+    networks:
+      - agent_net
+      - tool_net
+    command: ["sleep", "infinity"]

@@ -1,0 +1,26 @@
+{
+  "scenario": "authorize_only",
+  "concurrency": 50,
+  "requested_count": 200,
+  "warmup": 20,
+  "actual_count": 200,
+  "wall_seconds": 6.413832496000168,
+  "throughput_rps": 31.182604180063194,
+  "latency_ms": {
+    "min": 29.87882399997943,
+    "mean": 1180.9055112800024,
+    "p50": 837.2618495001234,
+    "p90": 2984.475089000034,
+    "p95": 3528.1249153998688,
+    "p99": 4814.861514239999,
+    "max": 5989.932897000017
+  },
+  "status_counts": {
+    "200": 200
+  },
+  "decision_counts": {
+    "ALLOW": 200
+  },
+  "error_count": 0,
+  "error_rate": 0.0
+}

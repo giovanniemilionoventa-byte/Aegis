@@ -1,0 +1,730 @@
+{
+  "latency": {
+    "baseline": {
+      "scenario": "baseline",
+      "concurrency": 1,
+      "requested_count": 500,
+      "warmup": 50,
+      "actual_count": 500,
+      "wall_seconds": 3.0098774599998706,
+      "throughput_rps": 166.11971970447644,
+      "latency_ms": {
+        "min": 4.283106999992015,
+        "mean": 6.016669229996296,
+        "p50": 5.686041999979352,
+        "p90": 7.082463299957454,
+        "p95": 7.921353049948721,
+        "p99": 10.2731739699243,
+        "max": 38.15564599995014
+      },
+      "status_counts": {
+        "200": 500
+      },
+      "decision_counts": {},
+      "error_count": 0,
+      "error_rate": 0.0
+    },
+    "aegis_allow": {
+      "scenario": "aegis_allow",
+      "concurrency": 1,
+      "requested_count": 500,
+      "warmup": 50,
+      "actual_count": 500,
+      "wall_seconds": 32.3893966669998,
+      "throughput_rps": 15.437150779329862,
+      "latency_ms": {
+        "min": 48.45673599993461,
+        "mean": 64.73590908600227,
+        "p50": 60.92147350000232,
+        "p90": 80.8758766999972,
+        "p95": 88.00438839999741,
+        "p99": 122.5490620499704,
+        "max": 168.88212999992902
+      },
+      "status_counts": {
+        "200": 500
+      },
+      "decision_counts": {
+        "ALLOW": 500
+      },
+      "error_count": 0,
+      "error_rate": 0.0
+    },
+    "aegis_block": {
+      "scenario": "aegis_block",
+      "concurrency": 1,
+      "requested_count": 500,
+      "warmup": 50,
+      "actual_count": 500,
+      "wall_seconds": 13.788946447999933,
+      "throughput_rps": 36.260928409981915,
+      "latency_ms": {
+        "min": 23.08868899990557,
+        "mean": 27.543172818004223,
+        "p50": 26.19858299999578,
+        "p90": 31.826316400088217,
+        "p95": 35.688427100024,
+        "p99": 47.434166180132706,
+        "max": 82.0911809998961
+      },
+      "status_counts": {
+        "200": 500
+      },
+      "decision_counts": {
+        "BLOCK": 500
+      },
+      "error_count": 0,
+      "error_rate": 0.0
+    },
+    "authorize_only": {
+      "scenario": "authorize_only",
+      "concurrency": 1,
+      "requested_count": 500,
+      "warmup": 50,
+      "actual_count": 500,
+      "wall_seconds": 13.07808154899999,
+      "throughput_rps": 38.23190718964681,
+      "latency_ms": {
+        "min": 21.78034899998238,
+        "mean": 26.12288936199957,
+        "p50": 25.219963500035192,
+        "p90": 29.469914000151228,
+        "p95": 32.379194300085594,
+        "p99": 41.84261479994574,
+        "max": 45.81069200003185
+      },
+      "status_counts": {
+        "200": 500
+      },
+      "decision_counts": {
+        "ALLOW": 500
+      },
+      "error_count": 0,
+      "error_rate": 0.0
+    }
+  },
+  "throughput": {
+    "baseline": {
+      "1": {
+        "scenario": "baseline",
+        "concurrency": 1,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 1.3547873340000933,
+        "throughput_rps": 147.62464556668658,
+        "latency_ms": {
+          "min": 5.293397999821536,
+          "mean": 6.770206279998092,
+          "p50": 6.572968000114088,
+          "p90": 7.649801900106468,
+          "p95": 8.335308950108807,
+          "p99": 11.206524409876689,
+          "max": 11.925721999887173
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "2": {
+        "scenario": "baseline",
+        "concurrency": 2,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 1.1881947159999982,
+        "throughput_rps": 168.32257988260596,
+        "latency_ms": {
+          "min": 7.361793999962174,
+          "mean": 11.862243314991474,
+          "p50": 11.582392000036634,
+          "p90": 14.650431900054173,
+          "p95": 15.22427035001783,
+          "p99": 17.429676189794915,
+          "max": 19.34262400004627
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "5": {
+        "scenario": "baseline",
+        "concurrency": 5,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 0.9662750949999008,
+        "throughput_rps": 206.98039412887954,
+        "latency_ms": {
+          "min": 7.216180000114036,
+          "mean": 23.29429456000753,
+          "p50": 21.979871999860734,
+          "p90": 29.28116079992833,
+          "p95": 34.06212550013378,
+          "p99": 49.6370225100189,
+          "max": 72.95107699997061
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "10": {
+        "scenario": "baseline",
+        "concurrency": 10,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 1.531109545000163,
+        "throughput_rps": 130.62422649842387,
+        "latency_ms": {
+          "min": 6.5602189999935945,
+          "mean": 63.25644448999469,
+          "p50": 37.54053950001435,
+          "p90": 108.17820909992406,
+          "p95": 241.5580929500377,
+          "p99": 411.47460991004215,
+          "max": 816.2144479999824
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "25": {
+        "scenario": "baseline",
+        "concurrency": 25,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 2.311640632000035,
+        "throughput_rps": 86.51863842130153,
+        "latency_ms": {
+          "min": 12.195831000099133,
+          "mean": 240.19728357500867,
+          "p50": 132.02514650004105,
+          "p90": 610.4768685000635,
+          "p95": 746.113100449997,
+          "p99": 985.8473426100134,
+          "max": 1191.6931429998385
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "50": {
+        "scenario": "baseline",
+        "concurrency": 50,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 4.08095395600003,
+        "throughput_rps": 49.008149113260544,
+        "latency_ms": {
+          "min": 10.390763999794217,
+          "mean": 742.2197991250027,
+          "p50": 448.9949500000421,
+          "p90": 1793.112502699978,
+          "p95": 2359.197583249987,
+          "p99": 2887.216091179925,
+          "max": 3687.601068000049
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0
+      }
+    },
+    "aegis_allow": {
+      "1": {
+        "scenario": "aegis_allow",
+        "concurrency": 1,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 12.03238443500004,
+        "throughput_rps": 16.621809341316922,
+        "latency_ms": {
+          "min": 51.495216999910554,
+          "mean": 60.12294499500854,
+          "p50": 58.75951150005676,
+          "p90": 67.9220315999828,
+          "p95": 72.11627275005411,
+          "p99": 80.54368029007492,
+          "max": 106.78983699995115
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "2": {
+        "scenario": "aegis_allow",
+        "concurrency": 2,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 8.53388143999996,
+        "throughput_rps": 23.43599467676703,
+        "latency_ms": {
+          "min": 64.37867800013919,
+          "mean": 84.76680694499576,
+          "p50": 83.2906580000099,
+          "p90": 97.90649960000337,
+          "p95": 105.19663374999479,
+          "p99": 133.34808803000212,
+          "max": 157.34836699994048
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "5": {
+        "scenario": "aegis_allow",
+        "concurrency": 5,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 8.662823243000048,
+        "throughput_rps": 23.08716158575774,
+        "latency_ms": {
+          "min": 58.30339499993897,
+          "mean": 204.04695360499773,
+          "p50": 151.03791000001365,
+          "p90": 291.270584500171,
+          "p95": 475.4277961499382,
+          "p99": 1106.0125974301302,
+          "max": 1658.646299999873
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "10": {
+        "scenario": "aegis_allow",
+        "concurrency": 10,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 8.217541115999893,
+        "throughput_rps": 24.338180628094662,
+        "latency_ms": {
+          "min": 61.111595999818746,
+          "mean": 358.3793232899973,
+          "p50": 172.11802300005274,
+          "p90": 962.7615091998223,
+          "p95": 1311.2964100000331,
+          "p99": 1875.195505500059,
+          "max": 2077.6188289999027
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "25": {
+        "scenario": "aegis_allow",
+        "concurrency": 25,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 8.566147017000048,
+        "throughput_rps": 23.347719762816077,
+        "latency_ms": {
+          "min": 79.02388699994845,
+          "mean": 877.1798805699996,
+          "p50": 557.2733504999405,
+          "p90": 2228.440817400019,
+          "p95": 2843.4837692499286,
+          "p99": 3728.642782749912,
+          "max": 4601.170577999937
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "50": {
+        "scenario": "aegis_allow",
+        "concurrency": 50,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 9.362429411999983,
+        "throughput_rps": 21.361976811665638,
+        "latency_ms": {
+          "min": 71.94910500015794,
+          "mean": 1802.5762668249922,
+          "p50": 1227.9859330000136,
+          "p90": 4310.0619462999475,
+          "p95": 4760.046884649886,
+          "p99": 6231.1761485099905,
+          "max": 7536.302235999983
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      }
+    },
+    "aegis_block": {
+      "1": {
+        "scenario": "aegis_block",
+        "concurrency": 1,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 5.571779892999984,
+        "throughput_rps": 35.8951724297772,
+        "latency_ms": {
+          "min": 23.748848999957772,
+          "mean": 27.822055979997913,
+          "p50": 26.53921350008659,
+          "p90": 32.46836020009596,
+          "p95": 34.33483400003751,
+          "p99": 43.753385949844386,
+          "max": 58.53494400003001
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "2": {
+        "scenario": "aegis_block",
+        "concurrency": 2,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 5.67881237000006,
+        "throughput_rps": 35.218631461845234,
+        "latency_ms": {
+          "min": 34.52887000003102,
+          "mean": 56.613046609991216,
+          "p50": 56.26912949992402,
+          "p90": 69.42331939990254,
+          "p95": 74.00631019983165,
+          "p99": 81.844528019908,
+          "max": 88.86621600004219
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "5": {
+        "scenario": "aegis_block",
+        "concurrency": 5,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 6.073935461000019,
+        "throughput_rps": 32.92758069034072,
+        "latency_ms": {
+          "min": 30.50585799996952,
+          "mean": 145.73685503998945,
+          "p50": 70.29246199999761,
+          "p90": 314.996793900104,
+          "p95": 506.7688472001123,
+          "p99": 1073.0370893900435,
+          "max": 1584.0541410000242
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "10": {
+        "scenario": "aegis_block",
+        "concurrency": 10,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 5.661706815999878,
+        "throughput_rps": 35.3250365128063,
+        "latency_ms": {
+          "min": 25.22346700015987,
+          "mean": 210.63160001499568,
+          "p50": 66.95524450015,
+          "p90": 502.3701158998387,
+          "p95": 799.1157567000396,
+          "p99": 2000.7917964701414,
+          "max": 5074.264782
+        },
+        "status_counts": {
+          "-1": 1,
+          "200": 198,
+          "500": 1
+        },
+        "decision_counts": {
+          "BLOCK": 198
+        },
+        "error_count": 2,
+        "error_rate": 0.01
+      },
+      "25": {
+        "scenario": "aegis_block",
+        "concurrency": 25,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 6.5348893519999365,
+        "throughput_rps": 30.604955834300704,
+        "latency_ms": {
+          "min": 26.06267500004833,
+          "mean": 647.2141614550083,
+          "p50": 363.9635024999279,
+          "p90": 1544.5057515001956,
+          "p95": 2252.324376650085,
+          "p99": 3780.704708509969,
+          "max": 5339.932610999995
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "50": {
+        "scenario": "aegis_block",
+        "concurrency": 50,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 6.852550121999911,
+        "throughput_rps": 29.1862148308709,
+        "latency_ms": {
+          "min": 34.873146000109045,
+          "mean": 1268.7603096299927,
+          "p50": 851.4310985000293,
+          "p90": 3134.379744200055,
+          "p95": 3491.488461050037,
+          "p99": 4377.527001369983,
+          "max": 5088.119076999874
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      }
+    },
+    "authorize_only": {
+      "1": {
+        "scenario": "authorize_only",
+        "concurrency": 1,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 6.103551952000089,
+        "throughput_rps": 32.76780497206409,
+        "latency_ms": {
+          "min": 22.362323999914224,
+          "mean": 30.477758659998244,
+          "p50": 27.645803499922295,
+          "p90": 42.75540009998622,
+          "p95": 47.86140910015319,
+          "p99": 53.769376150057724,
+          "max": 89.297968999972
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "2": {
+        "scenario": "authorize_only",
+        "concurrency": 2,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 4.93450312899995,
+        "throughput_rps": 40.53092981633856,
+        "latency_ms": {
+          "min": 29.227333999870098,
+          "mean": 49.204520895003725,
+          "p50": 48.24084550000407,
+          "p90": 61.51060419995247,
+          "p95": 65.5544724499805,
+          "p99": 75.92791480983345,
+          "max": 92.61374699985936
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "5": {
+        "scenario": "authorize_only",
+        "concurrency": 5,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 5.128082446000008,
+        "throughput_rps": 39.00093302049062,
+        "latency_ms": {
+          "min": 23.358127999927092,
+          "mean": 119.13045665000254,
+          "p50": 65.04034649992718,
+          "p90": 237.69339949985772,
+          "p95": 507.88623755009763,
+          "p99": 805.070754990016,
+          "max": 1181.8894040000032
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "10": {
+        "scenario": "authorize_only",
+        "concurrency": 10,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 5.380475343999933,
+        "throughput_rps": 37.17143694804421,
+        "latency_ms": {
+          "min": 24.930685000072117,
+          "mean": 234.2406650699991,
+          "p50": 75.36961199991765,
+          "p90": 774.5292239998662,
+          "p95": 1095.1322811000066,
+          "p99": 1498.4111844599809,
+          "max": 2980.1285139999436
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "25": {
+        "scenario": "authorize_only",
+        "concurrency": 25,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 5.770172535000029,
+        "throughput_rps": 34.66100862441525,
+        "latency_ms": {
+          "min": 25.094090000038705,
+          "mean": 558.9866761999951,
+          "p50": 309.9054489999844,
+          "p90": 1570.2811081000164,
+          "p95": 2147.5634542500065,
+          "p99": 2838.998257289964,
+          "max": 3604.3915000000197
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      },
+      "50": {
+        "scenario": "authorize_only",
+        "concurrency": 50,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "wall_seconds": 6.413832496000168,
+        "throughput_rps": 31.182604180063194,
+        "latency_ms": {
+          "min": 29.87882399997943,
+          "mean": 1180.9055112800024,
+          "p50": 837.2618495001234,
+          "p90": 2984.475089000034,
+          "p95": 3528.1249153998688,
+          "p99": 4814.861514239999,
+          "max": 5989.932897000017
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0
+      }
+    }
+  }
+}

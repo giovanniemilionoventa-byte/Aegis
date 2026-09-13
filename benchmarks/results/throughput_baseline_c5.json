@@ -1,0 +1,24 @@
+{
+  "scenario": "baseline",
+  "concurrency": 5,
+  "requested_count": 200,
+  "warmup": 20,
+  "actual_count": 200,
+  "wall_seconds": 0.9662750949999008,
+  "throughput_rps": 206.98039412887954,
+  "latency_ms": {
+    "min": 7.216180000114036,
+    "mean": 23.29429456000753,
+    "p50": 21.979871999860734,
+    "p90": 29.28116079992833,
+    "p95": 34.06212550013378,
+    "p99": 49.6370225100189,
+    "max": 72.95107699997061
+  },
+  "status_counts": {
+    "200": 200
+  },
+  "decision_counts": {},
+  "error_count": 0,
+  "error_rate": 0.0
+}

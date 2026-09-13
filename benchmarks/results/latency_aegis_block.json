@@ -1,0 +1,26 @@
+{
+  "scenario": "aegis_block",
+  "concurrency": 1,
+  "requested_count": 500,
+  "warmup": 50,
+  "actual_count": 500,
+  "wall_seconds": 13.788946447999933,
+  "throughput_rps": 36.260928409981915,
+  "latency_ms": {
+    "min": 23.08868899990557,
+    "mean": 27.543172818004223,
+    "p50": 26.19858299999578,
+    "p90": 31.826316400088217,
+    "p95": 35.688427100024,
+    "p99": 47.434166180132706,
+    "max": 82.0911809998961
+  },
+  "status_counts": {
+    "200": 500
+  },
+  "decision_counts": {
+    "BLOCK": 500
+  },
+  "error_count": 0,
+  "error_rate": 0.0
+}
