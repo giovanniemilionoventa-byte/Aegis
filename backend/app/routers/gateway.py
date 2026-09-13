@@ -7,6 +7,10 @@ from .. import config, models, schemas
 from ..contract_store import ContractResolutionError, assert_contract_current_for_dispatch
 from ..database import get_db
 from ..engines.enforcement import authorize_request
+from ..services.evidence_verifier import (
+    EvidenceIntegrityError,
+    reseal_execution_event,
+)
 from ..remote import dispatch_via_broker
 from ..runtime_contract import coerce_utc
 from ..security import get_agent_from_token
@@ -80,7 +84,13 @@ def invoke_tool(
         request_id=body.request_id,
         client_request_id=body.client_request_id,
     )
-    outcome = authorize_request(db, agent, authorize_body)
+    try:
+        outcome = authorize_request(db, agent, authorize_body)
+    except EvidenceIntegrityError as exc:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Execution evidence integrity failure: {exc.reason}",
+        ) from exc
     event = outcome.event
     executed = False
     tool_result = None
@@ -102,6 +112,7 @@ def invoke_tool(
         if current is None:
             event.decision = "BLOCK"
             event.reason = "Runtime contract is no longer valid at execution time."
+            reseal_execution_event(db, event)
             db.commit()
         else:
             contract_status = current.status

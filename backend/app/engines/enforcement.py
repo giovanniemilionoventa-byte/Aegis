@@ -10,6 +10,12 @@ from sqlalchemy.orm import Session
 from .. import models, schemas
 from ..contract_store import ContractResolutionError, resolve_active_contract_for_agent
 from ..security import utcnow
+from ..services.evidence_verifier import (
+    EvidenceIntegrityError,
+    assert_execution_evidence_integrity,
+    record_integrity_failure,
+    seal_execution_event,
+)
 from . import behavior as behavior_engine
 from . import contract as contract_engine
 from . import permission as permission_engine
@@ -128,6 +134,21 @@ def authorize_request(
         raise HTTPException(
             status_code=403, detail="Execution does not belong to this agent"
         )
+
+    try:
+        assert_execution_evidence_integrity(db, execution.id)
+    except EvidenceIntegrityError as exc:
+        org_id = agent.organization_id
+        exec_id = execution.id
+        db.rollback()
+        record_integrity_failure(
+            db,
+            organization_id=org_id,
+            execution_id=exec_id,
+            reason=exc.reason,
+        )
+        db.commit()
+        raise
 
     kind = body.resource_kind.lower()
     act = body.action.upper()
@@ -256,6 +277,7 @@ def authorize_request(
     )
     db.add(event)
     db.flush()
+    seal_execution_event(db, event, execution)
     behavior_engine.persist_signals(db, agent, execution, event, matches)
     _maybe_alert(db, event)
 

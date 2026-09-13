@@ -219,6 +219,8 @@ class EventOut(BaseModel):
     reason: str
     request_id: str
     execution_id: Optional[str] = None
+    evidence_hash: Optional[str] = None
+    previous_evidence_hash: Optional[str] = None
     created_at: datetime
 
     class Config:

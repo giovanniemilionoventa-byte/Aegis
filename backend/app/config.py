@@ -14,6 +14,10 @@ DATABASE_URL = _env(
 )
 SECRET_KEY = _env("AEGIS_SECRET_KEY", "aegis-dev-secret-change-in-production")
 EAT_KEY = _env("AEGIS_EAT_KEY", "aegis-dev-eat-key-change-in-production")
+EVIDENCE_SECRET_KEY = _env(
+    "AEGIS_EVIDENCE_SECRET_KEY",
+    "aegis-dev-evidence-key-change-in-production",
+)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(_env("AEGIS_TOKEN_TTL_MINUTES", str(60 * 12)))
 AGENT_TOKEN_PREFIX = "aegis_"

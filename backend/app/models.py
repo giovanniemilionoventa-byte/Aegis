@@ -174,6 +174,7 @@ class Execution(Base):
     id = Column(String, primary_key=True, default=new_id)
     organization_id = Column(String, ForeignKey("organizations.id"), nullable=False)
     agent_id = Column(String, ForeignKey("agents.id"), nullable=False)
+    evidence_chain_tip = Column(String, nullable=True)
     created_at = Column(DateTime, default=utcnow)
 
     organization = relationship("Organization", back_populates="executions")
@@ -194,6 +195,8 @@ class Event(Base):
     scope = Column(String, nullable=False)
     destination = Column(String, nullable=True)
     payload_hash = Column(String, nullable=True)
+    evidence_hash = Column(String, nullable=True)
+    previous_evidence_hash = Column(String, nullable=True)
     decision = Column(String, nullable=False)
     risk_score = Column(Float, nullable=False, default=0.0)
     risk_level = Column(String, nullable=False, default="low")

@@ -34,6 +34,18 @@ def ensure_schema() -> None:
             conn.execute(
                 text("ALTER TABLE events ADD COLUMN seq INTEGER DEFAULT 0 NOT NULL")
             )
+        if "evidence_hash" not in cols:
+            conn.execute(text("ALTER TABLE events ADD COLUMN evidence_hash VARCHAR"))
+        if "previous_evidence_hash" not in cols:
+            conn.execute(
+                text("ALTER TABLE events ADD COLUMN previous_evidence_hash VARCHAR")
+            )
+        exec_rows = conn.execute(text("PRAGMA table_info(executions)")).fetchall()
+        exec_cols = {row[1] for row in exec_rows}
+        if "evidence_chain_tip" not in exec_cols:
+            conn.execute(
+                text("ALTER TABLE executions ADD COLUMN evidence_chain_tip VARCHAR")
+            )
         tables = {
             row[0]
             for row in conn.execute(

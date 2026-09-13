@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_db
 from ..engines.enforcement import authorize_request
 from ..security import get_agent_from_token
+from ..services.evidence_verifier import EvidenceIntegrityError
 
 router = APIRouter(tags=["enforcement"])
 
@@ -28,5 +29,11 @@ def authorize(
     agent: models.Agent = Depends(get_agent_from_token),
     db: Session = Depends(get_db),
 ):
-    outcome = authorize_request(db, agent, body)
+    try:
+        outcome = authorize_request(db, agent, body)
+    except EvidenceIntegrityError as exc:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Execution evidence integrity failure: {exc.reason}",
+        ) from exc
     return _response(outcome.event, outcome.approval_id)
