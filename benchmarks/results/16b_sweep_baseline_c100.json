@@ -1,0 +1,28 @@
+{
+  "scenario": "baseline",
+  "concurrency": 100,
+  "execution_id": null,
+  "requested_count": 100,
+  "warmup": 15,
+  "actual_count": 100,
+  "started_at": "2026-09-13T14:13:59.853612+00:00",
+  "finished_at": "2026-09-13T14:14:04.363135+00:00",
+  "wall_seconds": 4.509499908000009,
+  "throughput_rps": 22.175407925521082,
+  "latency_ms": {
+    "min": 923.2841019999682,
+    "mean": 2527.113551959999,
+    "p50": 2410.3945844999826,
+    "p90": 3984.0475823999673,
+    "p95": 4143.249876800001,
+    "p99": 4391.272026849992,
+    "max": 4493.515450000018
+  },
+  "status_counts": {
+    "200": 100
+  },
+  "decision_counts": {},
+  "error_count": 0,
+  "error_rate": 0.0,
+  "error_samples": {}
+}

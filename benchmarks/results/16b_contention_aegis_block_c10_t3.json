@@ -1,0 +1,30 @@
+{
+  "scenario": "aegis_block",
+  "concurrency": 10,
+  "execution_id": null,
+  "requested_count": 200,
+  "warmup": 20,
+  "actual_count": 200,
+  "started_at": "2026-09-13T14:33:32.069771+00:00",
+  "finished_at": "2026-09-13T14:33:37.524881+00:00",
+  "wall_seconds": 5.45509789699986,
+  "throughput_rps": 36.662953401806774,
+  "latency_ms": {
+    "min": 24.299967000160905,
+    "mean": 221.76164656000765,
+    "p50": 76.31810049997512,
+    "p90": 627.157937299921,
+    "p95": 998.8715276999852,
+    "p99": 1788.0088701499394,
+    "max": 2200.1376949999667
+  },
+  "status_counts": {
+    "200": 200
+  },
+  "decision_counts": {
+    "BLOCK": 200
+  },
+  "error_count": 0,
+  "error_rate": 0.0,
+  "error_samples": {}
+}

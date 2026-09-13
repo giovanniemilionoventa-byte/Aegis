@@ -1,0 +1,30 @@
+{
+  "scenario": "authorize_only",
+  "concurrency": 10,
+  "execution_id": null,
+  "requested_count": 200,
+  "warmup": 20,
+  "actual_count": 200,
+  "started_at": "2026-09-13T14:35:59.688481+00:00",
+  "finished_at": "2026-09-13T14:36:04.890544+00:00",
+  "wall_seconds": 5.202050338000163,
+  "throughput_rps": 38.44637921686981,
+  "latency_ms": {
+    "min": 24.14745999999468,
+    "mean": 189.176138294996,
+    "p50": 67.544028000043,
+    "p90": 296.5833102000258,
+    "p95": 810.3202321000923,
+    "p99": 2197.503337389996,
+    "max": 4381.4957720001075
+  },
+  "status_counts": {
+    "200": 200
+  },
+  "decision_counts": {
+    "ALLOW": 200
+  },
+  "error_count": 0,
+  "error_rate": 0.0,
+  "error_samples": {}
+}

@@ -1,0 +1,23 @@
+{
+  "aegis-enforcement-gateway": {
+    "container": "aegis-enforcement-gateway",
+    "since": "2026-09-13T14:30:17.668292+00:00",
+    "until": "2026-09-13T14:30:25.387346+00:00",
+    "log_lines": 202,
+    "counts": {}
+  },
+  "aegis-credential-broker": {
+    "container": "aegis-credential-broker",
+    "since": "2026-09-13T14:30:17.668292+00:00",
+    "until": "2026-09-13T14:30:25.387346+00:00",
+    "log_lines": 200,
+    "counts": {}
+  },
+  "aegis-protected-tool": {
+    "container": "aegis-protected-tool",
+    "since": "2026-09-13T14:30:17.668292+00:00",
+    "until": "2026-09-13T14:30:25.387346+00:00",
+    "log_lines": 200,
+    "counts": {}
+  }
+}

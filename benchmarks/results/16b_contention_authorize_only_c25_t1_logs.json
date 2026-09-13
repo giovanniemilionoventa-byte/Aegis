@@ -1,0 +1,9 @@
+{
+  "aegis-enforcement-gateway": {
+    "container": "aegis-enforcement-gateway",
+    "since": "2026-09-13T14:36:10.710848+00:00",
+    "until": "2026-09-13T14:36:16.283545+00:00",
+    "log_lines": 201,
+    "counts": {}
+  }
+}

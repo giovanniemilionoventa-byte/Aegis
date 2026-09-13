@@ -1,0 +1,37 @@
+{
+  "scenario": "aegis_mixed",
+  "concurrency": 20,
+  "execution_id": "bench-16b-race-b-3dcefded-9f82-4e97-ae48-268df905f5ba",
+  "requested_count": 40,
+  "warmup": 0,
+  "actual_count": 40,
+  "started_at": "2026-09-13T14:37:37.464461+00:00",
+  "finished_at": "2026-09-13T14:37:38.969383+00:00",
+  "wall_seconds": 1.5080983150000975,
+  "throughput_rps": 26.523469724848418,
+  "latency_ms": {
+    "min": 14.740670000037426,
+    "mean": 444.06881987501947,
+    "p50": 458.1557699999621,
+    "p90": 916.8065571000852,
+    "p95": 956.2584168000055,
+    "p99": 1018.47779816007,
+    "max": 1019.3147210000006
+  },
+  "status_counts": {
+    "-1": 14,
+    "200": 3,
+    "409": 9,
+    "500": 14
+  },
+  "decision_counts": {
+    "ALLOW": 3
+  },
+  "error_count": 37,
+  "error_rate": 0.925,
+  "error_samples": {
+    "HTTP 500: Internal Server Error": 14,
+    "EXCEPTION:ReadError": 14,
+    "HTTP 409: {\"detail\":\"Execution evidence integrity failure: chain tip does not match predecessor\"}": 9
+  }
+}

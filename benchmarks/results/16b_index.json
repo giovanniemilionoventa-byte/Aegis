@@ -1,0 +1,4935 @@
+{
+  "sweep": {
+    "baseline": {
+      "1": {
+        "scenario": "baseline",
+        "concurrency": 1,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:13:33.806572+00:00",
+        "finished_at": "2026-09-13T14:13:35.154847+00:00",
+        "wall_seconds": 1.3482602370000336,
+        "throughput_rps": 148.3393150012441,
+        "latency_ms": {
+          "min": 5.218178000006901,
+          "mean": 6.733284095002432,
+          "p50": 6.057238500005724,
+          "p90": 8.325193600012426,
+          "p95": 9.381490550020995,
+          "p99": 11.317434340000428,
+          "max": 45.89962699998296
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "2": {
+        "scenario": "baseline",
+        "concurrency": 2,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:13:36.174199+00:00",
+        "finished_at": "2026-09-13T14:13:37.275261+00:00",
+        "wall_seconds": 1.1010482930000194,
+        "throughput_rps": 181.64507521741962,
+        "latency_ms": {
+          "min": 7.017508000046746,
+          "mean": 10.986979179998286,
+          "p50": 10.848936499996853,
+          "p90": 13.401451399988673,
+          "p95": 13.976287650032756,
+          "p99": 16.37333668996518,
+          "max": 17.753386999970644
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "5": {
+        "scenario": "baseline",
+        "concurrency": 5,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:13:38.288628+00:00",
+        "finished_at": "2026-09-13T14:13:39.559825+00:00",
+        "wall_seconds": 1.2739153779999697,
+        "throughput_rps": 156.99629932562505,
+        "latency_ms": {
+          "min": 5.71011400000998,
+          "mean": 30.54919084499971,
+          "p50": 28.487113000011277,
+          "p90": 43.170516300040155,
+          "p95": 51.981260149989325,
+          "p99": 71.44209029999209,
+          "max": 90.5301580000355
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "10": {
+        "scenario": "baseline",
+        "concurrency": 10,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:13:40.557757+00:00",
+        "finished_at": "2026-09-13T14:13:42.128152+00:00",
+        "wall_seconds": 1.5703830530000005,
+        "throughput_rps": 127.35746200134264,
+        "latency_ms": {
+          "min": 6.806593000021621,
+          "mean": 65.43646549000329,
+          "p50": 35.54752549996465,
+          "p90": 83.98612319997473,
+          "p95": 228.89071520002872,
+          "p99": 497.0595683599864,
+          "max": 933.1852970000227
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "25": {
+        "scenario": "baseline",
+        "concurrency": 25,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:13:43.256655+00:00",
+        "finished_at": "2026-09-13T14:13:45.709986+00:00",
+        "wall_seconds": 2.4533198099999822,
+        "throughput_rps": 81.52218849934671,
+        "latency_ms": {
+          "min": 6.9555039999613655,
+          "mean": 274.11157962499857,
+          "p50": 159.29163849997963,
+          "p90": 601.8809672999962,
+          "p95": 854.8560522499912,
+          "p99": 1364.6890860100125,
+          "max": 1575.6218319999675
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "50": {
+        "scenario": "baseline",
+        "concurrency": 50,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:13:47.297818+00:00",
+        "finished_at": "2026-09-13T14:13:51.230837+00:00",
+        "wall_seconds": 3.9330063950000067,
+        "throughput_rps": 50.851684414817655,
+        "latency_ms": {
+          "min": 22.312016000000767,
+          "mean": 717.8158682800035,
+          "p50": 439.2179150000004,
+          "p90": 1777.4952159999714,
+          "p95": 2361.721466049977,
+          "p99": 2960.463868869991,
+          "max": 3333.87759499999
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "75": {
+        "scenario": "baseline",
+        "concurrency": 75,
+        "execution_id": null,
+        "requested_count": 100,
+        "warmup": 15,
+        "actual_count": 100,
+        "started_at": "2026-09-13T14:13:52.856483+00:00",
+        "finished_at": "2026-09-13T14:13:56.595205+00:00",
+        "wall_seconds": 3.7387088099999914,
+        "throughput_rps": 26.74720206412658,
+        "latency_ms": {
+          "min": 18.13661400001365,
+          "mean": 1641.9458818900011,
+          "p50": 1373.6046825000017,
+          "p90": 3265.8685171999937,
+          "p95": 3387.6598080999597,
+          "p99": 3544.2326590699745,
+          "max": 3712.380601999996
+        },
+        "status_counts": {
+          "200": 100
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "100": {
+        "scenario": "baseline",
+        "concurrency": 100,
+        "execution_id": null,
+        "requested_count": 100,
+        "warmup": 15,
+        "actual_count": 100,
+        "started_at": "2026-09-13T14:13:59.853612+00:00",
+        "finished_at": "2026-09-13T14:14:04.363135+00:00",
+        "wall_seconds": 4.509499908000009,
+        "throughput_rps": 22.175407925521082,
+        "latency_ms": {
+          "min": 923.2841019999682,
+          "mean": 2527.113551959999,
+          "p50": 2410.3945844999826,
+          "p90": 3984.0475823999673,
+          "p95": 4143.249876800001,
+          "p99": 4391.272026849992,
+          "max": 4493.515450000018
+        },
+        "status_counts": {
+          "200": 100
+        },
+        "decision_counts": {},
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      }
+    },
+    "aegis_allow": {
+      "1": {
+        "scenario": "aegis_allow",
+        "concurrency": 1,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:14:07.467081+00:00",
+        "finished_at": "2026-09-13T14:14:21.301527+00:00",
+        "wall_seconds": 13.835922406000009,
+        "throughput_rps": 14.455125876773428,
+        "latency_ms": {
+          "min": 50.58416700001089,
+          "mean": 69.12965391000029,
+          "p50": 62.16425499997058,
+          "p90": 94.36162880001007,
+          "p95": 100.23010810001544,
+          "p99": 112.7000846499546,
+          "max": 305.21402899995564
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "2": {
+        "scenario": "aegis_allow",
+        "concurrency": 2,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:14:23.075103+00:00",
+        "finished_at": "2026-09-13T14:14:31.497845+00:00",
+        "wall_seconds": 8.42272914199998,
+        "throughput_rps": 23.74527265784899,
+        "latency_ms": {
+          "min": 63.81222700002809,
+          "mean": 83.99139731999895,
+          "p50": 82.20771100002366,
+          "p90": 100.64184759995669,
+          "p95": 105.79578135001951,
+          "p99": 112.39250265004668,
+          "max": 116.35553799999343
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "5": {
+        "scenario": "aegis_allow",
+        "concurrency": 5,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:14:33.836188+00:00",
+        "finished_at": "2026-09-13T14:14:44.320292+00:00",
+        "wall_seconds": 10.487043312999958,
+        "throughput_rps": 19.07115228103195,
+        "latency_ms": {
+          "min": 61.53557200002524,
+          "mean": 247.1783144599982,
+          "p50": 166.4596620000225,
+          "p90": 333.0213306999439,
+          "p95": 714.0105836499966,
+          "p99": 1850.866906059936,
+          "max": 2475.115770000002
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "10": {
+        "scenario": "aegis_allow",
+        "concurrency": 10,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:14:46.232649+00:00",
+        "finished_at": "2026-09-13T14:14:55.425930+00:00",
+        "wall_seconds": 9.193268554000042,
+        "throughput_rps": 21.755048144762277,
+        "latency_ms": {
+          "min": 79.20286600005966,
+          "mean": 418.9216722099991,
+          "p50": 211.30690600000435,
+          "p90": 915.5884480000051,
+          "p95": 1774.949831300074,
+          "p99": 2387.866184579986,
+          "max": 3687.839814999961
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "25": {
+        "scenario": "aegis_allow",
+        "concurrency": 25,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:14:59.166222+00:00",
+        "finished_at": "2026-09-13T14:15:13.061522+00:00",
+        "wall_seconds": 13.898134914000025,
+        "throughput_rps": 14.39042009863739,
+        "latency_ms": {
+          "min": 21.668404000024566,
+          "mean": 1502.0511734649997,
+          "p50": 1043.0446995000011,
+          "p90": 3653.778986999975,
+          "p95": 4460.662691949926,
+          "p99": 6686.017630840036,
+          "max": 6991.08362100003
+        },
+        "status_counts": {
+          "-1": 5,
+          "200": 190,
+          "500": 5
+        },
+        "decision_counts": {
+          "ALLOW": 190
+        },
+        "error_count": 10,
+        "error_rate": 0.05,
+        "error_samples": {
+          "HTTP 500: Internal Server Error": 5,
+          "EXCEPTION:ReadError": 5
+        }
+      },
+      "50": {
+        "scenario": "aegis_allow",
+        "concurrency": 50,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:15:18.341230+00:00",
+        "finished_at": "2026-09-13T14:15:27.633322+00:00",
+        "wall_seconds": 9.292068601999972,
+        "throughput_rps": 21.52373261180542,
+        "latency_ms": {
+          "min": 54.908332999957565,
+          "mean": 1788.487849684999,
+          "p50": 1372.3475334999762,
+          "p90": 3780.2911131999954,
+          "p95": 4456.984916250033,
+          "p99": 5668.770811929935,
+          "max": 6084.693087000005
+        },
+        "status_counts": {
+          "-1": 1,
+          "200": 199
+        },
+        "decision_counts": {
+          "ALLOW": 199
+        },
+        "error_count": 1,
+        "error_rate": 0.005,
+        "error_samples": {
+          "EXCEPTION:ReadError": 1
+        }
+      },
+      "75": {
+        "scenario": "aegis_allow",
+        "concurrency": 75,
+        "execution_id": null,
+        "requested_count": 100,
+        "warmup": 15,
+        "actual_count": 100,
+        "started_at": "2026-09-13T14:15:43.915018+00:00",
+        "finished_at": "2026-09-13T14:16:14.497349+00:00",
+        "wall_seconds": 30.584664498999928,
+        "throughput_rps": 3.269612455721718,
+        "latency_ms": {
+          "min": 15027.216699999939,
+          "mean": 15323.948845089993,
+          "p50": 15371.052528500002,
+          "p90": 15398.064102499995,
+          "p95": 15407.007500399977,
+          "p99": 15418.059128289928,
+          "max": 15419.259135999937
+        },
+        "status_counts": {
+          "-1": 100
+        },
+        "decision_counts": {},
+        "error_count": 100,
+        "error_rate": 1.0,
+        "error_samples": {
+          "EXCEPTION:ReadTimeout": 100
+        }
+      },
+      "100": {
+        "scenario": "aegis_allow",
+        "concurrency": 100,
+        "execution_id": null,
+        "requested_count": 100,
+        "warmup": 15,
+        "actual_count": 100,
+        "started_at": "2026-09-13T14:16:31.696161+00:00",
+        "finished_at": "2026-09-13T14:16:47.125183+00:00",
+        "wall_seconds": 15.431842336000045,
+        "throughput_rps": 6.480107677533474,
+        "latency_ms": {
+          "min": 15256.691736999983,
+          "mean": 15295.310371869999,
+          "p50": 15295.645847000003,
+          "p90": 15315.351979400055,
+          "p95": 15325.351513549946,
+          "p99": 15343.078868480003,
+          "max": 15345.085943000071
+        },
+        "status_counts": {
+          "-1": 100
+        },
+        "decision_counts": {},
+        "error_count": 100,
+        "error_rate": 1.0,
+        "error_samples": {
+          "EXCEPTION:ReadTimeout": 100
+        }
+      }
+    },
+    "aegis_block": {
+      "1": {
+        "scenario": "aegis_block",
+        "concurrency": 1,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:19:32.078457+00:00",
+        "finished_at": "2026-09-13T14:19:37.647273+00:00",
+        "wall_seconds": 5.568801041000029,
+        "throughput_rps": 35.914373404168984,
+        "latency_ms": {
+          "min": 18.88776400005554,
+          "mean": 27.802766245000612,
+          "p50": 25.733393499990598,
+          "p90": 32.94409870001118,
+          "p95": 37.1341162500073,
+          "p99": 53.9593946399599,
+          "max": 150.91729699997813
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "2": {
+        "scenario": "aegis_block",
+        "concurrency": 2,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:19:39.196869+00:00",
+        "finished_at": "2026-09-13T14:19:44.978037+00:00",
+        "wall_seconds": 5.781154849000018,
+        "throughput_rps": 34.59516398087737,
+        "latency_ms": {
+          "min": 25.98403399997551,
+          "mean": 57.52272614000105,
+          "p50": 54.67900849998841,
+          "p90": 75.62402620001194,
+          "p95": 83.18298905003299,
+          "p99": 94.11198398994996,
+          "max": 112.66575100000864
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "5": {
+        "scenario": "aegis_block",
+        "concurrency": 5,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:19:46.429814+00:00",
+        "finished_at": "2026-09-13T14:19:52.381059+00:00",
+        "wall_seconds": 5.951233204999994,
+        "throughput_rps": 33.60648005391014,
+        "latency_ms": {
+          "min": 26.32727899992915,
+          "mean": 139.87436682000123,
+          "p50": 78.98623549999684,
+          "p90": 239.00711040004123,
+          "p95": 496.21113779996875,
+          "p99": 1080.174287070066,
+          "max": 2013.4394000000384
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "10": {
+        "scenario": "aegis_block",
+        "concurrency": 10,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:19:54.285649+00:00",
+        "finished_at": "2026-09-13T14:20:00.474466+00:00",
+        "wall_seconds": 6.188804705000052,
+        "throughput_rps": 32.31641803762465,
+        "latency_ms": {
+          "min": 24.675657999978284,
+          "mean": 277.0772641550019,
+          "p50": 82.36243449999847,
+          "p90": 886.8065566999461,
+          "p95": 1120.9698804500122,
+          "p99": 1989.2341042799183,
+          "max": 2294.0984089999574
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "25": {
+        "scenario": "aegis_block",
+        "concurrency": 25,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:20:02.659423+00:00",
+        "finished_at": "2026-09-13T14:20:08.325471+00:00",
+        "wall_seconds": 5.666035210000018,
+        "throughput_rps": 35.29805103346673,
+        "latency_ms": {
+          "min": 27.408823999962806,
+          "mean": 547.8202148849994,
+          "p50": 229.73166400004175,
+          "p90": 1556.611568400035,
+          "p95": 1917.749762349956,
+          "p99": 2956.39636400999,
+          "max": 3111.5653750000547
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "50": {
+        "scenario": "aegis_block",
+        "concurrency": 50,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:20:10.958856+00:00",
+        "finished_at": "2026-09-13T14:20:17.228525+00:00",
+        "wall_seconds": 6.2696561290000545,
+        "throughput_rps": 31.899676136129326,
+        "latency_ms": {
+          "min": 25.281681000024037,
+          "mean": 1084.8227239949983,
+          "p50": 800.3107674999796,
+          "p90": 2498.6123128999334,
+          "p95": 3056.536837149944,
+          "p99": 4438.040025789936,
+          "max": 5002.268742000069
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "BLOCK": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "75": {
+        "scenario": "aegis_block",
+        "concurrency": 75,
+        "execution_id": null,
+        "requested_count": 100,
+        "warmup": 15,
+        "actual_count": 100,
+        "started_at": "2026-09-13T14:20:33.447046+00:00",
+        "finished_at": "2026-09-13T14:21:03.919943+00:00",
+        "wall_seconds": 30.475227098000005,
+        "throughput_rps": 3.2813537263701864,
+        "latency_ms": {
+          "min": 15138.303661999998,
+          "mean": 15246.36182807,
+          "p50": 15264.50014049999,
+          "p90": 15295.439548800005,
+          "p95": 15298.40722589999,
+          "p99": 15305.652504989957,
+          "max": 15313.181651999912
+        },
+        "status_counts": {
+          "-1": 100
+        },
+        "decision_counts": {},
+        "error_count": 100,
+        "error_rate": 1.0,
+        "error_samples": {
+          "EXCEPTION:ReadTimeout": 100
+        }
+      },
+      "100": {
+        "scenario": "aegis_block",
+        "concurrency": 100,
+        "execution_id": null,
+        "requested_count": 100,
+        "warmup": 15,
+        "actual_count": 100,
+        "started_at": "2026-09-13T14:21:21.140198+00:00",
+        "finished_at": "2026-09-13T14:21:36.702372+00:00",
+        "wall_seconds": 15.562160984999991,
+        "throughput_rps": 6.425842792423732,
+        "latency_ms": {
+          "min": 15313.377872000046,
+          "mean": 15385.241853050004,
+          "p50": 15387.411008000072,
+          "p90": 15421.208288600086,
+          "p95": 15428.442123100041,
+          "p99": 15434.6979923199,
+          "max": 15435.11748700007
+        },
+        "status_counts": {
+          "-1": 100
+        },
+        "decision_counts": {},
+        "error_count": 100,
+        "error_rate": 1.0,
+        "error_samples": {
+          "EXCEPTION:ReadTimeout": 100
+        }
+      }
+    },
+    "authorize_only": {
+      "1": {
+        "scenario": "authorize_only",
+        "concurrency": 1,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:24:20.627926+00:00",
+        "finished_at": "2026-09-13T14:24:25.840171+00:00",
+        "wall_seconds": 5.212230552999927,
+        "throughput_rps": 38.37128806301344,
+        "latency_ms": {
+          "min": 22.029254000017318,
+          "mean": 26.024117954997337,
+          "p50": 24.58019550010704,
+          "p90": 30.625629500173087,
+          "p95": 34.41967865002195,
+          "p99": 44.57307612996374,
+          "max": 45.59282299987899
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "2": {
+        "scenario": "authorize_only",
+        "concurrency": 2,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:24:27.135682+00:00",
+        "finished_at": "2026-09-13T14:24:32.134303+00:00",
+        "wall_seconds": 4.998611172999972,
+        "throughput_rps": 40.01111370300239,
+        "latency_ms": {
+          "min": 21.65001299999858,
+          "mean": 49.737342220004166,
+          "p50": 48.64612350002062,
+          "p90": 61.350149899999444,
+          "p95": 65.3140860999656,
+          "p99": 125.82004949999128,
+          "max": 167.10634799983382
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "5": {
+        "scenario": "authorize_only",
+        "concurrency": 5,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:24:33.495027+00:00",
+        "finished_at": "2026-09-13T14:24:38.641552+00:00",
+        "wall_seconds": 5.146512450000046,
+        "throughput_rps": 38.86126808067825,
+        "latency_ms": {
+          "min": 23.26372199991056,
+          "mean": 98.04745961498838,
+          "p50": 50.43419999992693,
+          "p90": 104.10961849997874,
+          "p95": 300.01273370005356,
+          "p99": 1313.6073514901857,
+          "max": 1529.3116889999965
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "10": {
+        "scenario": "authorize_only",
+        "concurrency": 10,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:24:40.326489+00:00",
+        "finished_at": "2026-09-13T14:24:45.660083+00:00",
+        "wall_seconds": 5.3335788189999676,
+        "throughput_rps": 37.498274008351395,
+        "latency_ms": {
+          "min": 23.54477400012911,
+          "mean": 207.25808401000336,
+          "p50": 61.947964999944816,
+          "p90": 406.2856005999942,
+          "p95": 889.2235277000723,
+          "p99": 2997.712634020085,
+          "max": 4477.452878999884
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "25": {
+        "scenario": "authorize_only",
+        "concurrency": 25,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:24:47.666482+00:00",
+        "finished_at": "2026-09-13T14:24:53.477037+00:00",
+        "wall_seconds": 5.810542093000095,
+        "throughput_rps": 34.4201963945736,
+        "latency_ms": {
+          "min": 24.299994999864793,
+          "mean": 570.456701640004,
+          "p50": 304.75351199993383,
+          "p90": 1302.4022045999573,
+          "p95": 1805.4985602500888,
+          "p99": 3878.28531554001,
+          "max": 5096.2108759999865
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "50": {
+        "scenario": "authorize_only",
+        "concurrency": 50,
+        "execution_id": null,
+        "requested_count": 200,
+        "warmup": 20,
+        "actual_count": 200,
+        "started_at": "2026-09-13T14:24:56.040628+00:00",
+        "finished_at": "2026-09-13T14:25:02.287869+00:00",
+        "wall_seconds": 6.2472288559999924,
+        "throughput_rps": 32.01419455090317,
+        "latency_ms": {
+          "min": 25.611396000158493,
+          "mean": 1110.4419855050003,
+          "p50": 711.8937919999553,
+          "p90": 2733.4510674000285,
+          "p95": 3334.4894643501098,
+          "p99": 4631.909695940062,
+          "max": 5039.323157999888
+        },
+        "status_counts": {
+          "200": 200
+        },
+        "decision_counts": {
+          "ALLOW": 200
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      },
+      "75": {
+        "scenario": "authorize_only",
+        "concurrency": 75,
+        "execution_id": null,
+        "requested_count": 100,
+        "warmup": 15,
+        "actual_count": 100,
+        "started_at": "2026-09-13T14:25:18.486862+00:00",
+        "finished_at": "2026-09-13T14:25:48.894505+00:00",
+        "wall_seconds": 30.408563588000106,
+        "throughput_rps": 3.2885473103853617,
+        "latency_ms": {
+          "min": 15012.827584999968,
+          "mean": 15224.691928520006,
+          "p50": 15249.475312999948,
+          "p90": 15276.647914800014,
+          "p95": 15278.837482349956,
+          "p99": 15281.962799730025,
+          "max": 15284.262048000073
+        },
+        "status_counts": {
+          "-1": 100
+        },
+        "decision_counts": {},
+        "error_count": 100,
+        "error_rate": 1.0,
+        "error_samples": {
+          "EXCEPTION:ReadTimeout": 100
+        }
+      },
+      "100": {
+        "scenario": "authorize_only",
+        "concurrency": 100,
+        "execution_id": null,
+        "requested_count": 100,
+        "warmup": 15,
+        "actual_count": 100,
+        "started_at": "2026-09-13T14:26:05.213797+00:00",
+        "finished_at": "2026-09-13T14:26:20.935439+00:00",
+        "wall_seconds": 15.723802337000052,
+        "throughput_rps": 6.359784857170815,
+        "latency_ms": {
+          "min": 15416.600878000054,
+          "mean": 15512.818096720004,
+          "p50": 15521.715361500013,
+          "p90": 15558.32238359983,
+          "p95": 15570.663552150154,
+          "p99": 15596.454208009916,
+          "max": 15604.415590999906
+        },
+        "status_counts": {
+          "-1": 100
+        },
+        "decision_counts": {},
+        "error_count": 100,
+        "error_rate": 1.0,
+        "error_samples": {
+          "EXCEPTION:ReadTimeout": 100
+        }
+      }
+    }
+  },
+  "contention": {
+    "aegis_allow": {
+      "5": [
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 5,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:27:22.017311+00:00",
+            "finished_at": "2026-09-13T14:29:42.094973+00:00",
+            "wall_seconds": 140.08854392299986,
+            "throughput_rps": 1.4276684902223744,
+            "latency_ms": {
+              "min": 59.50831800009837,
+              "mean": 3493.19637232,
+              "p50": 137.51148899996224,
+              "p90": 15040.018528399924,
+              "p95": 15046.911502950014,
+              "p99": 15052.843676970073,
+              "max": 15059.441219000064
+            },
+            "status_counts": {
+              "-1": 40,
+              "200": 160
+            },
+            "decision_counts": {
+              "ALLOW": 160
+            },
+            "error_count": 40,
+            "error_rate": 0.2,
+            "error_samples": {
+              "EXCEPTION:ReadTimeout": 40
+            }
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:27:22.017311+00:00",
+              "until": "2026-09-13T14:29:42.094973+00:00",
+              "log_lines": 48411,
+              "counts": {}
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:27:22.017311+00:00",
+              "until": "2026-09-13T14:29:42.094973+00:00",
+              "log_lines": 197,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:27:22.017311+00:00",
+              "until": "2026-09-13T14:29:42.094973+00:00",
+              "log_lines": 197,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 5,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:29:49.896354+00:00",
+            "finished_at": "2026-09-13T14:29:57.300205+00:00",
+            "wall_seconds": 7.403838442000051,
+            "throughput_rps": 27.013015149743406,
+            "latency_ms": {
+              "min": 74.25654000007853,
+              "mean": 175.4844359799938,
+              "p50": 118.55553599991708,
+              "p90": 291.7434030999175,
+              "p95": 552.6268235000201,
+              "p99": 862.722905449923,
+              "max": 1444.7950090000177
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:29:49.896354+00:00",
+              "until": "2026-09-13T14:29:57.300205+00:00",
+              "log_lines": 201,
+              "counts": {}
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:29:49.896354+00:00",
+              "until": "2026-09-13T14:29:57.300205+00:00",
+              "log_lines": 200,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:29:49.896354+00:00",
+              "until": "2026-09-13T14:29:57.300205+00:00",
+              "log_lines": 200,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 5,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:30:03.714237+00:00",
+            "finished_at": "2026-09-13T14:30:11.251892+00:00",
+            "wall_seconds": 7.539831381999875,
+            "throughput_rps": 26.52579213872973,
+            "latency_ms": {
+              "min": 57.2099389999039,
+              "mean": 169.84903913499124,
+              "p50": 124.65731450004114,
+              "p90": 246.85349040012164,
+              "p95": 334.27748244996565,
+              "p99": 853.7919427000501,
+              "max": 2141.564326999969
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:30:03.714237+00:00",
+              "until": "2026-09-13T14:30:11.251892+00:00",
+              "log_lines": 201,
+              "counts": {}
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:30:03.714237+00:00",
+              "until": "2026-09-13T14:30:11.251892+00:00",
+              "log_lines": 200,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:30:03.714237+00:00",
+              "until": "2026-09-13T14:30:11.251892+00:00",
+              "log_lines": 200,
+              "counts": {}
+            }
+          }
+        }
+      ],
+      "10": [
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 10,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:30:17.668292+00:00",
+            "finished_at": "2026-09-13T14:30:25.387346+00:00",
+            "wall_seconds": 7.719040991999918,
+            "throughput_rps": 25.909954385173204,
+            "latency_ms": {
+              "min": 57.83901500012689,
+              "mean": 327.24729884499766,
+              "p50": 165.59777450004276,
+              "p90": 701.6407092000006,
+              "p95": 1158.098277050052,
+              "p99": 2145.7785426100227,
+              "max": 2451.9333279999955
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:30:17.668292+00:00",
+              "until": "2026-09-13T14:30:25.387346+00:00",
+              "log_lines": 202,
+              "counts": {}
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:30:17.668292+00:00",
+              "until": "2026-09-13T14:30:25.387346+00:00",
+              "log_lines": 200,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:30:17.668292+00:00",
+              "until": "2026-09-13T14:30:25.387346+00:00",
+              "log_lines": 200,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 10,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:30:31.821790+00:00",
+            "finished_at": "2026-09-13T14:30:39.620481+00:00",
+            "wall_seconds": 7.8013197329999,
+            "throughput_rps": 25.636688002158387,
+            "latency_ms": {
+              "min": 50.23055500009832,
+              "mean": 338.39490340499765,
+              "p50": 177.01714050008377,
+              "p90": 770.7890148998328,
+              "p95": 1243.3712012498968,
+              "p99": 2764.793436039967,
+              "max": 4031.143044000146
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:30:31.821790+00:00",
+              "until": "2026-09-13T14:30:39.620481+00:00",
+              "log_lines": 202,
+              "counts": {}
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:30:31.821790+00:00",
+              "until": "2026-09-13T14:30:39.620481+00:00",
+              "log_lines": 200,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:30:31.821790+00:00",
+              "until": "2026-09-13T14:30:39.620481+00:00",
+              "log_lines": 200,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 10,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:30:46.214111+00:00",
+            "finished_at": "2026-09-13T14:30:53.869912+00:00",
+            "wall_seconds": 7.655787931000077,
+            "throughput_rps": 26.124025613373274,
+            "latency_ms": {
+              "min": 53.1425690001015,
+              "mean": 310.9586950900041,
+              "p50": 145.81373049986723,
+              "p90": 660.5667268001295,
+              "p95": 1462.9734989002,
+              "p99": 2271.642131569984,
+              "max": 4442.390653000075
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:30:46.214111+00:00",
+              "until": "2026-09-13T14:30:53.869912+00:00",
+              "log_lines": 201,
+              "counts": {}
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:30:46.214111+00:00",
+              "until": "2026-09-13T14:30:53.869912+00:00",
+              "log_lines": 200,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:30:46.214111+00:00",
+              "until": "2026-09-13T14:30:53.869912+00:00",
+              "log_lines": 200,
+              "counts": {}
+            }
+          }
+        }
+      ],
+      "25": [
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 25,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:31:00.574096+00:00",
+            "finished_at": "2026-09-13T14:31:08.709800+00:00",
+            "wall_seconds": 8.135690557999851,
+            "throughput_rps": 24.583039211507295,
+            "latency_ms": {
+              "min": 60.05231199992522,
+              "mean": 818.9103291350011,
+              "p50": 496.56340000001364,
+              "p90": 2220.7973112999753,
+              "p95": 2904.110418649837,
+              "p99": 3630.4366227700384,
+              "max": 4722.791977000043
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:31:00.574096+00:00",
+              "until": "2026-09-13T14:31:08.709800+00:00",
+              "log_lines": 201,
+              "counts": {}
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:31:00.574096+00:00",
+              "until": "2026-09-13T14:31:08.709800+00:00",
+              "log_lines": 200,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:31:00.574096+00:00",
+              "until": "2026-09-13T14:31:08.709800+00:00",
+              "log_lines": 200,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 25,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:31:15.988322+00:00",
+            "finished_at": "2026-09-13T14:31:23.934353+00:00",
+            "wall_seconds": 7.946018827999978,
+            "throughput_rps": 25.169837163642892,
+            "latency_ms": {
+              "min": 53.9609269999346,
+              "mean": 821.5823069999987,
+              "p50": 508.7674845000265,
+              "p90": 1852.531518800037,
+              "p95": 2328.3110877501144,
+              "p99": 3690.530581580047,
+              "max": 4455.343503999984
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:31:15.988322+00:00",
+              "until": "2026-09-13T14:31:23.934353+00:00",
+              "log_lines": 201,
+              "counts": {}
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:31:15.988322+00:00",
+              "until": "2026-09-13T14:31:23.934353+00:00",
+              "log_lines": 200,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:31:15.988322+00:00",
+              "until": "2026-09-13T14:31:23.934353+00:00",
+              "log_lines": 200,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 25,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:31:30.763236+00:00",
+            "finished_at": "2026-09-13T14:31:38.747719+00:00",
+            "wall_seconds": 7.984469804000128,
+            "throughput_rps": 25.048626259417038,
+            "latency_ms": {
+              "min": 12.12018100000023,
+              "mean": 784.1245102250048,
+              "p50": 522.481733999939,
+              "p90": 1758.367592800073,
+              "p95": 2319.044538599962,
+              "p99": 4382.573497340049,
+              "max": 5278.8309699999445
+            },
+            "status_counts": {
+              "-1": 1,
+              "200": 198,
+              "500": 1
+            },
+            "decision_counts": {
+              "ALLOW": 198
+            },
+            "error_count": 2,
+            "error_rate": 0.01,
+            "error_samples": {
+              "HTTP 500: Internal Server Error": 1,
+              "EXCEPTION:ReadError": 1
+            }
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:31:30.763236+00:00",
+              "until": "2026-09-13T14:31:38.747719+00:00",
+              "log_lines": 332,
+              "counts": {
+                "database_is_locked": 2,
+                "http_500": 1,
+                "operational_error": 2
+              }
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:31:30.763236+00:00",
+              "until": "2026-09-13T14:31:38.747719+00:00",
+              "log_lines": 198,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:31:30.763236+00:00",
+              "until": "2026-09-13T14:31:38.747719+00:00",
+              "log_lines": 198,
+              "counts": {}
+            }
+          }
+        }
+      ],
+      "50": [
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 50,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:31:46.656698+00:00",
+            "finished_at": "2026-09-13T14:31:55.005749+00:00",
+            "wall_seconds": 8.349037651999879,
+            "throughput_rps": 23.954856635733723,
+            "latency_ms": {
+              "min": 82.0877000001019,
+              "mean": 1557.7289991450164,
+              "p50": 1181.344253500015,
+              "p90": 3398.3096134000107,
+              "p95": 4067.3737877999974,
+              "p99": 5794.546211740188,
+              "max": 7150.466472000062
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:31:46.656698+00:00",
+              "until": "2026-09-13T14:31:55.005749+00:00",
+              "log_lines": 201,
+              "counts": {}
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:31:46.656698+00:00",
+              "until": "2026-09-13T14:31:55.005749+00:00",
+              "log_lines": 200,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:31:46.656698+00:00",
+              "until": "2026-09-13T14:31:55.005749+00:00",
+              "log_lines": 200,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 50,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:32:02.773981+00:00",
+            "finished_at": "2026-09-13T14:32:11.174509+00:00",
+            "wall_seconds": 8.402885964999996,
+            "throughput_rps": 23.80134644609569,
+            "latency_ms": {
+              "min": 13.105954000138809,
+              "mean": 1551.5075538550036,
+              "p50": 1054.596384999968,
+              "p90": 3430.2398027999966,
+              "p95": 3984.975726650151,
+              "p99": 5201.310097969926,
+              "max": 7216.020855000124
+            },
+            "status_counts": {
+              "-1": 1,
+              "200": 198,
+              "500": 1
+            },
+            "decision_counts": {
+              "ALLOW": 198
+            },
+            "error_count": 2,
+            "error_rate": 0.01,
+            "error_samples": {
+              "HTTP 500: Internal Server Error": 1,
+              "EXCEPTION:ReadError": 1
+            }
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:32:02.773981+00:00",
+              "until": "2026-09-13T14:32:11.174509+00:00",
+              "log_lines": 331,
+              "counts": {
+                "database_is_locked": 2,
+                "http_500": 1,
+                "operational_error": 2
+              }
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:32:02.773981+00:00",
+              "until": "2026-09-13T14:32:11.174509+00:00",
+              "log_lines": 198,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:32:02.773981+00:00",
+              "until": "2026-09-13T14:32:11.174509+00:00",
+              "log_lines": 198,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_allow",
+            "concurrency": 50,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:32:18.859867+00:00",
+            "finished_at": "2026-09-13T14:32:27.079197+00:00",
+            "wall_seconds": 8.21931504600002,
+            "throughput_rps": 24.33292785112687,
+            "latency_ms": {
+              "min": 56.097009000041,
+              "mean": 1553.0064805849847,
+              "p50": 1298.231211999905,
+              "p90": 3156.113754799958,
+              "p95": 3503.432151350022,
+              "p99": 4588.617741120029,
+              "max": 6586.210947000154
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:32:18.859867+00:00",
+              "until": "2026-09-13T14:32:27.079197+00:00",
+              "log_lines": 201,
+              "counts": {}
+            },
+            "aegis-credential-broker": {
+              "container": "aegis-credential-broker",
+              "since": "2026-09-13T14:32:18.859867+00:00",
+              "until": "2026-09-13T14:32:27.079197+00:00",
+              "log_lines": 200,
+              "counts": {}
+            },
+            "aegis-protected-tool": {
+              "container": "aegis-protected-tool",
+              "since": "2026-09-13T14:32:18.859867+00:00",
+              "until": "2026-09-13T14:32:27.079197+00:00",
+              "log_lines": 200,
+              "counts": {}
+            }
+          }
+        }
+      ]
+    },
+    "aegis_block": {
+      "5": [
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 5,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:32:33.226064+00:00",
+            "finished_at": "2026-09-13T14:32:38.650701+00:00",
+            "wall_seconds": 5.424623216999862,
+            "throughput_rps": 36.868920107341914,
+            "latency_ms": {
+              "min": 23.9571590000196,
+              "mean": 99.02674126499505,
+              "p50": 51.97236599997268,
+              "p90": 95.62986170003568,
+              "p95": 230.60164064995644,
+              "p99": 1411.7933570398227,
+              "max": 2212.7945849999833
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "BLOCK": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:32:33.226064+00:00",
+              "until": "2026-09-13T14:32:38.650701+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 5,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:32:44.144207+00:00",
+            "finished_at": "2026-09-13T14:32:49.457630+00:00",
+            "wall_seconds": 5.313408771000013,
+            "throughput_rps": 37.64061991457866,
+            "latency_ms": {
+              "min": 23.370501000044897,
+              "mean": 107.79648568000084,
+              "p50": 52.536623500031965,
+              "p90": 102.15888419991185,
+              "p95": 178.27998979998748,
+              "p99": 1190.2306744001116,
+              "max": 2527.935164000155
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "BLOCK": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:32:44.144207+00:00",
+              "until": "2026-09-13T14:32:49.457630+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 5,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:32:56.421340+00:00",
+            "finished_at": "2026-09-13T14:33:03.703918+00:00",
+            "wall_seconds": 7.282561748000035,
+            "throughput_rps": 27.462863607702985,
+            "latency_ms": {
+              "min": 20.959895000032702,
+              "mean": 164.4063702649919,
+              "p50": 85.65861899990068,
+              "p90": 271.3342515000021,
+              "p95": 644.5344156000917,
+              "p99": 1763.3440416800415,
+              "max": 2353.012443999887
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "BLOCK": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:32:56.421340+00:00",
+              "until": "2026-09-13T14:33:03.703918+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        }
+      ],
+      "10": [
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 10,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:33:09.422853+00:00",
+            "finished_at": "2026-09-13T14:33:14.712322+00:00",
+            "wall_seconds": 5.2894571669999095,
+            "throughput_rps": 37.8110633446034,
+            "latency_ms": {
+              "min": 23.483305000127075,
+              "mean": 226.7727299049875,
+              "p50": 72.77070199995705,
+              "p90": 670.6647129999055,
+              "p95": 1071.6476563999206,
+              "p99": 1795.9011974799016,
+              "max": 2777.2633110000697
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "BLOCK": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:33:09.422853+00:00",
+              "until": "2026-09-13T14:33:14.712322+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 10,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:33:20.407905+00:00",
+            "finished_at": "2026-09-13T14:33:26.544739+00:00",
+            "wall_seconds": 6.136821760999965,
+            "throughput_rps": 32.59015949770895,
+            "latency_ms": {
+              "min": 22.48083199992834,
+              "mean": 257.6192989749927,
+              "p50": 69.79751949995716,
+              "p90": 695.9441691001075,
+              "p95": 1112.9263879001426,
+              "p99": 2420.674872829946,
+              "max": 3828.998823999882
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "BLOCK": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:33:20.407905+00:00",
+              "until": "2026-09-13T14:33:26.544739+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 10,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:33:32.069771+00:00",
+            "finished_at": "2026-09-13T14:33:37.524881+00:00",
+            "wall_seconds": 5.45509789699986,
+            "throughput_rps": 36.662953401806774,
+            "latency_ms": {
+              "min": 24.299967000160905,
+              "mean": 221.76164656000765,
+              "p50": 76.31810049997512,
+              "p90": 627.157937299921,
+              "p95": 998.8715276999852,
+              "p99": 1788.0088701499394,
+              "max": 2200.1376949999667
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "BLOCK": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:33:32.069771+00:00",
+              "until": "2026-09-13T14:33:37.524881+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        }
+      ],
+      "25": [
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 25,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:33:44.758981+00:00",
+            "finished_at": "2026-09-13T14:33:52.616149+00:00",
+            "wall_seconds": 7.857150563999994,
+            "throughput_rps": 25.45452048690054,
+            "latency_ms": {
+              "min": 10.390861000132645,
+              "mean": 853.9251962599973,
+              "p50": 456.3933349999161,
+              "p90": 2123.459323699944,
+              "p95": 2969.020931650174,
+              "p99": 5477.324545270006,
+              "max": 6774.435982999876
+            },
+            "status_counts": {
+              "-1": 2,
+              "200": 196,
+              "500": 2
+            },
+            "decision_counts": {
+              "BLOCK": 196
+            },
+            "error_count": 4,
+            "error_rate": 0.02,
+            "error_samples": {
+              "HTTP 500: Internal Server Error": 2,
+              "EXCEPTION:ReadError": 2
+            }
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:33:44.758981+00:00",
+              "until": "2026-09-13T14:33:52.616149+00:00",
+              "log_lines": 462,
+              "counts": {
+                "database_is_locked": 4,
+                "http_500": 2,
+                "operational_error": 4
+              }
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 25,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:34:00.602700+00:00",
+            "finished_at": "2026-09-13T14:34:06.028756+00:00",
+            "wall_seconds": 5.426044501999968,
+            "throughput_rps": 36.85926275139886,
+            "latency_ms": {
+              "min": 23.890445000006366,
+              "mean": 512.5571388099888,
+              "p50": 240.54891950004276,
+              "p90": 1418.867808099912,
+              "p95": 1695.9603270000107,
+              "p99": 3199.9656433201058,
+              "max": 5152.942123999992
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "BLOCK": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:34:00.602700+00:00",
+              "until": "2026-09-13T14:34:06.028756+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 25,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:34:12.120982+00:00",
+            "finished_at": "2026-09-13T14:34:17.490074+00:00",
+            "wall_seconds": 5.369078436999871,
+            "throughput_rps": 37.250340509414464,
+            "latency_ms": {
+              "min": 21.684185000140133,
+              "mean": 526.9513633749989,
+              "p50": 212.40697499990802,
+              "p90": 1491.0165010998749,
+              "p95": 2105.3246924501755,
+              "p99": 2526.6101863999725,
+              "max": 3173.6156660001598
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "BLOCK": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:34:12.120982+00:00",
+              "until": "2026-09-13T14:34:17.490074+00:00",
+              "log_lines": 202,
+              "counts": {}
+            }
+          }
+        }
+      ],
+      "50": [
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 50,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:34:26.401711+00:00",
+            "finished_at": "2026-09-13T14:34:32.447813+00:00",
+            "wall_seconds": 6.046084261000033,
+            "throughput_rps": 33.07926111617235,
+            "latency_ms": {
+              "min": 26.606882000123733,
+              "mean": 1134.1855958649967,
+              "p50": 802.7330195000104,
+              "p90": 2748.8921024000774,
+              "p95": 3189.110122249872,
+              "p99": 4219.35327677003,
+              "max": 5827.405244999909
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "BLOCK": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:34:26.401711+00:00",
+              "until": "2026-09-13T14:34:32.447813+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 50,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:34:39.071127+00:00",
+            "finished_at": "2026-09-13T14:34:45.277539+00:00",
+            "wall_seconds": 6.206399430000147,
+            "throughput_rps": 32.224803165785815,
+            "latency_ms": {
+              "min": 26.799530000062077,
+              "mean": 1103.0618209049999,
+              "p50": 709.9526329999435,
+              "p90": 2918.3490029999803,
+              "p95": 3279.273233250001,
+              "p99": 4569.8302070099235,
+              "max": 5459.543156000109
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "BLOCK": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:34:39.071127+00:00",
+              "until": "2026-09-13T14:34:45.277539+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "aegis_block",
+            "concurrency": 50,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:34:51.774987+00:00",
+            "finished_at": "2026-09-13T14:34:58.038285+00:00",
+            "wall_seconds": 6.263285256000017,
+            "throughput_rps": 31.93212376977509,
+            "latency_ms": {
+              "min": 26.145943999836163,
+              "mean": 1132.442609200009,
+              "p50": 809.325784000066,
+              "p90": 2665.69624899987,
+              "p95": 3382.6740353001205,
+              "p99": 5309.429223819809,
+              "max": 6146.154646000014
+            },
+            "status_counts": {
+              "200": 199,
+              "500": 1
+            },
+            "decision_counts": {
+              "BLOCK": 199
+            },
+            "error_count": 1,
+            "error_rate": 0.005,
+            "error_samples": {
+              "HTTP 500: Internal Server Error": 1
+            }
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:34:51.774987+00:00",
+              "until": "2026-09-13T14:34:58.038285+00:00",
+              "log_lines": 332,
+              "counts": {
+                "database_is_locked": 2,
+                "http_500": 1,
+                "operational_error": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    "authorize_only": {
+      "5": [
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 5,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:35:04.809415+00:00",
+            "finished_at": "2026-09-13T14:35:11.463135+00:00",
+            "wall_seconds": 6.656065402999957,
+            "throughput_rps": 30.047781668409982,
+            "latency_ms": {
+              "min": 22.00379000009889,
+              "mean": 155.90218179000658,
+              "p50": 88.3134885001482,
+              "p90": 345.37816229992563,
+              "p95": 534.1777039999896,
+              "p99": 1321.308185300094,
+              "max": 1976.9273570000223
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:35:04.809415+00:00",
+              "until": "2026-09-13T14:35:11.463135+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 5,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:35:17.035685+00:00",
+            "finished_at": "2026-09-13T14:35:21.970606+00:00",
+            "wall_seconds": 4.934907580000072,
+            "throughput_rps": 40.527608016520766,
+            "latency_ms": {
+              "min": 23.27809200005504,
+              "mean": 105.60295975998997,
+              "p50": 56.333493500005716,
+              "p90": 147.02607259994232,
+              "p95": 267.04956999998126,
+              "p99": 981.2749555499458,
+              "max": 2384.7567810000783
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:35:17.035685+00:00",
+              "until": "2026-09-13T14:35:21.970606+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 5,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:35:27.339419+00:00",
+            "finished_at": "2026-09-13T14:35:32.384017+00:00",
+            "wall_seconds": 5.044586170000002,
+            "throughput_rps": 39.64646321028151,
+            "latency_ms": {
+              "min": 23.03740399997878,
+              "mean": 113.94102449000344,
+              "p50": 58.4268880000991,
+              "p90": 167.25476429987776,
+              "p95": 479.8020743999796,
+              "p99": 889.7779934801048,
+              "max": 1785.1970140000049
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:35:27.339419+00:00",
+              "until": "2026-09-13T14:35:32.384017+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        }
+      ],
+      "10": [
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 10,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:35:37.958283+00:00",
+            "finished_at": "2026-09-13T14:35:43.082462+00:00",
+            "wall_seconds": 5.125941151999996,
+            "throughput_rps": 39.01722514351647,
+            "latency_ms": {
+              "min": 23.324802999923122,
+              "mean": 186.15862078999956,
+              "p50": 55.60436449991357,
+              "p90": 302.8209111001387,
+              "p95": 682.5574590999264,
+              "p99": 2885.5932947698884,
+              "max": 3997.203163999984
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:35:37.958283+00:00",
+              "until": "2026-09-13T14:35:43.082462+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 10,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:35:48.733344+00:00",
+            "finished_at": "2026-09-13T14:35:54.104052+00:00",
+            "wall_seconds": 5.370695617000138,
+            "throughput_rps": 37.239123991113885,
+            "latency_ms": {
+              "min": 23.62969000000703,
+              "mean": 212.469043425001,
+              "p50": 64.48233550008808,
+              "p90": 580.9167537000576,
+              "p95": 1075.6874658000356,
+              "p99": 1687.7306697798315,
+              "max": 2978.084937999938
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:35:48.733344+00:00",
+              "until": "2026-09-13T14:35:54.104052+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 10,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:35:59.688481+00:00",
+            "finished_at": "2026-09-13T14:36:04.890544+00:00",
+            "wall_seconds": 5.202050338000163,
+            "throughput_rps": 38.44637921686981,
+            "latency_ms": {
+              "min": 24.14745999999468,
+              "mean": 189.176138294996,
+              "p50": 67.544028000043,
+              "p90": 296.5833102000258,
+              "p95": 810.3202321000923,
+              "p99": 2197.503337389996,
+              "max": 4381.4957720001075
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:35:59.688481+00:00",
+              "until": "2026-09-13T14:36:04.890544+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        }
+      ],
+      "25": [
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 25,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:36:10.710848+00:00",
+            "finished_at": "2026-09-13T14:36:16.283545+00:00",
+            "wall_seconds": 5.572684239999944,
+            "throughput_rps": 35.88934728517868,
+            "latency_ms": {
+              "min": 21.472152000114875,
+              "mean": 509.766464894999,
+              "p50": 206.80749699999978,
+              "p90": 1447.2470080999974,
+              "p95": 1946.3541738998817,
+              "p99": 3627.8139511100376,
+              "max": 4805.9550059999765
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:36:10.710848+00:00",
+              "until": "2026-09-13T14:36:16.283545+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 25,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:36:22.181600+00:00",
+            "finished_at": "2026-09-13T14:36:27.791162+00:00",
+            "wall_seconds": 5.609547581000015,
+            "throughput_rps": 35.653499165853574,
+            "latency_ms": {
+              "min": 23.944671999970524,
+              "mean": 518.1124126250165,
+              "p50": 204.33698450005977,
+              "p90": 1452.5684871000065,
+              "p95": 1897.3102943501065,
+              "p99": 3411.872870200062,
+              "max": 5373.501141000133
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:36:22.181600+00:00",
+              "until": "2026-09-13T14:36:27.791162+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 25,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:36:35.285841+00:00",
+            "finished_at": "2026-09-13T14:36:41.853197+00:00",
+            "wall_seconds": 6.569620580999981,
+            "throughput_rps": 30.4431584037624,
+            "latency_ms": {
+              "min": 23.897246999922572,
+              "mean": 698.9526313350018,
+              "p50": 380.9738960000004,
+              "p90": 1677.5302222001071,
+              "p95": 2592.204432699952,
+              "p99": 3465.922367469982,
+              "max": 3940.2250949999598
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:36:35.285841+00:00",
+              "until": "2026-09-13T14:36:41.853197+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        }
+      ],
+      "50": [
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 50,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:36:50.827455+00:00",
+            "finished_at": "2026-09-13T14:36:57.311590+00:00",
+            "wall_seconds": 6.484116163999943,
+            "throughput_rps": 30.844604714272013,
+            "latency_ms": {
+              "min": 25.263107000000673,
+              "mean": 1134.9533751699983,
+              "p50": 749.5173715000192,
+              "p90": 2561.359559699917,
+              "p95": 3322.952682000094,
+              "p99": 4344.645596239968,
+              "max": 5849.9964439999985
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:36:50.827455+00:00",
+              "until": "2026-09-13T14:36:57.311590+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 50,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:37:04.107408+00:00",
+            "finished_at": "2026-09-13T14:37:10.011884+00:00",
+            "wall_seconds": 5.90630269799999,
+            "throughput_rps": 33.86213173051977,
+            "latency_ms": {
+              "min": 30.14321899991046,
+              "mean": 1063.4091078800054,
+              "p50": 741.4143564999449,
+              "p90": 2321.287232399982,
+              "p95": 2928.4081105999226,
+              "p99": 4378.741174740184,
+              "max": 5108.300971000062
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:37:04.107408+00:00",
+              "until": "2026-09-13T14:37:10.011884+00:00",
+              "log_lines": 202,
+              "counts": {}
+            }
+          }
+        },
+        {
+          "result": {
+            "scenario": "authorize_only",
+            "concurrency": 50,
+            "execution_id": null,
+            "requested_count": 200,
+            "warmup": 20,
+            "actual_count": 200,
+            "started_at": "2026-09-13T14:37:16.685624+00:00",
+            "finished_at": "2026-09-13T14:37:22.437925+00:00",
+            "wall_seconds": 5.752289098000119,
+            "throughput_rps": 34.76876711038974,
+            "latency_ms": {
+              "min": 26.305705999902784,
+              "mean": 1061.5453711950124,
+              "p50": 783.4193644998777,
+              "p90": 2456.4128568001247,
+              "p95": 2901.881753600048,
+              "p99": 4250.443995199895,
+              "max": 4745.462346000068
+            },
+            "status_counts": {
+              "200": 200
+            },
+            "decision_counts": {
+              "ALLOW": 200
+            },
+            "error_count": 0,
+            "error_rate": 0.0,
+            "error_samples": {}
+          },
+          "logs": {
+            "aegis-enforcement-gateway": {
+              "container": "aegis-enforcement-gateway",
+              "since": "2026-09-13T14:37:16.685624+00:00",
+              "until": "2026-09-13T14:37:22.437925+00:00",
+              "log_lines": 201,
+              "counts": {}
+            }
+          }
+        }
+      ]
+    }
+  },
+  "race": {
+    "authorize_only_same_execution": {
+      "execution_id": "bench-16b-race-a-70a1fd92-0340-4765-9d40-4990e69b492f",
+      "burst": {
+        "scenario": "authorize_only",
+        "concurrency": 30,
+        "execution_id": "bench-16b-race-a-70a1fd92-0340-4765-9d40-4990e69b492f",
+        "requested_count": 30,
+        "warmup": 0,
+        "actual_count": 30,
+        "started_at": "2026-09-13T14:37:27.318436+00:00",
+        "finished_at": "2026-09-13T14:37:28.589231+00:00",
+        "wall_seconds": 1.2707748269999684,
+        "throughput_rps": 23.60764422035624,
+        "latency_ms": {
+          "min": 279.9210260000109,
+          "mean": 801.9985243666724,
+          "p50": 849.3556770000623,
+          "p90": 1133.8148631000877,
+          "p95": 1136.7613383999924,
+          "p99": 1171.5493938000714,
+          "max": 1184.9836670000968
+        },
+        "status_counts": {
+          "200": 2,
+          "409": 14,
+          "500": 14
+        },
+        "decision_counts": {
+          "ALLOW": 2
+        },
+        "error_count": 28,
+        "error_rate": 0.9333333333333333,
+        "error_samples": {
+          "HTTP 500: Internal Server Error": 14,
+          "HTTP 409: {\"detail\":\"Execution evidence integrity failure: chain tip does not match predecessor\"}": 13,
+          "HTTP 409: {\"detail\":\"Execution evidence integrity failure: chain tip mismatch\"}": 1
+        }
+      },
+      "burst_logs": {
+        "container": "aegis-enforcement-gateway",
+        "since": "2026-09-13T14:37:27.318436+00:00",
+        "until": "2026-09-13T14:37:28.589231+00:00",
+        "log_lines": 1864,
+        "counts": {
+          "integrity_error": 42,
+          "http_500": 14,
+          "http_409": 14
+        }
+      },
+      "chain_probe": {
+        "execution_id": "bench-16b-race-a-70a1fd92-0340-4765-9d40-4990e69b492f",
+        "event_count": 2,
+        "seq_sequence": [
+          1,
+          2
+        ],
+        "duplicate_seq": [],
+        "seq_gaps": [],
+        "evidence_chain_tip_prefix": "dddb0e74e062",
+        "verifier_result": {
+          "pass": true,
+          "reason": null
+        },
+        "trajectory_summary": {
+          "total_events": 2,
+          "authorized_count": 2,
+          "decisions_in_order": [
+            "ALLOW",
+            "ALLOW"
+          ],
+          "authorized_decisions": [
+            "ALLOW",
+            "ALLOW"
+          ],
+          "last_valid_progress": {
+            "seq": 2,
+            "resource_kind": "crm",
+            "action": "READ"
+          }
+        },
+        "rows": [
+          {
+            "seq": 1,
+            "decision": "ALLOW",
+            "id": "ff06e2a8-6fb8-46fd-8050-1cf277259483",
+            "request_id": "c0d4f368-a8ce-471f-931c-96de4172e3f1",
+            "created_at": "2026-09-13T14:37:27.671605",
+            "evidence_hash_prefix": "9d9b0571e48e",
+            "previous_evidence_hash_prefix": "000000000000"
+          },
+          {
+            "seq": 2,
+            "decision": "ALLOW",
+            "id": "394d94d7-fa6e-41ab-a906-7dddf8bee35e",
+            "request_id": "b01693ee-a487-4ebe-a8d5-5f4bf40a5152",
+            "created_at": "2026-09-13T14:37:28.133528",
+            "evidence_hash_prefix": "dddb0e74e062",
+            "previous_evidence_hash_prefix": "9d9b0571e48e"
+          }
+        ]
+      },
+      "followup_request": {
+        "scenario": "authorize_only",
+        "concurrency": 1,
+        "execution_id": "bench-16b-race-a-70a1fd92-0340-4765-9d40-4990e69b492f",
+        "requested_count": 1,
+        "warmup": 0,
+        "actual_count": 1,
+        "started_at": "2026-09-13T14:37:35.983988+00:00",
+        "finished_at": "2026-09-13T14:37:36.095221+00:00",
+        "wall_seconds": 0.11120677600001727,
+        "throughput_rps": 8.992257809900403,
+        "latency_ms": {
+          "min": 110.85995099983847,
+          "mean": 110.85995099983847,
+          "p50": 110.85995099983847,
+          "p90": 110.85995099983847,
+          "p95": 110.85995099983847,
+          "p99": 110.85995099983847,
+          "max": 110.85995099983847
+        },
+        "status_counts": {
+          "200": 1
+        },
+        "decision_counts": {
+          "ALLOW": 1
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      }
+    },
+    "mixed_allow_block_same_execution": {
+      "execution_id": "bench-16b-race-b-3dcefded-9f82-4e97-ae48-268df905f5ba",
+      "burst": {
+        "scenario": "aegis_mixed",
+        "concurrency": 20,
+        "execution_id": "bench-16b-race-b-3dcefded-9f82-4e97-ae48-268df905f5ba",
+        "requested_count": 40,
+        "warmup": 0,
+        "actual_count": 40,
+        "started_at": "2026-09-13T14:37:37.464461+00:00",
+        "finished_at": "2026-09-13T14:37:38.969383+00:00",
+        "wall_seconds": 1.5080983150000975,
+        "throughput_rps": 26.523469724848418,
+        "latency_ms": {
+          "min": 14.740670000037426,
+          "mean": 444.06881987501947,
+          "p50": 458.1557699999621,
+          "p90": 916.8065571000852,
+          "p95": 956.2584168000055,
+          "p99": 1018.47779816007,
+          "max": 1019.3147210000006
+        },
+        "status_counts": {
+          "-1": 14,
+          "200": 3,
+          "409": 9,
+          "500": 14
+        },
+        "decision_counts": {
+          "ALLOW": 3
+        },
+        "error_count": 37,
+        "error_rate": 0.925,
+        "error_samples": {
+          "HTTP 500: Internal Server Error": 14,
+          "EXCEPTION:ReadError": 14,
+          "HTTP 409: {\"detail\":\"Execution evidence integrity failure: chain tip does not match predecessor\"}": 9
+        }
+      },
+      "burst_logs": {
+        "container": "aegis-enforcement-gateway",
+        "since": "2026-09-13T14:37:37.464461+00:00",
+        "until": "2026-09-13T14:37:38.969383+00:00",
+        "log_lines": 1860,
+        "counts": {
+          "integrity_error": 42,
+          "http_500": 14,
+          "http_409": 9
+        }
+      },
+      "chain_probe": {
+        "execution_id": "bench-16b-race-b-3dcefded-9f82-4e97-ae48-268df905f5ba",
+        "event_count": 3,
+        "seq_sequence": [
+          1,
+          2,
+          3
+        ],
+        "duplicate_seq": [],
+        "seq_gaps": [],
+        "evidence_chain_tip_prefix": "1d5029bde737",
+        "verifier_result": {
+          "pass": true,
+          "reason": null
+        },
+        "trajectory_summary": {
+          "total_events": 3,
+          "authorized_count": 3,
+          "decisions_in_order": [
+            "ALLOW",
+            "ALLOW",
+            "ALLOW"
+          ],
+          "authorized_decisions": [
+            "ALLOW",
+            "ALLOW",
+            "ALLOW"
+          ],
+          "last_valid_progress": {
+            "seq": 3,
+            "resource_kind": "crm",
+            "action": "READ"
+          }
+        },
+        "rows": [
+          {
+            "seq": 1,
+            "decision": "ALLOW",
+            "id": "2314f0ed-bc61-4ab7-8ebf-ea1771f1c08d",
+            "request_id": "e1e359eb-2368-4b7f-b5b1-e0a355451435",
+            "created_at": "2026-09-13T14:37:37.900560",
+            "evidence_hash_prefix": "ce8c9a2e4ed6",
+            "previous_evidence_hash_prefix": "000000000000"
+          },
+          {
+            "seq": 2,
+            "decision": "ALLOW",
+            "id": "c54b1bbb-e0ab-48a2-83bb-4272a3e9c449",
+            "request_id": "8fca0951-5227-40a9-b9a5-560e3ad88389",
+            "created_at": "2026-09-13T14:37:38.070371",
+            "evidence_hash_prefix": "74f6865eb1dc",
+            "previous_evidence_hash_prefix": "ce8c9a2e4ed6"
+          },
+          {
+            "seq": 3,
+            "decision": "ALLOW",
+            "id": "c5edeaf2-3e75-4500-ba6a-9df6646daf4e",
+            "request_id": "cb81343d-e789-4631-92af-49c03dd97461",
+            "created_at": "2026-09-13T14:37:38.816990",
+            "evidence_hash_prefix": "1d5029bde737",
+            "previous_evidence_hash_prefix": "74f6865eb1dc"
+          }
+        ]
+      },
+      "followup_request": {
+        "scenario": "aegis_mixed",
+        "concurrency": 1,
+        "execution_id": "bench-16b-race-b-3dcefded-9f82-4e97-ae48-268df905f5ba",
+        "requested_count": 1,
+        "warmup": 0,
+        "actual_count": 1,
+        "started_at": "2026-09-13T14:37:44.776220+00:00",
+        "finished_at": "2026-09-13T14:37:44.863332+00:00",
+        "wall_seconds": 0.08709527300015907,
+        "throughput_rps": 11.481679378835791,
+        "latency_ms": {
+          "min": 86.90436100005172,
+          "mean": 86.90436100005172,
+          "p50": 86.90436100005172,
+          "p90": 86.90436100005172,
+          "p95": 86.90436100005172,
+          "p99": 86.90436100005172,
+          "max": 86.90436100005172
+        },
+        "status_counts": {
+          "200": 1
+        },
+        "decision_counts": {
+          "ALLOW": 1
+        },
+        "error_count": 0,
+        "error_rate": 0.0,
+        "error_samples": {}
+      }
+    }
+  },
+  "chain_growth": {
+    "growth": {
+      "execution_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680",
+      "count": 100,
+      "requests": [
+        {
+          "index": 1,
+          "prior_events_in_chain": 0,
+          "latency_ms": 102.86928200002876,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 2,
+          "prior_events_in_chain": 1,
+          "latency_ms": 24.780285000133517,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 3,
+          "prior_events_in_chain": 2,
+          "latency_ms": 25.086405999900308,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 4,
+          "prior_events_in_chain": 3,
+          "latency_ms": 25.159210000083476,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 5,
+          "prior_events_in_chain": 4,
+          "latency_ms": 27.69217199988816,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 6,
+          "prior_events_in_chain": 5,
+          "latency_ms": 26.95072500000606,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 7,
+          "prior_events_in_chain": 6,
+          "latency_ms": 24.962397000081182,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 8,
+          "prior_events_in_chain": 7,
+          "latency_ms": 26.774613000043246,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 9,
+          "prior_events_in_chain": 8,
+          "latency_ms": 25.562735999983488,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 10,
+          "prior_events_in_chain": 9,
+          "latency_ms": 24.991398999873127,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 11,
+          "prior_events_in_chain": 10,
+          "latency_ms": 25.21761399998468,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 12,
+          "prior_events_in_chain": 11,
+          "latency_ms": 24.34635800000251,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 13,
+          "prior_events_in_chain": 12,
+          "latency_ms": 25.935260000096605,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 14,
+          "prior_events_in_chain": 13,
+          "latency_ms": 24.598173999947903,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 15,
+          "prior_events_in_chain": 14,
+          "latency_ms": 25.95446100008303,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 16,
+          "prior_events_in_chain": 15,
+          "latency_ms": 27.288746000067476,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 17,
+          "prior_events_in_chain": 16,
+          "latency_ms": 26.10467099998459,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 18,
+          "prior_events_in_chain": 17,
+          "latency_ms": 26.881721000108882,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 19,
+          "prior_events_in_chain": 18,
+          "latency_ms": 26.248579999901267,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 20,
+          "prior_events_in_chain": 19,
+          "latency_ms": 26.419889999942825,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 21,
+          "prior_events_in_chain": 20,
+          "latency_ms": 26.052366999920196,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 22,
+          "prior_events_in_chain": 21,
+          "latency_ms": 28.145701000084955,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 23,
+          "prior_events_in_chain": 22,
+          "latency_ms": 26.810614999931204,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 24,
+          "prior_events_in_chain": 23,
+          "latency_ms": 27.37155099998745,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 25,
+          "prior_events_in_chain": 24,
+          "latency_ms": 27.831780999804323,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 26,
+          "prior_events_in_chain": 25,
+          "latency_ms": 27.057030999912968,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 27,
+          "prior_events_in_chain": 26,
+          "latency_ms": 28.08289699987654,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 28,
+          "prior_events_in_chain": 27,
+          "latency_ms": 27.63196799992329,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 29,
+          "prior_events_in_chain": 28,
+          "latency_ms": 27.059232000056,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 30,
+          "prior_events_in_chain": 29,
+          "latency_ms": 26.263879999987694,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 31,
+          "prior_events_in_chain": 30,
+          "latency_ms": 27.055130999997345,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 32,
+          "prior_events_in_chain": 31,
+          "latency_ms": 26.711510000041017,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 33,
+          "prior_events_in_chain": 32,
+          "latency_ms": 27.37795199982429,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 34,
+          "prior_events_in_chain": 33,
+          "latency_ms": 27.154138000014427,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 35,
+          "prior_events_in_chain": 34,
+          "latency_ms": 40.13916799999606,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 36,
+          "prior_events_in_chain": 35,
+          "latency_ms": 28.64703299997018,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 37,
+          "prior_events_in_chain": 36,
+          "latency_ms": 27.566863999936686,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 38,
+          "prior_events_in_chain": 37,
+          "latency_ms": 25.203012000019953,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 39,
+          "prior_events_in_chain": 38,
+          "latency_ms": 26.386887999933606,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 40,
+          "prior_events_in_chain": 39,
+          "latency_ms": 24.930794999818318,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 41,
+          "prior_events_in_chain": 40,
+          "latency_ms": 24.02763700001742,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 42,
+          "prior_events_in_chain": 41,
+          "latency_ms": 26.753092999797445,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 43,
+          "prior_events_in_chain": 42,
+          "latency_ms": 26.038344999960827,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 44,
+          "prior_events_in_chain": 43,
+          "latency_ms": 25.038855000047988,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 45,
+          "prior_events_in_chain": 44,
+          "latency_ms": 71.90627699992547,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 46,
+          "prior_events_in_chain": 45,
+          "latency_ms": 25.225172000091334,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 47,
+          "prior_events_in_chain": 46,
+          "latency_ms": 25.452993000044444,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 48,
+          "prior_events_in_chain": 47,
+          "latency_ms": 25.40838899994924,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 49,
+          "prior_events_in_chain": 48,
+          "latency_ms": 27.050736000092,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 50,
+          "prior_events_in_chain": 49,
+          "latency_ms": 28.312651000078404,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 51,
+          "prior_events_in_chain": 50,
+          "latency_ms": 25.51099799984513,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 52,
+          "prior_events_in_chain": 51,
+          "latency_ms": 24.30198900015057,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 53,
+          "prior_events_in_chain": 52,
+          "latency_ms": 24.039964999928998,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 54,
+          "prior_events_in_chain": 53,
+          "latency_ms": 25.443390999953408,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 55,
+          "prior_events_in_chain": 54,
+          "latency_ms": 26.73500699984288,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 56,
+          "prior_events_in_chain": 55,
+          "latency_ms": 26.08124899984432,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 57,
+          "prior_events_in_chain": 56,
+          "latency_ms": 27.66479199999594,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 58,
+          "prior_events_in_chain": 57,
+          "latency_ms": 25.175667999974394,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 59,
+          "prior_events_in_chain": 58,
+          "latency_ms": 25.744819000010466,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 60,
+          "prior_events_in_chain": 59,
+          "latency_ms": 26.171256999987236,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 61,
+          "prior_events_in_chain": 60,
+          "latency_ms": 26.297568000018146,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 62,
+          "prior_events_in_chain": 61,
+          "latency_ms": 25.4226900001413,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 63,
+          "prior_events_in_chain": 62,
+          "latency_ms": 25.453792000007525,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 64,
+          "prior_events_in_chain": 63,
+          "latency_ms": 26.545291000047655,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 65,
+          "prior_events_in_chain": 64,
+          "latency_ms": 25.385886000094615,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 66,
+          "prior_events_in_chain": 65,
+          "latency_ms": 26.693304999980683,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 67,
+          "prior_events_in_chain": 66,
+          "latency_ms": 26.025143999959255,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 68,
+          "prior_events_in_chain": 67,
+          "latency_ms": 25.406889000123556,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 69,
+          "prior_events_in_chain": 68,
+          "latency_ms": 25.42008899990833,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 70,
+          "prior_events_in_chain": 69,
+          "latency_ms": 25.42639000012059,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 71,
+          "prior_events_in_chain": 70,
+          "latency_ms": 27.9755199999272,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 72,
+          "prior_events_in_chain": 71,
+          "latency_ms": 37.99732199991013,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 73,
+          "prior_events_in_chain": 72,
+          "latency_ms": 28.115331999970294,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 74,
+          "prior_events_in_chain": 73,
+          "latency_ms": 34.42730100005065,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 75,
+          "prior_events_in_chain": 74,
+          "latency_ms": 29.55036100001962,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 76,
+          "prior_events_in_chain": 75,
+          "latency_ms": 26.731606999874202,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 77,
+          "prior_events_in_chain": 76,
+          "latency_ms": 27.2676560000491,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 78,
+          "prior_events_in_chain": 77,
+          "latency_ms": 28.76739099997394,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 79,
+          "prior_events_in_chain": 78,
+          "latency_ms": 27.33586199997262,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 80,
+          "prior_events_in_chain": 79,
+          "latency_ms": 27.745199000037246,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 81,
+          "prior_events_in_chain": 80,
+          "latency_ms": 25.95533799990335,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 82,
+          "prior_events_in_chain": 81,
+          "latency_ms": 28.82349600008638,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 83,
+          "prior_events_in_chain": 82,
+          "latency_ms": 30.77337200011243,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 84,
+          "prior_events_in_chain": 83,
+          "latency_ms": 28.757990000030986,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 85,
+          "prior_events_in_chain": 84,
+          "latency_ms": 30.85918000010679,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 86,
+          "prior_events_in_chain": 85,
+          "latency_ms": 29.308140000011917,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 87,
+          "prior_events_in_chain": 86,
+          "latency_ms": 28.69988500015097,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 88,
+          "prior_events_in_chain": 87,
+          "latency_ms": 29.02021400018384,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 89,
+          "prior_events_in_chain": 88,
+          "latency_ms": 28.062827999974616,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 90,
+          "prior_events_in_chain": 89,
+          "latency_ms": 29.056317000140552,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 91,
+          "prior_events_in_chain": 90,
+          "latency_ms": 32.392218000040884,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 92,
+          "prior_events_in_chain": 91,
+          "latency_ms": 28.372856000032698,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 93,
+          "prior_events_in_chain": 92,
+          "latency_ms": 29.09052000018164,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 94,
+          "prior_events_in_chain": 93,
+          "latency_ms": 28.489466000110042,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 95,
+          "prior_events_in_chain": 94,
+          "latency_ms": 29.13692400011314,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 96,
+          "prior_events_in_chain": 95,
+          "latency_ms": 29.845988000033685,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 97,
+          "prior_events_in_chain": 96,
+          "latency_ms": 29.31864099991799,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 98,
+          "prior_events_in_chain": 97,
+          "latency_ms": 28.753990000041085,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 99,
+          "prior_events_in_chain": 98,
+          "latency_ms": 30.389737000177774,
+          "status": 200,
+          "decision": "ALLOW"
+        },
+        {
+          "index": 100,
+          "prior_events_in_chain": 99,
+          "latency_ms": 29.49365599988596,
+          "status": 200,
+          "decision": "ALLOW"
+        }
+      ]
+    },
+    "final_chain_probe": {
+      "execution_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680",
+      "event_count": 100,
+      "seq_sequence": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100
+      ],
+      "duplicate_seq": [],
+      "seq_gaps": [],
+      "evidence_chain_tip_prefix": "556b60295d4f",
+      "verifier_result": {
+        "pass": true,
+        "reason": null
+      },
+      "trajectory_summary": {
+        "total_events": 100,
+        "authorized_count": 100,
+        "decisions_in_order": [
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW"
+        ],
+        "authorized_decisions": [
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW",
+          "ALLOW"
+        ],
+        "last_valid_progress": {
+          "seq": 100,
+          "resource_kind": "crm",
+          "action": "READ"
+        }
+      },
+      "rows": [
+        {
+          "seq": 1,
+          "decision": "ALLOW",
+          "id": "9e2745e7-4e01-4c84-855e-a7236c1a70c5",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-1",
+          "created_at": "2026-09-13T14:37:46.037177",
+          "evidence_hash_prefix": "16fbb24fbbd0",
+          "previous_evidence_hash_prefix": "000000000000"
+        },
+        {
+          "seq": 2,
+          "decision": "ALLOW",
+          "id": "d71c86f6-02fd-4f99-bf98-271487fca7eb",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-2",
+          "created_at": "2026-09-13T14:37:46.065748",
+          "evidence_hash_prefix": "3b2c72467f3c",
+          "previous_evidence_hash_prefix": "16fbb24fbbd0"
+        },
+        {
+          "seq": 3,
+          "decision": "ALLOW",
+          "id": "59366d24-ce04-46cf-8233-f854ea8db3a7",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-3",
+          "created_at": "2026-09-13T14:37:46.090313",
+          "evidence_hash_prefix": "f8fad39bf620",
+          "previous_evidence_hash_prefix": "3b2c72467f3c"
+        },
+        {
+          "seq": 4,
+          "decision": "ALLOW",
+          "id": "b4b60cb7-1357-4257-8e90-ccf87303b80c",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-4",
+          "created_at": "2026-09-13T14:37:46.115956",
+          "evidence_hash_prefix": "296d24e1b487",
+          "previous_evidence_hash_prefix": "f8fad39bf620"
+        },
+        {
+          "seq": 5,
+          "decision": "ALLOW",
+          "id": "eba3cca5-e235-432a-83d4-74b6d0364b4c",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-5",
+          "created_at": "2026-09-13T14:37:46.144380",
+          "evidence_hash_prefix": "e57695a91557",
+          "previous_evidence_hash_prefix": "296d24e1b487"
+        },
+        {
+          "seq": 6,
+          "decision": "ALLOW",
+          "id": "1eef4575-12cf-45d9-993b-12bf1dbacfb1",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-6",
+          "created_at": "2026-09-13T14:37:46.168284",
+          "evidence_hash_prefix": "548bb4084953",
+          "previous_evidence_hash_prefix": "e57695a91557"
+        },
+        {
+          "seq": 7,
+          "decision": "ALLOW",
+          "id": "75940065-b480-4273-9402-f417226e5c76",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-7",
+          "created_at": "2026-09-13T14:37:46.196152",
+          "evidence_hash_prefix": "4417bb905401",
+          "previous_evidence_hash_prefix": "548bb4084953"
+        },
+        {
+          "seq": 8,
+          "decision": "ALLOW",
+          "id": "5a62d646-e759-4411-bc5b-eba23f5a3543",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-8",
+          "created_at": "2026-09-13T14:37:46.220354",
+          "evidence_hash_prefix": "a186eebcc050",
+          "previous_evidence_hash_prefix": "4417bb905401"
+        },
+        {
+          "seq": 9,
+          "decision": "ALLOW",
+          "id": "da2d1b8b-0e9d-4610-ad8e-dc5656290c7f",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-9",
+          "created_at": "2026-09-13T14:37:46.248208",
+          "evidence_hash_prefix": "59da42bebdee",
+          "previous_evidence_hash_prefix": "a186eebcc050"
+        },
+        {
+          "seq": 10,
+          "decision": "ALLOW",
+          "id": "81c23b71-62ff-4f36-8fd8-4c20a47a485c",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-10",
+          "created_at": "2026-09-13T14:37:46.273325",
+          "evidence_hash_prefix": "9824491c973c",
+          "previous_evidence_hash_prefix": "59da42bebdee"
+        },
+        {
+          "seq": 11,
+          "decision": "ALLOW",
+          "id": "220bfcff-8dcc-414a-a608-e3e9e4991483",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-11",
+          "created_at": "2026-09-13T14:37:46.299209",
+          "evidence_hash_prefix": "ac37ec169707",
+          "previous_evidence_hash_prefix": "9824491c973c"
+        },
+        {
+          "seq": 12,
+          "decision": "ALLOW",
+          "id": "80be5dd6-df42-48c0-ac56-2bab526b811a",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-12",
+          "created_at": "2026-09-13T14:37:46.323548",
+          "evidence_hash_prefix": "7648efec0d97",
+          "previous_evidence_hash_prefix": "ac37ec169707"
+        },
+        {
+          "seq": 13,
+          "decision": "ALLOW",
+          "id": "d57b9375-da25-426d-8da6-8e42a96bd1ea",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-13",
+          "created_at": "2026-09-13T14:37:46.349456",
+          "evidence_hash_prefix": "9cd7c50fde7f",
+          "previous_evidence_hash_prefix": "7648efec0d97"
+        },
+        {
+          "seq": 14,
+          "decision": "ALLOW",
+          "id": "41aa68ba-75dd-4e4a-9039-080e20697a73",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-14",
+          "created_at": "2026-09-13T14:37:46.373705",
+          "evidence_hash_prefix": "3cc590d145d3",
+          "previous_evidence_hash_prefix": "9cd7c50fde7f"
+        },
+        {
+          "seq": 15,
+          "decision": "ALLOW",
+          "id": "6efdd34d-80e4-40ff-b471-996a78eaf6db",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-15",
+          "created_at": "2026-09-13T14:37:46.398932",
+          "evidence_hash_prefix": "e83dcfbc0ef6",
+          "previous_evidence_hash_prefix": "3cc590d145d3"
+        },
+        {
+          "seq": 16,
+          "decision": "ALLOW",
+          "id": "a56e969c-8bda-4f5d-bdfd-fc4b4312c464",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-16",
+          "created_at": "2026-09-13T14:37:46.425558",
+          "evidence_hash_prefix": "32db52056663",
+          "previous_evidence_hash_prefix": "e83dcfbc0ef6"
+        },
+        {
+          "seq": 17,
+          "decision": "ALLOW",
+          "id": "18b8c945-7003-4abf-b045-3afb05a8bd0d",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-17",
+          "created_at": "2026-09-13T14:37:46.453226",
+          "evidence_hash_prefix": "b4d2307e3f75",
+          "previous_evidence_hash_prefix": "32db52056663"
+        },
+        {
+          "seq": 18,
+          "decision": "ALLOW",
+          "id": "b6a69c80-85f9-4041-9a68-b31983a70a5a",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-18",
+          "created_at": "2026-09-13T14:37:46.479556",
+          "evidence_hash_prefix": "85c1519010ce",
+          "previous_evidence_hash_prefix": "b4d2307e3f75"
+        },
+        {
+          "seq": 19,
+          "decision": "ALLOW",
+          "id": "dcbf5d3f-ac4f-458e-bcc8-e53f68aad58e",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-19",
+          "created_at": "2026-09-13T14:37:46.506214",
+          "evidence_hash_prefix": "55957684db0d",
+          "previous_evidence_hash_prefix": "85c1519010ce"
+        },
+        {
+          "seq": 20,
+          "decision": "ALLOW",
+          "id": "e053c431-22bb-479d-84f5-7a9eaba92242",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-20",
+          "created_at": "2026-09-13T14:37:46.531649",
+          "evidence_hash_prefix": "8e8cb338a8e4",
+          "previous_evidence_hash_prefix": "55957684db0d"
+        },
+        {
+          "seq": 21,
+          "decision": "ALLOW",
+          "id": "110216c4-8a9b-419b-ad33-d180982cc2bf",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-21",
+          "created_at": "2026-09-13T14:37:46.558521",
+          "evidence_hash_prefix": "89a3354d0a9d",
+          "previous_evidence_hash_prefix": "8e8cb338a8e4"
+        },
+        {
+          "seq": 22,
+          "decision": "ALLOW",
+          "id": "d8f9955c-d55e-4306-ac47-daf09e591688",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-22",
+          "created_at": "2026-09-13T14:37:46.584544",
+          "evidence_hash_prefix": "a1981c6c7e92",
+          "previous_evidence_hash_prefix": "89a3354d0a9d"
+        },
+        {
+          "seq": 23,
+          "decision": "ALLOW",
+          "id": "73375543-e7bf-4ded-8777-be19e3a502bd",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-23",
+          "created_at": "2026-09-13T14:37:46.613467",
+          "evidence_hash_prefix": "0ec77961fcf7",
+          "previous_evidence_hash_prefix": "a1981c6c7e92"
+        },
+        {
+          "seq": 24,
+          "decision": "ALLOW",
+          "id": "d2ff7505-ccad-4718-b884-012f6d99a63c",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-24",
+          "created_at": "2026-09-13T14:37:46.639892",
+          "evidence_hash_prefix": "0a23dfd5ac23",
+          "previous_evidence_hash_prefix": "0ec77961fcf7"
+        },
+        {
+          "seq": 25,
+          "decision": "ALLOW",
+          "id": "19af7672-7563-4c72-b172-cfe191b5f7cb",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-25",
+          "created_at": "2026-09-13T14:37:46.668416",
+          "evidence_hash_prefix": "a4a20b7b137a",
+          "previous_evidence_hash_prefix": "0a23dfd5ac23"
+        },
+        {
+          "seq": 26,
+          "decision": "ALLOW",
+          "id": "39aedef8-7408-4382-a8b8-8bdb10ae13a6",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-26",
+          "created_at": "2026-09-13T14:37:46.695465",
+          "evidence_hash_prefix": "ab1fc9f9f5d5",
+          "previous_evidence_hash_prefix": "a4a20b7b137a"
+        },
+        {
+          "seq": 27,
+          "decision": "ALLOW",
+          "id": "02988081-6e0a-46d5-a568-a72d64938968",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-27",
+          "created_at": "2026-09-13T14:37:46.722870",
+          "evidence_hash_prefix": "9d938d16205f",
+          "previous_evidence_hash_prefix": "ab1fc9f9f5d5"
+        },
+        {
+          "seq": 28,
+          "decision": "ALLOW",
+          "id": "afaadba9-4395-48fe-b74d-39c063996914",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-28",
+          "created_at": "2026-09-13T14:37:46.750856",
+          "evidence_hash_prefix": "1349bd2ee0b8",
+          "previous_evidence_hash_prefix": "9d938d16205f"
+        },
+        {
+          "seq": 29,
+          "decision": "ALLOW",
+          "id": "947e0eea-cbb2-4d25-91d5-cd06636171e9",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-29",
+          "created_at": "2026-09-13T14:37:46.778628",
+          "evidence_hash_prefix": "b363c0147ad8",
+          "previous_evidence_hash_prefix": "1349bd2ee0b8"
+        },
+        {
+          "seq": 30,
+          "decision": "ALLOW",
+          "id": "9c599b92-e8b0-4145-a904-f81d769433df",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-30",
+          "created_at": "2026-09-13T14:37:46.805801",
+          "evidence_hash_prefix": "8784464fa225",
+          "previous_evidence_hash_prefix": "b363c0147ad8"
+        },
+        {
+          "seq": 31,
+          "decision": "ALLOW",
+          "id": "f21f3410-8da2-4e91-a4d9-59258734772e",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-31",
+          "created_at": "2026-09-13T14:37:46.832122",
+          "evidence_hash_prefix": "8f714022dc48",
+          "previous_evidence_hash_prefix": "8784464fa225"
+        },
+        {
+          "seq": 32,
+          "decision": "ALLOW",
+          "id": "4ba3a42b-cf1c-4ab1-bc2d-f1e3c49aa6ac",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-32",
+          "created_at": "2026-09-13T14:37:46.859455",
+          "evidence_hash_prefix": "7301c6f32c51",
+          "previous_evidence_hash_prefix": "8f714022dc48"
+        },
+        {
+          "seq": 33,
+          "decision": "ALLOW",
+          "id": "201114ae-ca57-4673-ae9d-6c8efe1704f3",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-33",
+          "created_at": "2026-09-13T14:37:46.886329",
+          "evidence_hash_prefix": "a0c076b9100f",
+          "previous_evidence_hash_prefix": "7301c6f32c51"
+        },
+        {
+          "seq": 34,
+          "decision": "ALLOW",
+          "id": "72c2c7ff-c597-495c-93f5-ddbaa59472d7",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-34",
+          "created_at": "2026-09-13T14:37:46.913687",
+          "evidence_hash_prefix": "6779f399efd7",
+          "previous_evidence_hash_prefix": "a0c076b9100f"
+        },
+        {
+          "seq": 35,
+          "decision": "ALLOW",
+          "id": "77acfdad-7180-4261-a8b6-fdaa26ba7620",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-35",
+          "created_at": "2026-09-13T14:37:46.950309",
+          "evidence_hash_prefix": "43c2e3a296ff",
+          "previous_evidence_hash_prefix": "6779f399efd7"
+        },
+        {
+          "seq": 36,
+          "decision": "ALLOW",
+          "id": "5762dba8-4419-4b6e-94b9-357eac20f59a",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-36",
+          "created_at": "2026-09-13T14:37:46.980901",
+          "evidence_hash_prefix": "ee6aab7a8776",
+          "previous_evidence_hash_prefix": "43c2e3a296ff"
+        },
+        {
+          "seq": 37,
+          "decision": "ALLOW",
+          "id": "0012ca4d-d04b-4a53-a0f7-dce4ca5871ae",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-37",
+          "created_at": "2026-09-13T14:37:47.010276",
+          "evidence_hash_prefix": "aa09ce20d5c6",
+          "previous_evidence_hash_prefix": "ee6aab7a8776"
+        },
+        {
+          "seq": 38,
+          "decision": "ALLOW",
+          "id": "57f6513c-57a1-4db3-b10d-107bf85c5ce6",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-38",
+          "created_at": "2026-09-13T14:37:47.035897",
+          "evidence_hash_prefix": "8697033c0371",
+          "previous_evidence_hash_prefix": "aa09ce20d5c6"
+        },
+        {
+          "seq": 39,
+          "decision": "ALLOW",
+          "id": "b56e1cab-b10b-4121-99f1-59924a2792e4",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-39",
+          "created_at": "2026-09-13T14:37:47.061434",
+          "evidence_hash_prefix": "98b6c0b00ff3",
+          "previous_evidence_hash_prefix": "8697033c0371"
+        },
+        {
+          "seq": 40,
+          "decision": "ALLOW",
+          "id": "a52c7f55-b2f1-4ae8-8f36-f6a6e8fcdafd",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-40",
+          "created_at": "2026-09-13T14:37:47.087585",
+          "evidence_hash_prefix": "140c802a1cda",
+          "previous_evidence_hash_prefix": "98b6c0b00ff3"
+        },
+        {
+          "seq": 41,
+          "decision": "ALLOW",
+          "id": "40fb1bd4-664a-41eb-bf15-7cfd0757de88",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-41",
+          "created_at": "2026-09-13T14:37:47.112752",
+          "evidence_hash_prefix": "811dbe861ed5",
+          "previous_evidence_hash_prefix": "140c802a1cda"
+        },
+        {
+          "seq": 42,
+          "decision": "ALLOW",
+          "id": "61b6d47f-30dc-4a76-850a-9b4a318f2074",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-42",
+          "created_at": "2026-09-13T14:37:47.136570",
+          "evidence_hash_prefix": "ff2eb4ee88df",
+          "previous_evidence_hash_prefix": "811dbe861ed5"
+        },
+        {
+          "seq": 43,
+          "decision": "ALLOW",
+          "id": "5c818da1-6a37-42b4-a66c-982d1d641256",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-43",
+          "created_at": "2026-09-13T14:37:47.163340",
+          "evidence_hash_prefix": "659c1dc79c0e",
+          "previous_evidence_hash_prefix": "ff2eb4ee88df"
+        },
+        {
+          "seq": 44,
+          "decision": "ALLOW",
+          "id": "2ac38591-bd70-4b9d-991f-ab1966c8029d",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-44",
+          "created_at": "2026-09-13T14:37:47.189634",
+          "evidence_hash_prefix": "11e66b1f331a",
+          "previous_evidence_hash_prefix": "659c1dc79c0e"
+        },
+        {
+          "seq": 45,
+          "decision": "ALLOW",
+          "id": "48f700c8-33ba-4511-9e3c-aaa3422b2e9d",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-45",
+          "created_at": "2026-09-13T14:37:47.258780",
+          "evidence_hash_prefix": "9d7cda764cf6",
+          "previous_evidence_hash_prefix": "11e66b1f331a"
+        },
+        {
+          "seq": 46,
+          "decision": "ALLOW",
+          "id": "30267fd6-9252-4b5b-9d63-441bdb7f561e",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-46",
+          "created_at": "2026-09-13T14:37:47.286409",
+          "evidence_hash_prefix": "08bcdde0e52e",
+          "previous_evidence_hash_prefix": "9d7cda764cf6"
+        },
+        {
+          "seq": 47,
+          "decision": "ALLOW",
+          "id": "b87442ee-d11c-4840-bc95-70f74948652f",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-47",
+          "created_at": "2026-09-13T14:37:47.312088",
+          "evidence_hash_prefix": "df5bbf61034d",
+          "previous_evidence_hash_prefix": "08bcdde0e52e"
+        },
+        {
+          "seq": 48,
+          "decision": "ALLOW",
+          "id": "5ab0ef35-5c83-41db-bce9-9163c7cba950",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-48",
+          "created_at": "2026-09-13T14:37:47.337210",
+          "evidence_hash_prefix": "61a20c38ffb7",
+          "previous_evidence_hash_prefix": "df5bbf61034d"
+        },
+        {
+          "seq": 49,
+          "decision": "ALLOW",
+          "id": "c99a9460-6649-42ec-a07f-35d13de731a5",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-49",
+          "created_at": "2026-09-13T14:37:47.363283",
+          "evidence_hash_prefix": "acf989bd1ea2",
+          "previous_evidence_hash_prefix": "61a20c38ffb7"
+        },
+        {
+          "seq": 50,
+          "decision": "ALLOW",
+          "id": "b0ea64db-ef3c-401d-81dd-f25d79725637",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-50",
+          "created_at": "2026-09-13T14:37:47.390339",
+          "evidence_hash_prefix": "579ebcb18bf4",
+          "previous_evidence_hash_prefix": "acf989bd1ea2"
+        },
+        {
+          "seq": 51,
+          "decision": "ALLOW",
+          "id": "cdc719c9-c04c-4df6-9f27-e40ec30b0f73",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-51",
+          "created_at": "2026-09-13T14:37:47.418471",
+          "evidence_hash_prefix": "7e9192d9b159",
+          "previous_evidence_hash_prefix": "579ebcb18bf4"
+        },
+        {
+          "seq": 52,
+          "decision": "ALLOW",
+          "id": "ae3dd5cb-832f-4db9-8307-8b8691c919c1",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-52",
+          "created_at": "2026-09-13T14:37:47.443746",
+          "evidence_hash_prefix": "a029aff169e5",
+          "previous_evidence_hash_prefix": "7e9192d9b159"
+        },
+        {
+          "seq": 53,
+          "decision": "ALLOW",
+          "id": "f675d6cc-69e9-44d4-93f5-ce625a663b9a",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-53",
+          "created_at": "2026-09-13T14:37:47.468101",
+          "evidence_hash_prefix": "390b215ba30b",
+          "previous_evidence_hash_prefix": "a029aff169e5"
+        },
+        {
+          "seq": 54,
+          "decision": "ALLOW",
+          "id": "5908078e-ca9a-46e1-b875-e4bb61528490",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-54",
+          "created_at": "2026-09-13T14:37:47.492192",
+          "evidence_hash_prefix": "3b739bcd986b",
+          "previous_evidence_hash_prefix": "390b215ba30b"
+        },
+        {
+          "seq": 55,
+          "decision": "ALLOW",
+          "id": "eaeb8527-2d6d-4c5c-a699-7bfd63cb454e",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-55",
+          "created_at": "2026-09-13T14:37:47.518275",
+          "evidence_hash_prefix": "85881bfb3ae6",
+          "previous_evidence_hash_prefix": "3b739bcd986b"
+        },
+        {
+          "seq": 56,
+          "decision": "ALLOW",
+          "id": "fd870917-d080-45fb-aee9-0202be865731",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-56",
+          "created_at": "2026-09-13T14:37:47.544681",
+          "evidence_hash_prefix": "beea3146a8d4",
+          "previous_evidence_hash_prefix": "85881bfb3ae6"
+        },
+        {
+          "seq": 57,
+          "decision": "ALLOW",
+          "id": "78f2de09-da5d-4a24-adb2-23761415768c",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-57",
+          "created_at": "2026-09-13T14:37:47.571712",
+          "evidence_hash_prefix": "b19ed5003ad3",
+          "previous_evidence_hash_prefix": "beea3146a8d4"
+        },
+        {
+          "seq": 58,
+          "decision": "ALLOW",
+          "id": "38c3b175-08a2-40ad-a06b-dd5f11e4edd1",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-58",
+          "created_at": "2026-09-13T14:37:47.598868",
+          "evidence_hash_prefix": "8a3a8f347b85",
+          "previous_evidence_hash_prefix": "b19ed5003ad3"
+        },
+        {
+          "seq": 59,
+          "decision": "ALLOW",
+          "id": "44d491fc-04f0-4f33-94fe-3a117164028b",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-59",
+          "created_at": "2026-09-13T14:37:47.624431",
+          "evidence_hash_prefix": "8927131f9f24",
+          "previous_evidence_hash_prefix": "8a3a8f347b85"
+        },
+        {
+          "seq": 60,
+          "decision": "ALLOW",
+          "id": "62a70ecc-3375-4c38-a178-6e0fa3ef5f0e",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-60",
+          "created_at": "2026-09-13T14:37:47.649504",
+          "evidence_hash_prefix": "f828853dfd5a",
+          "previous_evidence_hash_prefix": "8927131f9f24"
+        },
+        {
+          "seq": 61,
+          "decision": "ALLOW",
+          "id": "1ae014c2-4cf2-4535-a0ad-50b46937d82f",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-61",
+          "created_at": "2026-09-13T14:37:47.676095",
+          "evidence_hash_prefix": "0cd1217582dd",
+          "previous_evidence_hash_prefix": "f828853dfd5a"
+        },
+        {
+          "seq": 62,
+          "decision": "ALLOW",
+          "id": "3db38cc4-f450-43e9-b514-f0b392108ab1",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-62",
+          "created_at": "2026-09-13T14:37:47.702272",
+          "evidence_hash_prefix": "ab8027499931",
+          "previous_evidence_hash_prefix": "0cd1217582dd"
+        },
+        {
+          "seq": 63,
+          "decision": "ALLOW",
+          "id": "c04abee8-dd45-4def-8e7f-8317b999fa52",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-63",
+          "created_at": "2026-09-13T14:37:47.727937",
+          "evidence_hash_prefix": "30c7f1f2b85c",
+          "previous_evidence_hash_prefix": "ab8027499931"
+        },
+        {
+          "seq": 64,
+          "decision": "ALLOW",
+          "id": "75c5f2d0-93b8-4ef9-b3bb-cd4f84e60dfb",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-64",
+          "created_at": "2026-09-13T14:37:47.753384",
+          "evidence_hash_prefix": "458b006efbea",
+          "previous_evidence_hash_prefix": "30c7f1f2b85c"
+        },
+        {
+          "seq": 65,
+          "decision": "ALLOW",
+          "id": "7ab34301-57f9-40df-b88b-8f2f33551a09",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-65",
+          "created_at": "2026-09-13T14:37:47.780082",
+          "evidence_hash_prefix": "1373f3173ed1",
+          "previous_evidence_hash_prefix": "458b006efbea"
+        },
+        {
+          "seq": 66,
+          "decision": "ALLOW",
+          "id": "b57fa82e-52db-4f79-ac11-544b2fb60143",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-66",
+          "created_at": "2026-09-13T14:37:47.806059",
+          "evidence_hash_prefix": "a1a8cd77ed17",
+          "previous_evidence_hash_prefix": "1373f3173ed1"
+        },
+        {
+          "seq": 67,
+          "decision": "ALLOW",
+          "id": "ae6e95ae-d7ad-408f-8c46-1d18ad248681",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-67",
+          "created_at": "2026-09-13T14:37:47.832663",
+          "evidence_hash_prefix": "0abd07b6d048",
+          "previous_evidence_hash_prefix": "a1a8cd77ed17"
+        },
+        {
+          "seq": 68,
+          "decision": "ALLOW",
+          "id": "1df7c5e1-d89a-46ae-a554-2fb2ce6d81ad",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-68",
+          "created_at": "2026-09-13T14:37:47.858695",
+          "evidence_hash_prefix": "e65003131c5b",
+          "previous_evidence_hash_prefix": "0abd07b6d048"
+        },
+        {
+          "seq": 69,
+          "decision": "ALLOW",
+          "id": "0f1aed36-3e42-4d30-bc5d-e32f40b23dbb",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-69",
+          "created_at": "2026-09-13T14:37:47.883917",
+          "evidence_hash_prefix": "a98111864bea",
+          "previous_evidence_hash_prefix": "e65003131c5b"
+        },
+        {
+          "seq": 70,
+          "decision": "ALLOW",
+          "id": "b1ef0cbf-1040-47f7-b59e-540fb05df51a",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-70",
+          "created_at": "2026-09-13T14:37:47.909165",
+          "evidence_hash_prefix": "af757dcfa391",
+          "previous_evidence_hash_prefix": "a98111864bea"
+        },
+        {
+          "seq": 71,
+          "decision": "ALLOW",
+          "id": "efdebf3d-6c5f-456b-af48-7082e805858b",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-71",
+          "created_at": "2026-09-13T14:37:47.935226",
+          "evidence_hash_prefix": "937e3c557948",
+          "previous_evidence_hash_prefix": "af757dcfa391"
+        },
+        {
+          "seq": 72,
+          "decision": "ALLOW",
+          "id": "423e5251-6ecf-4831-983d-396bb4ce1271",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-72",
+          "created_at": "2026-09-13T14:37:47.973125",
+          "evidence_hash_prefix": "7804eef8cd20",
+          "previous_evidence_hash_prefix": "937e3c557948"
+        },
+        {
+          "seq": 73,
+          "decision": "ALLOW",
+          "id": "72c1dcf3-3e6d-42d5-9b91-ad513b271f34",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-73",
+          "created_at": "2026-09-13T14:37:48.001818",
+          "evidence_hash_prefix": "2e714f7f6944",
+          "previous_evidence_hash_prefix": "7804eef8cd20"
+        },
+        {
+          "seq": 74,
+          "decision": "ALLOW",
+          "id": "0412de7e-827f-4178-90a0-fe6f395d8612",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-74",
+          "created_at": "2026-09-13T14:37:48.031411",
+          "evidence_hash_prefix": "27ce23d192b9",
+          "previous_evidence_hash_prefix": "2e714f7f6944"
+        },
+        {
+          "seq": 75,
+          "decision": "ALLOW",
+          "id": "ba439e29-6a36-4a80-87b1-83e17aadd578",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-75",
+          "created_at": "2026-09-13T14:37:48.066311",
+          "evidence_hash_prefix": "d33e30999b8a",
+          "previous_evidence_hash_prefix": "27ce23d192b9"
+        },
+        {
+          "seq": 76,
+          "decision": "ALLOW",
+          "id": "923174c2-80ba-4f16-8c98-9569dc6bbf12",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-76",
+          "created_at": "2026-09-13T14:37:48.094287",
+          "evidence_hash_prefix": "eeb46661ed41",
+          "previous_evidence_hash_prefix": "d33e30999b8a"
+        },
+        {
+          "seq": 77,
+          "decision": "ALLOW",
+          "id": "8db23f1a-83d1-4ba5-ac20-be6451c48c0c",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-77",
+          "created_at": "2026-09-13T14:37:48.120244",
+          "evidence_hash_prefix": "1e65a28e092d",
+          "previous_evidence_hash_prefix": "eeb46661ed41"
+        },
+        {
+          "seq": 78,
+          "decision": "ALLOW",
+          "id": "11604ffe-e866-4b8f-a245-eed968bd6ef7",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-78",
+          "created_at": "2026-09-13T14:37:48.148912",
+          "evidence_hash_prefix": "7e00193872c7",
+          "previous_evidence_hash_prefix": "1e65a28e092d"
+        },
+        {
+          "seq": 79,
+          "decision": "ALLOW",
+          "id": "e6b4d9b0-ada1-4d78-b904-03f083bf6d34",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-79",
+          "created_at": "2026-09-13T14:37:48.177247",
+          "evidence_hash_prefix": "4bc57326fb63",
+          "previous_evidence_hash_prefix": "7e00193872c7"
+        },
+        {
+          "seq": 80,
+          "decision": "ALLOW",
+          "id": "dbde31ef-a934-4c57-ade3-223ec1742d3a",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-80",
+          "created_at": "2026-09-13T14:37:48.204231",
+          "evidence_hash_prefix": "822c4e602bf5",
+          "previous_evidence_hash_prefix": "4bc57326fb63"
+        },
+        {
+          "seq": 81,
+          "decision": "ALLOW",
+          "id": "9175eb25-dafd-4be7-bea6-0c14f804cacd",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-81",
+          "created_at": "2026-09-13T14:37:48.231912",
+          "evidence_hash_prefix": "64d0c20306ca",
+          "previous_evidence_hash_prefix": "822c4e602bf5"
+        },
+        {
+          "seq": 82,
+          "decision": "ALLOW",
+          "id": "dfaaedf8-2260-4372-9b80-53db8d259973",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-82",
+          "created_at": "2026-09-13T14:37:48.258882",
+          "evidence_hash_prefix": "af2cec869836",
+          "previous_evidence_hash_prefix": "64d0c20306ca"
+        },
+        {
+          "seq": 83,
+          "decision": "ALLOW",
+          "id": "d174f165-2e59-4d58-a459-329873ee6ab5",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-83",
+          "created_at": "2026-09-13T14:37:48.287732",
+          "evidence_hash_prefix": "9694b44c1608",
+          "previous_evidence_hash_prefix": "af2cec869836"
+        },
+        {
+          "seq": 84,
+          "decision": "ALLOW",
+          "id": "a607b9c8-330e-4b19-9598-e21fb1e17adf",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-84",
+          "created_at": "2026-09-13T14:37:48.318802",
+          "evidence_hash_prefix": "9ca29620b732",
+          "previous_evidence_hash_prefix": "9694b44c1608"
+        },
+        {
+          "seq": 85,
+          "decision": "ALLOW",
+          "id": "0e0f3821-dd63-4fee-93fd-519e6a780805",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-85",
+          "created_at": "2026-09-13T14:37:48.347296",
+          "evidence_hash_prefix": "9d37181ecae6",
+          "previous_evidence_hash_prefix": "9ca29620b732"
+        },
+        {
+          "seq": 86,
+          "decision": "ALLOW",
+          "id": "eb062293-c8ee-494b-b4e0-39c1a4955f3f",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-86",
+          "created_at": "2026-09-13T14:37:48.377939",
+          "evidence_hash_prefix": "9562bc78f9ef",
+          "previous_evidence_hash_prefix": "9d37181ecae6"
+        },
+        {
+          "seq": 87,
+          "decision": "ALLOW",
+          "id": "15ab76f6-b045-4b4d-86d6-8a5ad7ef8a80",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-87",
+          "created_at": "2026-09-13T14:37:48.408102",
+          "evidence_hash_prefix": "9b087283a774",
+          "previous_evidence_hash_prefix": "9562bc78f9ef"
+        },
+        {
+          "seq": 88,
+          "decision": "ALLOW",
+          "id": "cd448731-05af-4d1e-978a-058741ea2b48",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-88",
+          "created_at": "2026-09-13T14:37:48.436002",
+          "evidence_hash_prefix": "f20c55471de7",
+          "previous_evidence_hash_prefix": "9b087283a774"
+        },
+        {
+          "seq": 89,
+          "decision": "ALLOW",
+          "id": "9a704e10-0ff3-45e6-8901-04ba9e529d4f",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-89",
+          "created_at": "2026-09-13T14:37:48.465234",
+          "evidence_hash_prefix": "821cf04c300e",
+          "previous_evidence_hash_prefix": "f20c55471de7"
+        },
+        {
+          "seq": 90,
+          "decision": "ALLOW",
+          "id": "509390b3-d238-4fe3-a456-fcb737716347",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-90",
+          "created_at": "2026-09-13T14:37:48.494842",
+          "evidence_hash_prefix": "78ad4abd8d73",
+          "previous_evidence_hash_prefix": "821cf04c300e"
+        },
+        {
+          "seq": 91,
+          "decision": "ALLOW",
+          "id": "4ba5244d-b9f9-4347-bd7e-ef9eb248fac5",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-91",
+          "created_at": "2026-09-13T14:37:48.527593",
+          "evidence_hash_prefix": "7a76df0902a8",
+          "previous_evidence_hash_prefix": "78ad4abd8d73"
+        },
+        {
+          "seq": 92,
+          "decision": "ALLOW",
+          "id": "3442c013-aa7a-4a52-ad48-bf06e8083453",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-92",
+          "created_at": "2026-09-13T14:37:48.555080",
+          "evidence_hash_prefix": "abce4d5d23d9",
+          "previous_evidence_hash_prefix": "7a76df0902a8"
+        },
+        {
+          "seq": 93,
+          "decision": "ALLOW",
+          "id": "e5a31906-7ef2-4a41-9ec6-bd4a711f86be",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-93",
+          "created_at": "2026-09-13T14:37:48.583788",
+          "evidence_hash_prefix": "a2866e8a783d",
+          "previous_evidence_hash_prefix": "abce4d5d23d9"
+        },
+        {
+          "seq": 94,
+          "decision": "ALLOW",
+          "id": "2c38e40a-7837-429e-9a59-31ba8da6a12a",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-94",
+          "created_at": "2026-09-13T14:37:48.612744",
+          "evidence_hash_prefix": "26b3c34df67f",
+          "previous_evidence_hash_prefix": "a2866e8a783d"
+        },
+        {
+          "seq": 95,
+          "decision": "ALLOW",
+          "id": "635cd4c6-ab85-4fb2-816a-79537e17905d",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-95",
+          "created_at": "2026-09-13T14:37:48.641204",
+          "evidence_hash_prefix": "c5b53a7bf3d9",
+          "previous_evidence_hash_prefix": "26b3c34df67f"
+        },
+        {
+          "seq": 96,
+          "decision": "ALLOW",
+          "id": "b49c6082-2d0b-450a-9779-be260ed68b6b",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-96",
+          "created_at": "2026-09-13T14:37:48.671588",
+          "evidence_hash_prefix": "c4c12826ecf8",
+          "previous_evidence_hash_prefix": "c5b53a7bf3d9"
+        },
+        {
+          "seq": 97,
+          "decision": "ALLOW",
+          "id": "67ad79b7-f352-4b88-98d8-6160af3bdcd7",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-97",
+          "created_at": "2026-09-13T14:37:48.700748",
+          "evidence_hash_prefix": "6115b85fdffe",
+          "previous_evidence_hash_prefix": "c4c12826ecf8"
+        },
+        {
+          "seq": 98,
+          "decision": "ALLOW",
+          "id": "0debda7c-139d-4d4c-b1fa-e42c74c50da3",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-98",
+          "created_at": "2026-09-13T14:37:48.729812",
+          "evidence_hash_prefix": "8fffd93ca2bd",
+          "previous_evidence_hash_prefix": "6115b85fdffe"
+        },
+        {
+          "seq": 99,
+          "decision": "ALLOW",
+          "id": "154fd084-ae01-48ed-8f2e-83a6be7a5b74",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-99",
+          "created_at": "2026-09-13T14:37:48.758779",
+          "evidence_hash_prefix": "6ac9112b67fb",
+          "previous_evidence_hash_prefix": "8fffd93ca2bd"
+        },
+        {
+          "seq": 100,
+          "decision": "ALLOW",
+          "id": "aaa58916-0577-461a-bde1-552ea40fc198",
+          "request_id": "bench-16b-chaingrowth-3a35bac0-1cc5-4c6f-a444-d741866bc680-req-100",
+          "created_at": "2026-09-13T14:37:48.789006",
+          "evidence_hash_prefix": "556b60295d4f",
+          "previous_evidence_hash_prefix": "6ac9112b67fb"
+        }
+      ]
+    }
+  },
+  "eat_replay": {
+    "concurrent_replay": {
+      "attempts": 10,
+      "accepted_200": 1,
+      "rejected": 9,
+      "expected": "accepted_200 == 1 (exactly one JTI redemption)",
+      "raw_statuses": [
+        200,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401
+      ]
+    },
+    "sequential_replay_after_burst": {
+      "status": 401,
+      "body": "{\"detail\":\"eat_rejected\"}",
+      "expected": "non-200 (jti already consumed)"
+    },
+    "tampered_signature": {
+      "status": 401,
+      "body": "{\"detail\":\"eat_rejected\"}",
+      "expected": "401 eat_rejected (bad_signature)"
+    },
+    "expired_eat": {
+      "status": 401,
+      "body": "{\"detail\":\"eat_rejected\"}",
+      "expected": "401 eat_rejected (expired)"
+    }
+  },
+  "restart_counts": {
+    "aegis-control-plane": "0",
+    "aegis-enforcement-gateway": "0",
+    "aegis-credential-broker": "0",
+    "aegis-protected-tool": "0",
+    "aegis-bench-runner": "0",
+    "aegis-agent": "0"
+  }
+}

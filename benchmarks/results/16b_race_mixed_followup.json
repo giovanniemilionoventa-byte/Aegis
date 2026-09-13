@@ -1,0 +1,30 @@
+{
+  "scenario": "aegis_mixed",
+  "concurrency": 1,
+  "execution_id": "bench-16b-race-b-3dcefded-9f82-4e97-ae48-268df905f5ba",
+  "requested_count": 1,
+  "warmup": 0,
+  "actual_count": 1,
+  "started_at": "2026-09-13T14:37:44.776220+00:00",
+  "finished_at": "2026-09-13T14:37:44.863332+00:00",
+  "wall_seconds": 0.08709527300015907,
+  "throughput_rps": 11.481679378835791,
+  "latency_ms": {
+    "min": 86.90436100005172,
+    "mean": 86.90436100005172,
+    "p50": 86.90436100005172,
+    "p90": 86.90436100005172,
+    "p95": 86.90436100005172,
+    "p99": 86.90436100005172,
+    "max": 86.90436100005172
+  },
+  "status_counts": {
+    "200": 1
+  },
+  "decision_counts": {
+    "ALLOW": 1
+  },
+  "error_count": 0,
+  "error_rate": 0.0,
+  "error_samples": {}
+}

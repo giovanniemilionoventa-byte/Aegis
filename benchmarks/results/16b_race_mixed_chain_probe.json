@@ -1,0 +1,64 @@
+{
+  "execution_id": "bench-16b-race-b-3dcefded-9f82-4e97-ae48-268df905f5ba",
+  "event_count": 3,
+  "seq_sequence": [
+    1,
+    2,
+    3
+  ],
+  "duplicate_seq": [],
+  "seq_gaps": [],
+  "evidence_chain_tip_prefix": "1d5029bde737",
+  "verifier_result": {
+    "pass": true,
+    "reason": null
+  },
+  "trajectory_summary": {
+    "total_events": 3,
+    "authorized_count": 3,
+    "decisions_in_order": [
+      "ALLOW",
+      "ALLOW",
+      "ALLOW"
+    ],
+    "authorized_decisions": [
+      "ALLOW",
+      "ALLOW",
+      "ALLOW"
+    ],
+    "last_valid_progress": {
+      "seq": 3,
+      "resource_kind": "crm",
+      "action": "READ"
+    }
+  },
+  "rows": [
+    {
+      "seq": 1,
+      "decision": "ALLOW",
+      "id": "2314f0ed-bc61-4ab7-8ebf-ea1771f1c08d",
+      "request_id": "e1e359eb-2368-4b7f-b5b1-e0a355451435",
+      "created_at": "2026-09-13T14:37:37.900560",
+      "evidence_hash_prefix": "ce8c9a2e4ed6",
+      "previous_evidence_hash_prefix": "000000000000"
+    },
+    {
+      "seq": 2,
+      "decision": "ALLOW",
+      "id": "c54b1bbb-e0ab-48a2-83bb-4272a3e9c449",
+      "request_id": "8fca0951-5227-40a9-b9a5-560e3ad88389",
+      "created_at": "2026-09-13T14:37:38.070371",
+      "evidence_hash_prefix": "74f6865eb1dc",
+      "previous_evidence_hash_prefix": "ce8c9a2e4ed6"
+    },
+    {
+      "seq": 3,
+      "decision": "ALLOW",
+      "id": "c5edeaf2-3e75-4500-ba6a-9df6646daf4e",
+      "request_id": "cb81343d-e789-4631-92af-49c03dd97461",
+      "created_at": "2026-09-13T14:37:38.816990",
+      "evidence_hash_prefix": "1d5029bde737",
+      "previous_evidence_hash_prefix": "74f6865eb1dc"
+    }
+  ]
+}
