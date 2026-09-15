@@ -1,9 +1,17 @@
 import os
+from datetime import timedelta
 
 from sqlalchemy.orm import Session
 
 from . import models
+from . import config
 from .security import create_agent_token, hash_password, hash_token, utcnow
+
+
+def _seed_expiry():
+    if config.AGENT_TOKEN_TTL_DAYS <= 0:
+        return None
+    return utcnow() + timedelta(days=config.AGENT_TOKEN_TTL_DAYS)
 
 
 DEMO_EMAIL = "admin@acme.test"
@@ -181,6 +189,7 @@ def seed_if_empty(db: Session) -> None:
             token_hash=hash_token(token),
             token_prefix=token[:16],
             status="active",
+            expires_at=_seed_expiry(),
         )
     )
 
@@ -217,6 +226,7 @@ def seed_if_empty(db: Session) -> None:
             token_hash=hash_token(rtoken),
             token_prefix=rtoken[:16],
             status="active",
+            expires_at=_seed_expiry(),
         )
     )
 

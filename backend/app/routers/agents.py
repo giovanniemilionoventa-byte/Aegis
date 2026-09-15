@@ -1,13 +1,21 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_db
+from .. import config
 from ..security import create_agent_token, get_current_user, hash_token
 
 router = APIRouter(prefix="/agents", tags=["agents"])
+
+
+def _credential_expiry():
+    """When a newly issued agent token stops working. None means never."""
+    if config.AGENT_TOKEN_TTL_DAYS <= 0:
+        return None
+    return datetime.now(timezone.utc) + timedelta(days=config.AGENT_TOKEN_TTL_DAYS)
 
 
 @router.get("", response_model=list[schemas.AgentOut])
@@ -45,12 +53,16 @@ def create_agent(
         token_hash=hash_token(token),
         token_prefix=token[:16],
         status="active",
+        expires_at=_credential_expiry(),
     )
     db.add(cred)
     db.commit()
     db.refresh(agent)
     return schemas.AgentCredentialOut(
-        agent=agent, token=token, token_prefix=cred.token_prefix
+        agent=agent,
+        token=token,
+        token_prefix=cred.token_prefix,
+        expires_at=cred.expires_at,
     )
 
 
@@ -129,12 +141,16 @@ def rotate_credential(
         token_hash=hash_token(token),
         token_prefix=token[:16],
         status="active",
+        expires_at=_credential_expiry(),
     )
     db.add(cred)
     db.commit()
     db.refresh(agent)
     return schemas.AgentCredentialOut(
-        agent=agent, token=token, token_prefix=cred.token_prefix
+        agent=agent,
+        token=token,
+        token_prefix=cred.token_prefix,
+        expires_at=cred.expires_at,
     )
 
 

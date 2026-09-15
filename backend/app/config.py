@@ -69,5 +69,12 @@ ALLOW_DEFAULT_SECRETS = _flag("AEGIS_ALLOW_DEFAULT_SECRETS", False)
 # tampered. Set true only to read a pre-Phase-15 database that was never sealed.
 EVIDENCE_ALLOW_UNSEALED = _flag("AEGIS_EVIDENCE_ALLOW_UNSEALED", False)
 
+# Phase 17: agent credentials expire. The Credential model has always carried
+# expires_at and get_agent_from_token has always checked it, but no creation
+# path ever set it, so in practice every agent token issued was eternal. A
+# leaked token stayed valid until someone noticed and revoked it by hand.
+# 0 restores the previous never-expires behaviour.
+AGENT_TOKEN_TTL_DAYS = int(_env("AEGIS_AGENT_TOKEN_TTL_DAYS", "90"))
+
 # Approval grants are single-use and short-lived (Phase 17).
 APPROVAL_TTL_SECONDS = int(_env("AEGIS_APPROVAL_TTL_SECONDS", "900"))
