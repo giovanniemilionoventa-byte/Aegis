@@ -1,6 +1,6 @@
 {
   "agent_probe": {
-    "captured_at": "2026-09-15T18:26:02.998141+00:00",
+    "captured_at": "2026-09-15T18:49:40.728983+00:00",
     "schema": "aegis.execution_boundary.evidence/v1",
     "summary": {
       "application_blocks": [],
@@ -17,19 +17,19 @@
       "control-plane": {
         "boundary_level": "NETWORK",
         "by_ip": {
-          "172.19.0.2": {
+          "172.18.0.2": {
             "classification": "NETWORK_BLOCK",
             "connected": false,
             "dns_error": false,
-            "elapsed_ms": 0.06,
+            "elapsed_ms": 0.05,
             "errno": 101,
             "errno_name": "ENETUNREACH",
             "error": "[Errno 101] Network is unreachable",
-            "host": "172.19.0.2",
+            "host": "172.18.0.2",
             "http_status": null,
             "port": 8000,
             "resolved_to": [
-              "172.19.0.2"
+              "172.18.0.2"
             ]
           }
         },
@@ -37,7 +37,7 @@
           "classification": "DNS_BLOCK",
           "connected": false,
           "dns_error": true,
-          "elapsed_ms": 0.67,
+          "elapsed_ms": 0.59,
           "errno": null,
           "errno_name": null,
           "error": "getaddrinfo: [Errno -3] Temporary failure in name resolution",
@@ -53,14 +53,14 @@
         "reachable": false,
         "target": "control-plane:8000",
         "target_ips": [
-          "172.19.0.2"
+          "172.18.0.2"
         ],
         "verdict": "DENY"
       },
       "credential-broker": {
         "boundary_level": "NETWORK",
         "by_ip": {
-          "172.18.0.3": {
+          "172.19.0.2": {
             "classification": "NETWORK_BLOCK",
             "connected": false,
             "dns_error": false,
@@ -68,14 +68,14 @@
             "errno": 101,
             "errno_name": "ENETUNREACH",
             "error": "[Errno 101] Network is unreachable",
-            "host": "172.18.0.3",
+            "host": "172.19.0.2",
             "http_status": null,
             "port": 8000,
             "resolved_to": [
-              "172.18.0.3"
+              "172.19.0.2"
             ]
           },
-          "172.20.0.2": {
+          "172.20.0.3": {
             "classification": "NETWORK_BLOCK",
             "connected": false,
             "dns_error": false,
@@ -83,11 +83,11 @@
             "errno": 101,
             "errno_name": "ENETUNREACH",
             "error": "[Errno 101] Network is unreachable",
-            "host": "172.20.0.2",
+            "host": "172.20.0.3",
             "http_status": null,
             "port": 8000,
             "resolved_to": [
-              "172.20.0.2"
+              "172.20.0.3"
             ]
           }
         },
@@ -95,7 +95,7 @@
           "classification": "DNS_BLOCK",
           "connected": false,
           "dns_error": true,
-          "elapsed_ms": 0.48,
+          "elapsed_ms": 0.49,
           "errno": null,
           "errno_name": null,
           "error": "getaddrinfo: [Errno -3] Temporary failure in name resolution",
@@ -111,8 +111,8 @@
         "reachable": false,
         "target": "credential-broker:8000",
         "target_ips": [
-          "172.18.0.3",
-          "172.20.0.2"
+          "172.19.0.2",
+          "172.20.0.3"
         ],
         "verdict": "DENY"
       },
@@ -146,26 +146,26 @@
       "enforcement-gateway": {
         "boundary_level": "NONE",
         "by_ip": {
-          "172.20.0.3": {
+          "172.19.0.3": {
             "classification": "NETWORK_BLOCK",
             "connected": false,
             "dns_error": false,
-            "elapsed_ms": 0.07,
+            "elapsed_ms": 0.05,
             "errno": 101,
             "errno_name": "ENETUNREACH",
             "error": "[Errno 101] Network is unreachable",
-            "host": "172.20.0.3",
+            "host": "172.19.0.3",
             "http_status": null,
             "port": 8000,
             "resolved_to": [
-              "172.20.0.3"
+              "172.19.0.3"
             ]
           },
           "172.21.0.2": {
             "classification": "ALLOW",
             "connected": true,
             "dns_error": false,
-            "elapsed_ms": 0.09,
+            "elapsed_ms": 0.1,
             "errno": null,
             "errno_name": null,
             "error": null,
@@ -181,7 +181,7 @@
           "classification": "ALLOW",
           "connected": true,
           "dns_error": false,
-          "elapsed_ms": 2.11,
+          "elapsed_ms": 1.78,
           "errno": null,
           "errno_name": null,
           "error": null,
@@ -199,7 +199,7 @@
         "reachable": true,
         "target": "enforcement-gateway:8000",
         "target_ips": [
-          "172.20.0.3",
+          "172.19.0.3",
           "172.21.0.2"
         ],
         "verdict": "ALLOW"
@@ -213,7 +213,7 @@
       "protected-tool": {
         "boundary_level": "NETWORK",
         "by_ip": {
-          "172.18.0.2": {
+          "172.20.0.2": {
             "classification": "NETWORK_BLOCK",
             "connected": false,
             "dns_error": false,
@@ -221,11 +221,11 @@
             "errno": 101,
             "errno_name": "ENETUNREACH",
             "error": "[Errno 101] Network is unreachable",
-            "host": "172.18.0.2",
+            "host": "172.20.0.2",
             "http_status": null,
             "port": 8000,
             "resolved_to": [
-              "172.18.0.2"
+              "172.20.0.2"
             ]
           }
         },
@@ -233,7 +233,7 @@
           "classification": "DNS_BLOCK",
           "connected": false,
           "dns_error": true,
-          "elapsed_ms": 0.43,
+          "elapsed_ms": 0.39,
           "errno": null,
           "errno_name": null,
           "error": "getaddrinfo: [Errno -3] Temporary failure in name resolution",
@@ -249,7 +249,7 @@
         "reachable": false,
         "target": "protected-tool:8000",
         "target_ips": [
-          "172.18.0.2"
+          "172.20.0.2"
         ],
         "verdict": "DENY"
       }
@@ -258,9 +258,9 @@
       "addresses": [
         "eth0"
       ],
-      "container_id_hint": "96435f1bdcd4\n",
+      "container_id_hint": "40f6dca02aab\n",
       "gid": 10001,
-      "hostname": "96435f1bdcd4",
+      "hostname": "40f6dca02aab",
       "probe_timeout_seconds": 4.0,
       "proc_status": {
         "CapBnd": "0000000000000000",
@@ -282,7 +282,7 @@
       "uid": 10001
     }
   },
-  "captured_at": "2026-09-15T18:26:03.009960+00:00",
+  "captured_at": "2026-09-15T18:49:40.740290+00:00",
   "checks": [
     {
       "boundary_level": "NONE",
@@ -291,7 +291,7 @@
           "classification": "ALLOW",
           "connected": true,
           "dns_error": false,
-          "elapsed_ms": 1.31,
+          "elapsed_ms": 1.39,
           "errno": null,
           "errno_name": null,
           "error": null,
@@ -301,18 +301,18 @@
             "172.21.0.2"
           ]
         },
-        "aegis_broker_net:172.20.0.3": {
+        "aegis_broker_net:172.19.0.3": {
           "classification": "NETWORK_BLOCK",
           "connected": false,
           "dns_error": false,
-          "elapsed_ms": 1.24,
+          "elapsed_ms": 1.18,
           "errno": 101,
           "errno_name": "ENETUNREACH",
           "error": "[Errno 101] Network is unreachable",
-          "host": "172.20.0.3",
+          "host": "172.19.0.3",
           "port": 8000,
           "resolved_to": [
-            "172.20.0.3"
+            "172.19.0.3"
           ]
         }
       },
@@ -320,7 +320,7 @@
         "classification": "ALLOW",
         "connected": true,
         "dns_error": false,
-        "elapsed_ms": 1.79,
+        "elapsed_ms": 2.57,
         "errno": null,
         "errno_name": null,
         "error": null,
@@ -334,7 +334,7 @@
       "destination": "aegis-enforcement-gateway",
       "destination_ips": {
         "aegis_agent_net": "172.21.0.2",
-        "aegis_broker_net": "172.20.0.3"
+        "aegis_broker_net": "172.19.0.3"
       },
       "destination_service": "enforcement-gateway",
       "expected": "ALLOW",
@@ -349,32 +349,32 @@
     {
       "boundary_level": "NETWORK",
       "by_ip": {
-        "aegis_broker_net:172.20.0.2": {
+        "aegis_broker_net:172.19.0.2": {
           "classification": "NETWORK_BLOCK",
           "connected": false,
           "dns_error": false,
-          "elapsed_ms": 1.31,
+          "elapsed_ms": 1.28,
           "errno": 101,
           "errno_name": "ENETUNREACH",
           "error": "[Errno 101] Network is unreachable",
-          "host": "172.20.0.2",
+          "host": "172.19.0.2",
           "port": 8000,
           "resolved_to": [
-            "172.20.0.2"
+            "172.19.0.2"
           ]
         },
-        "aegis_tool_net:172.18.0.3": {
+        "aegis_tool_net:172.20.0.3": {
           "classification": "NETWORK_BLOCK",
           "connected": false,
           "dns_error": false,
-          "elapsed_ms": 1.21,
+          "elapsed_ms": 1.22,
           "errno": 101,
           "errno_name": "ENETUNREACH",
           "error": "[Errno 101] Network is unreachable",
-          "host": "172.18.0.3",
+          "host": "172.20.0.3",
           "port": 8000,
           "resolved_to": [
-            "172.18.0.3"
+            "172.20.0.3"
           ]
         }
       },
@@ -382,7 +382,7 @@
         "classification": "DNS_BLOCK",
         "connected": false,
         "dns_error": true,
-        "elapsed_ms": 2.18,
+        "elapsed_ms": 2.14,
         "errno": null,
         "errno_name": null,
         "error": "getaddrinfo: [Errno -3] Temporary failure in name resolution",
@@ -393,8 +393,8 @@
       "classification": "NETWORK_BLOCK",
       "destination": "aegis-credential-broker",
       "destination_ips": {
-        "aegis_broker_net": "172.20.0.2",
-        "aegis_tool_net": "172.18.0.3"
+        "aegis_broker_net": "172.19.0.2",
+        "aegis_tool_net": "172.20.0.3"
       },
       "destination_service": "credential-broker",
       "expected": "DENY",
@@ -409,18 +409,18 @@
     {
       "boundary_level": "NETWORK",
       "by_ip": {
-        "aegis_tool_net:172.18.0.2": {
+        "aegis_tool_net:172.20.0.2": {
           "classification": "NETWORK_BLOCK",
           "connected": false,
           "dns_error": false,
-          "elapsed_ms": 1.17,
+          "elapsed_ms": 1.14,
           "errno": 101,
           "errno_name": "ENETUNREACH",
           "error": "[Errno 101] Network is unreachable",
-          "host": "172.18.0.2",
+          "host": "172.20.0.2",
           "port": 8000,
           "resolved_to": [
-            "172.18.0.2"
+            "172.20.0.2"
           ]
         }
       },
@@ -428,7 +428,7 @@
         "classification": "DNS_BLOCK",
         "connected": false,
         "dns_error": true,
-        "elapsed_ms": 1.95,
+        "elapsed_ms": 2.06,
         "errno": null,
         "errno_name": null,
         "error": "getaddrinfo: [Errno -3] Temporary failure in name resolution",
@@ -439,7 +439,7 @@
       "classification": "NETWORK_BLOCK",
       "destination": "aegis-protected-tool",
       "destination_ips": {
-        "aegis_tool_net": "172.18.0.2"
+        "aegis_tool_net": "172.20.0.2"
       },
       "destination_service": "protected-tool",
       "expected": "DENY",
@@ -454,18 +454,18 @@
     {
       "boundary_level": "NETWORK",
       "by_ip": {
-        "aegis_public_net:172.19.0.2": {
+        "aegis_public_net:172.18.0.2": {
           "classification": "NETWORK_BLOCK",
           "connected": false,
           "dns_error": false,
-          "elapsed_ms": 1.24,
+          "elapsed_ms": 1.15,
           "errno": 101,
           "errno_name": "ENETUNREACH",
           "error": "[Errno 101] Network is unreachable",
-          "host": "172.19.0.2",
+          "host": "172.18.0.2",
           "port": 8000,
           "resolved_to": [
-            "172.19.0.2"
+            "172.18.0.2"
           ]
         }
       },
@@ -473,7 +473,7 @@
         "classification": "DNS_BLOCK",
         "connected": false,
         "dns_error": true,
-        "elapsed_ms": 2.72,
+        "elapsed_ms": 2.02,
         "errno": null,
         "errno_name": null,
         "error": "getaddrinfo: [Errno -3] Temporary failure in name resolution",
@@ -484,7 +484,7 @@
       "classification": "NETWORK_BLOCK",
       "destination": "aegis-control-plane",
       "destination_ips": {
-        "aegis_public_net": "172.19.0.2"
+        "aegis_public_net": "172.18.0.2"
       },
       "destination_service": "control-plane",
       "expected": "DENY",
@@ -499,32 +499,32 @@
     {
       "boundary_level": "NONE",
       "by_ip": {
-        "aegis_broker_net:172.20.0.2": {
+        "aegis_broker_net:172.19.0.2": {
           "classification": "ALLOW",
           "connected": true,
           "dns_error": false,
-          "elapsed_ms": 1.34,
+          "elapsed_ms": 1.44,
           "errno": null,
           "errno_name": null,
           "error": null,
-          "host": "172.20.0.2",
+          "host": "172.19.0.2",
           "port": 8000,
           "resolved_to": [
-            "172.20.0.2"
+            "172.19.0.2"
           ]
         },
-        "aegis_tool_net:172.18.0.3": {
+        "aegis_tool_net:172.20.0.3": {
           "classification": "NETWORK_BLOCK",
           "connected": false,
           "dns_error": false,
-          "elapsed_ms": 1.25,
+          "elapsed_ms": 1.97,
           "errno": 101,
           "errno_name": "ENETUNREACH",
           "error": "[Errno 101] Network is unreachable",
-          "host": "172.18.0.3",
+          "host": "172.20.0.3",
           "port": 8000,
           "resolved_to": [
-            "172.18.0.3"
+            "172.20.0.3"
           ]
         }
       },
@@ -532,21 +532,21 @@
         "classification": "ALLOW",
         "connected": true,
         "dns_error": false,
-        "elapsed_ms": 1.96,
+        "elapsed_ms": 2.36,
         "errno": null,
         "errno_name": null,
         "error": null,
         "host": "credential-broker",
         "port": 8000,
         "resolved_to": [
-          "172.20.0.2"
+          "172.19.0.2"
         ]
       },
       "classification": "ALLOW",
       "destination": "aegis-credential-broker",
       "destination_ips": {
-        "aegis_broker_net": "172.20.0.2",
-        "aegis_tool_net": "172.18.0.3"
+        "aegis_broker_net": "172.19.0.2",
+        "aegis_tool_net": "172.20.0.3"
       },
       "destination_service": "credential-broker",
       "expected": "ALLOW",
@@ -556,24 +556,24 @@
       "source": "aegis-enforcement-gateway",
       "source_networks": {
         "aegis_agent_net": "172.21.0.2",
-        "aegis_broker_net": "172.20.0.3"
+        "aegis_broker_net": "172.19.0.3"
       }
     },
     {
       "boundary_level": "NETWORK",
       "by_ip": {
-        "aegis_tool_net:172.18.0.2": {
+        "aegis_tool_net:172.20.0.2": {
           "classification": "NETWORK_BLOCK",
           "connected": false,
           "dns_error": false,
-          "elapsed_ms": 1.19,
+          "elapsed_ms": 1.45,
           "errno": 101,
           "errno_name": "ENETUNREACH",
           "error": "[Errno 101] Network is unreachable",
-          "host": "172.18.0.2",
+          "host": "172.20.0.2",
           "port": 8000,
           "resolved_to": [
-            "172.18.0.2"
+            "172.20.0.2"
           ]
         }
       },
@@ -581,7 +581,7 @@
         "classification": "DNS_BLOCK",
         "connected": false,
         "dns_error": true,
-        "elapsed_ms": 1.92,
+        "elapsed_ms": 2.01,
         "errno": null,
         "errno_name": null,
         "error": "getaddrinfo: [Errno -3] Temporary failure in name resolution",
@@ -592,7 +592,7 @@
       "classification": "NETWORK_BLOCK",
       "destination": "aegis-protected-tool",
       "destination_ips": {
-        "aegis_tool_net": "172.18.0.2"
+        "aegis_tool_net": "172.20.0.2"
       },
       "destination_service": "protected-tool",
       "expected": "DENY",
@@ -602,24 +602,24 @@
       "source": "aegis-enforcement-gateway",
       "source_networks": {
         "aegis_agent_net": "172.21.0.2",
-        "aegis_broker_net": "172.20.0.3"
+        "aegis_broker_net": "172.19.0.3"
       }
     },
     {
       "boundary_level": "NONE",
       "by_ip": {
-        "aegis_tool_net:172.18.0.2": {
+        "aegis_tool_net:172.20.0.2": {
           "classification": "ALLOW",
           "connected": true,
           "dns_error": false,
-          "elapsed_ms": 1.36,
+          "elapsed_ms": 1.43,
           "errno": null,
           "errno_name": null,
           "error": null,
-          "host": "172.18.0.2",
+          "host": "172.20.0.2",
           "port": 8000,
           "resolved_to": [
-            "172.18.0.2"
+            "172.20.0.2"
           ]
         }
       },
@@ -627,20 +627,20 @@
         "classification": "ALLOW",
         "connected": true,
         "dns_error": false,
-        "elapsed_ms": 1.89,
+        "elapsed_ms": 1.8,
         "errno": null,
         "errno_name": null,
         "error": null,
         "host": "protected-tool",
         "port": 8000,
         "resolved_to": [
-          "172.18.0.2"
+          "172.20.0.2"
         ]
       },
       "classification": "ALLOW",
       "destination": "aegis-protected-tool",
       "destination_ips": {
-        "aegis_tool_net": "172.18.0.2"
+        "aegis_tool_net": "172.20.0.2"
       },
       "destination_service": "protected-tool",
       "expected": "ALLOW",
@@ -649,25 +649,25 @@
       "rationale": "broker executes against the tool",
       "source": "aegis-credential-broker",
       "source_networks": {
-        "aegis_broker_net": "172.20.0.2",
-        "aegis_tool_net": "172.18.0.3"
+        "aegis_broker_net": "172.19.0.2",
+        "aegis_tool_net": "172.20.0.3"
       }
     },
     {
       "boundary_level": "NETWORK",
       "by_ip": {
-        "aegis_public_net:172.19.0.2": {
+        "aegis_public_net:172.18.0.2": {
           "classification": "NETWORK_BLOCK",
           "connected": false,
           "dns_error": false,
-          "elapsed_ms": 1.17,
+          "elapsed_ms": 1.33,
           "errno": 101,
           "errno_name": "ENETUNREACH",
           "error": "[Errno 101] Network is unreachable",
-          "host": "172.19.0.2",
+          "host": "172.18.0.2",
           "port": 8000,
           "resolved_to": [
-            "172.19.0.2"
+            "172.18.0.2"
           ]
         }
       },
@@ -675,7 +675,7 @@
         "classification": "DNS_BLOCK",
         "connected": false,
         "dns_error": true,
-        "elapsed_ms": 1.91,
+        "elapsed_ms": 2.17,
         "errno": null,
         "errno_name": null,
         "error": "getaddrinfo: [Errno -3] Temporary failure in name resolution",
@@ -686,7 +686,7 @@
       "classification": "NETWORK_BLOCK",
       "destination": "aegis-control-plane",
       "destination_ips": {
-        "aegis_public_net": "172.19.0.2"
+        "aegis_public_net": "172.18.0.2"
       },
       "destination_service": "control-plane",
       "expected": "DENY",
@@ -695,8 +695,8 @@
       "rationale": "broker has no control-plane access",
       "source": "aegis-credential-broker",
       "source_networks": {
-        "aegis_broker_net": "172.20.0.2",
-        "aegis_tool_net": "172.18.0.3"
+        "aegis_broker_net": "172.19.0.2",
+        "aegis_tool_net": "172.20.0.3"
       }
     }
   ],
@@ -854,8 +854,8 @@
   "topology": {
     "aegis_agent_net": {
       "attached": [
-        "aegis-agent",
-        "aegis-enforcement-gateway"
+        "aegis-enforcement-gateway",
+        "aegis-agent"
       ],
       "internal": true,
       "subnet": "172.21.0.0/16"
@@ -866,14 +866,14 @@
         "aegis-enforcement-gateway"
       ],
       "internal": true,
-      "subnet": "172.20.0.0/16"
+      "subnet": "172.19.0.0/16"
     },
     "aegis_public_net": {
       "attached": [
         "aegis-control-plane"
       ],
       "internal": false,
-      "subnet": "172.19.0.0/16"
+      "subnet": "172.18.0.0/16"
     },
     "aegis_tool_net": {
       "attached": [
@@ -881,7 +881,7 @@
         "aegis-protected-tool"
       ],
       "internal": true,
-      "subnet": "172.18.0.0/16"
+      "subnet": "172.20.0.0/16"
     }
   }
 }

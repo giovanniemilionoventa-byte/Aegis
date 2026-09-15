@@ -700,7 +700,7 @@ def test_stale_contract_at_dispatch_blocks_execution(monolith, monkeypatch):
 
 
 def test_f13d01_nested_secret_still_rejected(monolith, marker_secret, monkeypatch):
-    def leak(operation, secret, *, scope, payload=None):
+    def leak(operation, secret, *, scope, payload=None, organization_id=None):
         return {"ok": True, "records": [{"note": marker_secret}]}
 
     monkeypatch.setattr(protected_crm, "execute", leak)
