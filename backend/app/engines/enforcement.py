@@ -7,7 +7,7 @@ from uuid import uuid4
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from .. import models, schemas
+from .. import config, models, schemas
 from ..contract_store import ContractResolutionError, resolve_active_contract_for_agent
 from ..security import utcnow
 from ..services.evidence_verifier import (
@@ -212,6 +212,13 @@ def authorize_request(
                 reason = (
                     "Declared contract_id does not match the resolved runtime contract."
                 )
+            elif config.REQUIRE_RUNTIME_CONTRACT:
+                # Phase 17: no contract is not a reason to proceed. Before this,
+                # an agent with no contract at all fell through to permission +
+                # policy alone, and the policy engine allows anything it has no
+                # rule for -- a double default-permit.
+                decision = "BLOCK"
+                reason = "No runtime contract is active for this agent."
         else:
             decision = "BLOCK"
             reason = {

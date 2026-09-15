@@ -375,3 +375,7 @@ class RuntimeContractOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class RuntimeContractStatusChange(BaseModel):
+    status: str

@@ -12,6 +12,7 @@ from .routers import (
     auth,
     authorize,
     behavior_patterns,
+    contracts,
     gateway,
     policies,
     resources,
@@ -27,6 +28,7 @@ CONTROL_ROUTERS = (
     resources,
     approvals,
     behavior_patterns,
+    contracts,
 )
 ENFORCEMENT_ROUTERS = (authorize, gateway)
 BROKER_ROUTERS = (broker_router,)
