@@ -1,0 +1,410 @@
+{
+  "phase": 18,
+  "recorded_at": "2026-09-16T05:49:15.751942+00:00",
+  "what_this_is": "A new operator, with no account, doing the whole job through the dashboard in a real browser: register a tenant, create an agent, grant it authority, take its credential, watch a real agent process use that authority against the live gateway, approve one action as a human, read the evidence, then revoke.",
+  "how_it_was_driven": "Chromium via Playwright against the built frontend, clicking the same controls a person would. Nothing was called directly; the browser was the only client.",
+  "the_agent": "A container on aegis_agent_net holding nothing but the credential the wizard displayed. It is a separate process from the seeded demo agent, and it was started after the credential was issued, from that credential alone.",
+  "runs": {
+    "agent_id": "1e7865fb-d6c9-4be5-9af1-9b77de042823",
+    "agent_status": "revoked",
+    "runs": [
+      {
+        "run": "ea65ad1d-a4e6-41f6-838e-57f366d30050",
+        "status": "COMPLETED",
+        "execution_id": "verify-ea65ad1d-a4e6-41f6-838e-57f366d30050",
+        "verdict": "FAIL",
+        "passed": 11,
+        "total": 12,
+        "failed": [
+          "approved action executes after a human grants it"
+        ],
+        "checks": [
+          {
+            "check": "agent cannot reach credential-broker directly",
+            "ok": true,
+            "detail": "classification=DNS_BLOCK observed=DNS_FAILURE: [Errno -3] Temporary failure in name resolution"
+          },
+          {
+            "check": "agent cannot reach protected-tool directly",
+            "ok": true,
+            "detail": "classification=DNS_BLOCK observed=DNS_FAILURE: [Errno -3] Temporary failure in name resolution"
+          },
+          {
+            "check": "agent cannot reach control-plane directly",
+            "ok": true,
+            "detail": "classification=DNS_BLOCK observed=DNS_FAILURE: [Errno -3] Temporary failure in name resolution"
+          },
+          {
+            "check": "permitted action reaches the protected tool",
+            "ok": true,
+            "detail": "decision=ALLOW executed=True"
+          },
+          {
+            "check": "forbidden action is blocked and does not execute",
+            "ok": true,
+            "detail": "decision=BLOCK executed=False"
+          },
+          {
+            "check": "action needing a human does not execute on request",
+            "ok": true,
+            "detail": "decision=APPROVAL executed=False"
+          },
+          {
+            "check": "approved request cannot be mutated",
+            "ok": true,
+            "detail": "http=409 executed=False"
+          },
+          {
+            "check": "approved action executes after a human grants it",
+            "ok": false,
+            "detail": "decision=None executed=False"
+          },
+          {
+            "check": "approval cannot be reused",
+            "ok": true,
+            "detail": "executed=False"
+          },
+          {
+            "check": "credential extraction attempt returns no secret",
+            "ok": true,
+            "detail": "contains_secret_key=False"
+          },
+          {
+            "check": "contract data constraints block a denied field",
+            "ok": true,
+            "detail": "decision=BLOCK reason=Payload contains fields denied by the runtime contract."
+          },
+          {
+            "check": "agent holds no protected credentials",
+            "ok": true,
+            "detail": "{\"uid\": 10001, \"gid\": 10001, \"hostname\": \"9dc3e84e75f2\", \"has_agent_token\": true, \"holds_tool_credential\": false, \"holds_eat_key\": false, \"holds_internal_token\": false}"
+          }
+        ]
+      },
+      {
+        "run": "c32dfd83-63a7-475d-8150-0c4908701829",
+        "status": "COMPLETED",
+        "execution_id": "verify-c32dfd83-63a7-475d-8150-0c4908701829",
+        "verdict": "FAIL",
+        "passed": 11,
+        "total": 12,
+        "failed": [
+          "approved action executes after a human grants it"
+        ],
+        "checks": [
+          {
+            "check": "agent cannot reach credential-broker directly",
+            "ok": true,
+            "detail": "classification=DNS_BLOCK observed=DNS_FAILURE: [Errno -3] Temporary failure in name resolution"
+          },
+          {
+            "check": "agent cannot reach protected-tool directly",
+            "ok": true,
+            "detail": "classification=DNS_BLOCK observed=DNS_FAILURE: [Errno -3] Temporary failure in name resolution"
+          },
+          {
+            "check": "agent cannot reach control-plane directly",
+            "ok": true,
+            "detail": "classification=DNS_BLOCK observed=DNS_FAILURE: [Errno -3] Temporary failure in name resolution"
+          },
+          {
+            "check": "permitted action reaches the protected tool",
+            "ok": true,
+            "detail": "decision=ALLOW executed=True"
+          },
+          {
+            "check": "forbidden action is blocked and does not execute",
+            "ok": true,
+            "detail": "decision=BLOCK executed=False"
+          },
+          {
+            "check": "action needing a human does not execute on request",
+            "ok": true,
+            "detail": "decision=APPROVAL executed=False"
+          },
+          {
+            "check": "approved request cannot be mutated",
+            "ok": true,
+            "detail": "http=409 executed=False"
+          },
+          {
+            "check": "approved action executes after a human grants it",
+            "ok": false,
+            "detail": "decision=None executed=False"
+          },
+          {
+            "check": "approval cannot be reused",
+            "ok": true,
+            "detail": "executed=False"
+          },
+          {
+            "check": "credential extraction attempt returns no secret",
+            "ok": true,
+            "detail": "contains_secret_key=False"
+          },
+          {
+            "check": "contract data constraints block a denied field",
+            "ok": true,
+            "detail": "decision=BLOCK reason=Payload contains fields denied by the runtime contract."
+          },
+          {
+            "check": "agent holds no protected credentials",
+            "ok": true,
+            "detail": "{\"uid\": 10001, \"gid\": 10001, \"hostname\": \"9dc3e84e75f2\", \"has_agent_token\": true, \"holds_tool_credential\": false, \"holds_eat_key\": false, \"holds_internal_token\": false}"
+          }
+        ]
+      },
+      {
+        "run": "e5a0178f-74f4-40cd-94dc-2f826697b249",
+        "status": "COMPLETED",
+        "execution_id": "verify-e5a0178f-74f4-40cd-94dc-2f826697b249",
+        "verdict": "PASS",
+        "passed": 12,
+        "total": 12,
+        "failed": [],
+        "checks": [
+          {
+            "check": "agent cannot reach credential-broker directly",
+            "ok": true,
+            "detail": "classification=DNS_BLOCK observed=DNS_FAILURE: [Errno -3] Temporary failure in name resolution"
+          },
+          {
+            "check": "agent cannot reach protected-tool directly",
+            "ok": true,
+            "detail": "classification=DNS_BLOCK observed=DNS_FAILURE: [Errno -3] Temporary failure in name resolution"
+          },
+          {
+            "check": "agent cannot reach control-plane directly",
+            "ok": true,
+            "detail": "classification=DNS_BLOCK observed=DNS_FAILURE: [Errno -3] Temporary failure in name resolution"
+          },
+          {
+            "check": "permitted action reaches the protected tool",
+            "ok": true,
+            "detail": "decision=ALLOW executed=True"
+          },
+          {
+            "check": "forbidden action is blocked and does not execute",
+            "ok": true,
+            "detail": "decision=BLOCK executed=False"
+          },
+          {
+            "check": "action needing a human does not execute on request",
+            "ok": true,
+            "detail": "decision=APPROVAL executed=False"
+          },
+          {
+            "check": "approved request cannot be mutated",
+            "ok": true,
+            "detail": "http=409 executed=False"
+          },
+          {
+            "check": "approved action executes after a human grants it",
+            "ok": true,
+            "detail": "decision=ALLOW executed=True"
+          },
+          {
+            "check": "approval cannot be reused",
+            "ok": true,
+            "detail": "executed=False"
+          },
+          {
+            "check": "credential extraction attempt returns no secret",
+            "ok": true,
+            "detail": "contains_secret_key=False"
+          },
+          {
+            "check": "contract data constraints block a denied field",
+            "ok": true,
+            "detail": "decision=BLOCK reason=Payload contains fields denied by the runtime contract."
+          },
+          {
+            "check": "agent holds no protected credentials",
+            "ok": true,
+            "detail": "{\"uid\": 10001, \"gid\": 10001, \"hostname\": \"9dc3e84e75f2\", \"has_agent_token\": true, \"holds_tool_credential\": false, \"holds_eat_key\": false, \"holds_internal_token\": false}"
+          }
+        ]
+      }
+    ]
+  },
+  "first_two_runs_failed_honestly": "Runs ea65ad1d and c32dfd83 report 11/12. The failing check is 'approved action executes after a human grants it', and it failed because no human approved within the agent's 90-second window: the first time the driver script crashed before approving, the second time it approved the earlier run's still-pending request instead of the new one. Aegis did the right thing both times, and reported FAIL rather than passing an unapproved action. They are kept here rather than deleted, because a suite that only ever shows the clean run is not evidence.",
+  "revocation": {
+    "action": "'Revoke agent' clicked in the dashboard",
+    "effect_on_the_running_agent": "the live container's next poll returned 401 'Invalid or revoked agent token'",
+    "effect_on_tool_calls": "crm.read and crm.update with the revoked credential both returned 401 at the gateway",
+    "why_it_matters": "the UI button is not the security control; it changes state the gateway reads on every request"
+  },
+  "transcript": {
+    "part1": [
+      "  [browser console error] Failed to load resource: net::ERR_CERT_AUTHORITY_INVALID",
+      "1. Not signed in -> redirected to /login",
+      "  [browser console error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "  [browser console error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "2. Registered a brand new organization \"NewCo 1789537083504\" as operator-1789537083504@newco.test",
+      "3. Posture page on an empty tenant:",
+      "     Security posture",
+      "     What Aegis can see about this deployment right now. Anything it cannot see is marked unknown rather than assumed good.",
+      "     Live state",
+      "     Check\tState\tDetail\tBased on",
+      "     Deployment secrets\tOK\tNo shipped default secrets are in use.\tGET /api/health, reported by this process",
+      "     Contract enforcement\tOK\tAll 0 active agents are governed by a contract.\tlive contract resolution per agent",
+      "     Default-deny\tOK\tAn agent with no active contract is refused. This deployment runs fail-closed.\tAEGIS_REQUIRE_RUNTIME_CONTRACT, enforced in the authorization path",
+      "     Agent liveness\tUNKNOWN\tAegis has no heartbeat. It knows whether an agent is active or revoked in configuration, not whether it is running.\tnot implemented \u2014 stated rather than guessed",
+      "     Credential isolation from the provider\tATTENTION\tPer-tenant credentials are derived from a master key the provider holds, so the provider can still derive any tenant's credential. CAN USE \u2260 CAN READ is not solved.\tknown limitation, documented in the phase reports",
+      "     Proven by runtime experiment",
+      "     These were established by running the system and observing it, not by this page measuring anything. They are evidence from a recorded run \u2014 if the topology changes, the run has to be repeated.",
+      "     Property\tWhat was observed\tEvidence",
+      "     Execution boundary\tagent \u2192 broker / protected tool / control plane refused at the network layer (ENETUNREACH), not by application code.\tdocs/evidence/phase17_execution_boundary.json \u2014 13/13 paths",
+      "     Credential never reaches the agent\tThe agent container holds only its own Aegis token: no tool credential, EAT key or internal service token.\tobserved from inside the container during the boundary proof",
+      "     Evidence tamper detection\tModifying, deleting, reordering or stripping the chain is detected. Truncating the tail AND rewriting the stored tip is not detected by the chain alone.\t21 tamper cases; the exception is documented, not hidden",
+      "     Approval binding\tAn approval authorizes one request once, and concurrent redemption was found exploitable and fixed.\tPhase 17 finding A-1, stress-tested 25 runs",
+      "     Not proven",
+      "     No customer has used this. Nothing here is customer-proven or commercially-proven.",
+      "     The protected tool is a mock. The security path is real; the system behind it is not.",
+      "     Only crm is connected to a tool. For other resources Aegis decides but nothing executes either way.",
+      "     Performance was last measured with the contract engine in pass-through, so those numbers do not describe this system.",
+      "4. Agents page: Agents | Add agent | Identity is distinct from the human owner and from the model provider. An agent has no authority until an operator gives it a contract. | No agents yet. | An agent marked verification harness runs in",
+      "5. Capability catalogue offered by the wizard:",
+      "     crm.READ\texecutes\t\t\t",
+      "     crm.UPDATE\texecutes\t\t\t",
+      "     crm.DELETE irreversible\texecutes\t\t\t",
+      "     email.SEND irreversible\tdecision only\t\t\t",
+      "     files.READ\tdecision only\t\t\t",
+      "     files.EXPORT irreversible\tdecision only\t\t\t",
+      "     payments.TRANSFER irreversible\tdecision only\t\t\t",
+      "6. Chose: crm.READ=ALLOW, crm.UPDATE=NEEDS A HUMAN, everything else DENY",
+      "7. Review screen:",
+      "     Add agent",
+      "     An agent starts with no authority at all. What you grant here is written to its permissions and its runtime contract; anything you leave denied is refused by default.",
+      "     3. Review",
+      "     Capability\tDecision",
+      "     crm.READ\tALLOW",
+      "     crm.UPDATE\tNEEDS A HUMAN",
+      "     crm.DELETE\tDENY",
+      "     email.SEND\tDENY",
+      "     files.READ\tDENY",
+      "     files.EXPORT\tDENY",
+      "     payments.TRANSFER\tDENY",
+      "     Back",
+      "     Create agent",
+      "8. Agent created. Credential shown once, length=49, prefix=aegis_KkgVtB\u2026",
+      "9. Agent now listed: Agents | Add agent | Identity is distinct from the human owner and from the model provider. An agent has no authority until an operator gives it a contract. | Name\tKind\tState\tAuthority\t | Support Copilot\tcustom\tactive\tsupport-copilot-contract v1\tOpen | An agent marked verification harness runs insid",
+      "10. Agent detail at http://127.0.0.1:5173/agents/1e7865fb-d6c9-4be5-9af1-9b77de042823"
+    ],
+    "part2": [
+      "11. Signed in as the operator (operator-1789537083504@newco.test)",
+      "12. Clicked 'Run verification'. The run is queued; the agent claims it over its own network path.",
+      "13. An approval is waiting. What the reviewer sees before deciding:",
+      "     Human approval",
+      "     Approving lets the agent's next attempt at this exact request run, once. A changed request is not covered, and the grant cannot be reused.",
+      "     Waiting for you (1)",
+      "     Agent\tAction\tExpires\tWhy\t",
+      "     Support Copilot\tcrm.UPDATE customers\t13 min left\tRuntime contract requires human approval for crm.update.\t",
+      "     Hide",
+      "     Approve",
+      "     Deny",
+      "     What this approval will authorize, exactly:",
+      "     Execution\tverify-ea65ad1d-a4e6-41f6-838e-57f366d30050",
+      "     Request\tupdate-verify-ea65ad1d-a4e6-41f6-838e-57f366d30050",
+      "     Contract\tsupport-copilot-contract v1",
+      "     Parameter digest\tb3c4a174e433948c5d43fd54c8cbf625a11bccb496c0be85d7546d5d95669459",
+      "     Requested\t9/16/2026, 5:39:29 AM",
+      "     The parameter digest is what binds this grant to the exact payload. Aegis shows the digest rather than the payload so approving cannot become a way to read data the operator is not otherwise entitled to see.",
+      "     Decided",
+      "     Nothing decided yet.",
+      "14. Approved in the UI.",
+      "15. Verification run reached status: COMPLETED",
+      "    9/16/2026, 5:41:47 AM\tcanonical\tCOMPLETED\t11/12 FAIL\tOpen chain | 9/16/2026, 5:39:27 AM\tcanonical\tCOMPLETED\t11/12 FAIL\tOpen chain",
+      "16. Activity after the run:",
+      "     Activity",
+      "     Every action an agent attempted, and the decision Aegis made. Grouped by execution so a sequence reads as one story.",
+      "     All (12)",
+      "     ALLOW (6)",
+      "     APPROVAL (2)",
+      "     BLOCK (4)",
+      "     Refresh",
+      "     verify-c32dfd83-63a7-475d-81",
+      "     Support Copilot",
+      "     Evidence",
+      "     #\tAction\tDecision\tExecuted\tRisk\tWhy\tWhen",
+      "     1\tcrm.READ",
+      "     customers\tALLOW\texecuted\tlow\tPermission granted and no matching restrictive policy.\t5:41:48 AM",
+      "     2\tcrm.DELETE",
+      "     all\tBLOCK\tnot executed\tcritical\tAgent lacks permission for this resource/action/scope (least privilege).\t5:41:48 AM",
+      "     3\tcrm.UPDATE",
+      "     customers\tNEEDS A HUMAN\tnot executed\tlow\tRuntime contract requires human approval for crm.update.\t5:41:48 AM",
+      "     4\tcrm.READ",
+      "     customers\tALLOW\texecuted\tlow\tPermission granted and no matching restrictive policy.\t5:43:19 AM",
+      "     5\tcrm.UPDATE",
+      "     customers\tBLOCK\tnot executed\tmedium\tPayload contains fields denied by the runtime contract.\t5:43:19 AM",
+      "     c77d0c50-d6c8-43e4-a084-6d71",
+      "     Support Copilot",
+      "     Evidence",
+      "     #\tAction\tDecision\tExecuted\tRisk\tWhy\tWhen",
+      "     1\tcrm.READ",
+      "     customers\tALLOW\texecuted\tlow\tPermission granted and no matching restrictive policy.\t5:43:19 AM",
+      "     verify-ea65ad1d-a4e6-41f6-83",
+      "     Support Copilot",
+      "     Evidence",
+      "     #\tAction\tDecision\tExecuted\tRisk\tWhy\tWhen",
+      "     1\tcrm.READ",
+      "     customers\tALLOW\texecuted\tlow\tPermission granted and no matching restrictive policy.\t5:39:29 AM",
+      "     2\tcrm.DELETE",
+      "     all\tBLOCK\tnot executed\tcritical\tAgent lacks permission for this resource/action/scope (least privilege).\t5:39:29 AM",
+      "     3\tcrm.UPDATE",
+      "     customers\tNEEDS A HUMAN\tnot executed\tlow\tRuntime contract requires human approval for crm.update.\t5:39:29 AM",
+      "     4\tcrm.READ",
+      "     customers\tALLOW\texecuted\tlow\tPermission granted and no matching restrictive policy.\t5:41:00 AM",
+      "     5\tcrm.UPDATE",
+      "     customers\tBLOCK\tnot executed\tmedium\tPayload contains fields denied by the runtime contract.\t5:41:00 AM",
+      "     36371858-3cc7-493e-ae95-55d1",
+      "     Support Copilot",
+      "     Evidence",
+      "     #\tAction\tDecision\tExecuted\tRisk\tWhy\tWhen",
+      "     1\tcrm.READ",
+      "     customers\tALLOW\texecuted\tlow\tPermission granted and no matching restrictive policy.\t5:41:00 AM",
+      "17. Evidence chain, recomputed server-side:",
+      "     Execution evidence",
+      "     Every decision is sealed into a hash chain. Open an execution to have the server recompute it and report whether the record has been altered.",
+      "     Execution\tAgent\tEvents\tStarted\t",
+      "     c77d0c50-d6c8-43e4\t1e7865fb\t1\t9/16/2026, 5:43:19 AM\tVerify",
+      "     verify-c32dfd83-63\t1e7865fb\t5\t9/16/2026, 5:41:48 AM\tVerify",
+      "     36371858-3cc7-493e\t1e7865fb\t1\t9/16/2026, 5:41:00 AM\tVerify",
+      "     verify-ea65ad1d-a4\t1e7865fb\t5\t9/16/2026, 5:39:29 AM\tVerify",
+      "     c77d0c50-d6c8-43e4-a084-",
+      "     chain intact",
+      "     #\tCall\tDecision\tDigest\tReason",
+      "     1\tcrm.READ",
+      "     customers\tALLOW\tverified\tPermission granted and no matching restrictive policy."
+    ],
+    "part3": [
+      "A. Denied 1 stale approval(s) left over by earlier abandoned runs (exercises the Deny path).",
+      "B. Requested a fresh canonical run.",
+      "C. Approval waiting for execution verify-e5a0178f-74f4-40cd-94dc-2f826697b249",
+      "D. Approved through the UI.",
+      "E. Latest run row: 9/16/2026, 5:44:08 AM\tcanonical\tCOMPLETED\t12/12 PASS\tOpen chain"
+    ],
+    "part4": [
+      "F. Clicked 'Revoke agent'. Agent detail now reads:",
+      "     Support Copilot",
+      "     Reference agent used to verify enforcement end to end",
+      "     Authority",
+      "     revoked",
+      "     Configuration state, not connectivity. Aegis has no heartbeat and does not know whether this agent is running.",
+      "     Agent id\t1e7865fb-d6c9-4be5-9af1-9b77de042823",
+      "     Organization\tbd059c98-9fb7-4eee-8011-23146a007612",
+      "     Created\t9/16/2026, 5:38:08 AM",
+      "     Revoked\t9/16/2026, 5:44:44 AM",
+      "     Capabilities",
+      "     Capability\tScope\tEffect\tIn contract",
+      "     crm.READ\tcustomers\tallow\tyes",
+      "     crm.UPDATE\tcustomers\tneeds a human\tyes",
+      "     Runtime contract",
+      "     Revoke contract",
+      "     Contract\tVer\tStatus\tPurpose\tExpires",
+      "     support-copilot-contract\t1\tACTIVE\tRead customer records and correct mistakes\t\u2014",
+      "     Runtime verification",
+      "G. 'Run verification' is disabled for the revoked agent."
+    ]
+  }
+}

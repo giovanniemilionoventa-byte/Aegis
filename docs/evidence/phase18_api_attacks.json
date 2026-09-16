@@ -1,0 +1,192 @@
+{
+  "phase": 18,
+  "recorded_at": "2026-09-16T05:48:46.643136+00:00",
+  "what_this_is": "Attacks on the Phase 18 API surface, run against the live Docker stack with hand-built requests. The frontend is not involved in any of them, which is the point: the browser is untrusted, so the only question is what the API does when the caller does not cooperate.",
+  "method": {
+    "control_plane": "from the host against the published control-plane port",
+    "gateway": "from a throwaway container on aegis_agent_net, the only network that can reach the gateway",
+    "tenants": "two real organizations created through the product, each with its own operator and agents"
+  },
+  "not_covered": [
+    "Denial of service and rate limiting were not tested.",
+    "The browser session itself (XSS, CSRF, token storage) was not tested here.",
+    "These are point-in-time observations of one deployment, not a proof about all deployments."
+  ],
+  "control_plane": [
+    {
+      "attack": "read another tenant's agent by id",
+      "expected": "404",
+      "held": true,
+      "observed": "404 {'detail': 'Agent not found'}"
+    },
+    {
+      "attack": "queue a runtime job on another tenant's agent",
+      "expected": "404",
+      "held": true,
+      "observed": "404 {'detail': 'Agent not found'}"
+    },
+    {
+      "attack": "simulate against another tenant's agent",
+      "expected": "404",
+      "held": true,
+      "observed": "404 {'detail': 'Agent not found'}"
+    },
+    {
+      "attack": "revoke another tenant's agent",
+      "expected": "404",
+      "held": true,
+      "observed": "404 {'detail': 'Agent not found'}"
+    },
+    {
+      "attack": "rotate another tenant's agent credential",
+      "expected": "404",
+      "held": true,
+      "observed": "404 {'detail': 'Agent not found'}"
+    },
+    {
+      "attack": "approve another tenant's approval",
+      "expected": "404",
+      "held": true,
+      "observed": "404 {'detail': 'Approval not found'}"
+    },
+    {
+      "attack": "unauthenticated GET /api/agents",
+      "expected": "401",
+      "held": true,
+      "observed": "401 {'detail': 'Not authenticated'}"
+    },
+    {
+      "attack": "unauthenticated GET /api/approvals",
+      "expected": "401",
+      "held": true,
+      "observed": "401 {'detail': 'Not authenticated'}"
+    },
+    {
+      "attack": "unauthenticated GET /api/events",
+      "expected": "401",
+      "held": true,
+      "observed": "401 {'detail': 'Not authenticated'}"
+    },
+    {
+      "attack": "unauthenticated GET /api/capabilities",
+      "expected": "401",
+      "held": true,
+      "observed": "401 {'detail': 'Not authenticated'}"
+    },
+    {
+      "attack": "unauthenticated GET /api/verification-runs",
+      "expected": "401",
+      "held": true,
+      "observed": "401 {'detail': 'Not authenticated'}"
+    },
+    {
+      "attack": "unauthenticated GET /api/verification/scenarios",
+      "expected": "401",
+      "held": true,
+      "observed": "401 {'detail': 'Not authenticated'}"
+    },
+    {
+      "attack": "unauthenticated POST of a verification run",
+      "expected": "401",
+      "held": true,
+      "observed": "401 {'detail': 'Not authenticated'}"
+    },
+    {
+      "attack": "agent credential used as an operator session",
+      "expected": "refused (401 or 403)",
+      "held": true,
+      "observed": "403 {'detail': 'Agent credentials cannot access the control plane'}"
+    },
+    {
+      "attack": "client-supplied organization_id/agent_id on contract creation",
+      "expected": "ignored; the contract binds to the caller's own agent, not the one named in the body",
+      "held": true,
+      "observed": "201 agent_id=0aaf231f org=bd059c98 (victim agent was 82cfcd92)"
+    },
+    {
+      "attack": "smuggled contract appears on the victim's agent",
+      "expected": "never",
+      "held": true,
+      "observed": "200 victim contracts: ['reference-sales-agent']"
+    },
+    {
+      "attack": "hostile agent id '../../etc/passwd'",
+      "expected": "404 or 422, never 500",
+      "held": true,
+      "observed": "404"
+    },
+    {
+      "attack": "hostile agent id \"'; DROP TABLE agents;--\"",
+      "expected": "404 or 422, never 500",
+      "held": true,
+      "observed": "404"
+    },
+    {
+      "attack": "hostile agent id '00000000-0000-0000-0000-000000000000'",
+      "expected": "404 or 422, never 500",
+      "held": true,
+      "observed": "404"
+    },
+    {
+      "attack": "agent job channel exposed on the public control plane",
+      "expected": "404 (gateway-only route)",
+      "held": true,
+      "observed": "404 {'detail': 'Not Found'}"
+    }
+  ],
+  "gateway": [
+    {
+      "attack": "unauthenticated claim of a queued job",
+      "expected": "401",
+      "held": true,
+      "observed": "401 {'detail': 'Missing agent token'}"
+    },
+    {
+      "attack": "another tenant's agent claims a job queued for the victim",
+      "expected": "no job, or only its own",
+      "held": true,
+      "observed": "200 {\"run\": null}"
+    },
+    {
+      "attack": "forge a PASS verdict on another agent's run",
+      "expected": "404 or 403",
+      "held": true,
+      "observed": "404 {'detail': 'Run not found'}"
+    },
+    {
+      "attack": "operator session used as an agent credential",
+      "expected": "401 or 403",
+      "held": true,
+      "observed": "401 {'detail': 'Invalid or revoked agent token'}"
+    },
+    {
+      "attack": "control-plane route /api/agents usable on the gateway",
+      "expected": "refused both anonymously and with an agent credential",
+      "held": true,
+      "observed": "anonymous=404 with-agent-token=403"
+    },
+    {
+      "attack": "control-plane route /api/approvals usable on the gateway",
+      "expected": "refused both anonymously and with an agent credential",
+      "held": true,
+      "observed": "anonymous=404 with-agent-token=403"
+    },
+    {
+      "attack": "control-plane route /api/auth/login usable on the gateway",
+      "expected": "refused both anonymously and with an agent credential",
+      "held": true,
+      "observed": "anonymous=404 with-agent-token=403"
+    },
+    {
+      "attack": "operator login served by the enforcement gateway",
+      "expected": "404; the route is not in this role",
+      "held": true,
+      "observed": "404 {'detail': 'Not Found'}"
+    }
+  ],
+  "totals": {
+    "attacks": 28,
+    "held": 28,
+    "failed": 0
+  }
+}
