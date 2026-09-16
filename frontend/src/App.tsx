@@ -6,9 +6,13 @@ import Overview from "./pages/Overview";
 import Agents from "./pages/Agents";
 import Policies from "./pages/Policies";
 import Events from "./pages/Events";
+import Activity from "./pages/Activity";
+import Posture from "./pages/Posture";
 import Approvals from "./pages/Approvals";
 import Playground from "./pages/Playground";
 import Contracts from "./pages/Contracts";
+import NewAgent from "./pages/NewAgent";
+import AgentDetail from "./pages/AgentDetail";
 import Evidence from "./pages/Evidence";
 
 function Shell({ children }: { children: ReactNode }) {
@@ -24,10 +28,12 @@ function Shell({ children }: { children: ReactNode }) {
     ["/agents", "Agents"],
     ["/contracts", "Contracts"],
     ["/policies", "Policies"],
-    ["/events", "Audit"],
-    ["/evidence", "Evidence"],
     ["/approvals", "Approvals"],
-    ["/playground", "Authorize"],
+    ["/activity", "Activity"],
+    ["/evidence", "Evidence"],
+    ["/posture", "Posture"],
+    ["/events", "Audit log"],
+    ["/playground", "Ask"],
   ];
 
   return (
@@ -81,9 +87,13 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Private><Overview /></Private>} />
       <Route path="/agents" element={<Private><Agents /></Private>} />
+      <Route path="/agents/new" element={<Private><NewAgent /></Private>} />
+      <Route path="/agents/:agentId" element={<Private><AgentDetail /></Private>} />
       <Route path="/contracts" element={<Private><Contracts /></Private>} />
       <Route path="/policies" element={<Private><Policies /></Private>} />
       <Route path="/events" element={<Private><Events /></Private>} />
+      <Route path="/activity" element={<Private><Activity /></Private>} />
+      <Route path="/posture" element={<Private><Posture /></Private>} />
       <Route path="/evidence" element={<Private><Evidence /></Private>} />
       <Route path="/approvals" element={<Private><Approvals /></Private>} />
       <Route path="/playground" element={<Private><Playground /></Private>} />

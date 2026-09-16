@@ -96,6 +96,32 @@ export const api = {
       `/api/agents/${agentId}/contracts/${contractId}/${version}/status`,
       { method: "POST", body: JSON.stringify({ status }) },
     ),
+  agent: (id: string) => request<Agent>(`/api/agents/${id}`),
+  createContract: (agentId: string, doc: ContractDraft) =>
+    request<RuntimeContract>(`/api/agents/${agentId}/contracts`, {
+      method: "POST",
+      body: JSON.stringify(doc),
+    }),
+  capabilities: () => request<CapabilityCatalogue>("/api/capabilities"),
+  simulate: (agentId: string, body: SimulateBody) =>
+    request<SimulationResult>(`/api/agents/${agentId}/simulate`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+  scenarios: () => request<Scenario[]>("/api/verification/scenarios"),
+  requestRun: (agentId: string, scenario: string) =>
+    request<VerificationRun>(`/api/agents/${agentId}/verification-runs`, {
+      method: "POST",
+      body: JSON.stringify({ scenario }),
+    }),
+  runs: (agentId?: string) =>
+    request<VerificationRun[]>(
+      agentId ? `/api/verification-runs?agent_id=${agentId}` : "/api/verification-runs",
+    ),
+  run: (runId: string) => request<VerificationRun>(`/api/verification-runs/${runId}`),
+  cancelRun: (runId: string) =>
+    request<VerificationRun>(`/api/verification-runs/${runId}/cancel`, { method: "POST" }),
+  health: () => request<HealthReport>("/api/health"),
   executions: () => request<ExecutionRow[]>("/api/executions"),
   evidence: (executionId: string) =>
     request<EvidenceReport>(`/api/executions/${executionId}/evidence`),
@@ -171,6 +197,7 @@ export type PolicyCreate = {
 export type EventRow = {
   id: string;
   agent_id: string | null;
+  seq: number;
   resource_kind: string;
   action: string;
   scope: string;
@@ -201,6 +228,16 @@ export type ApprovalRow = {
   status: string;
   reason: string;
   created_at: string;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  execution_id: string | null;
+  request_id: string | null;
+  contract_id: string | null;
+  contract_version: number | null;
+  param_hash: string | null;
+  expires_at: string | null;
+  consumed_at: string | null;
+  consumed_event_id: string | null;
 };
 export type ResourceRow = {
   id: string;
@@ -283,4 +320,76 @@ export type EvidenceReport = {
   event_count: number;
   chain: EvidenceEvent[];
   approvals: EvidenceApproval[];
+};
+
+export type Capability = {
+  resource_kind: string;
+  action: string;
+  enforceable: boolean;
+  irreversible: boolean;
+  registered_resource: boolean;
+  default_scope: string;
+};
+export type CapabilityCatalogue = {
+  capabilities: Capability[];
+  executable_tools: string[];
+  note: string;
+};
+export type ContractDraft = {
+  organization_id: string;
+  agent_id: string;
+  contract_id: string;
+  version: number;
+  status: string;
+  purpose: string;
+  capabilities: Array<Record<string, unknown>>;
+  resources: Array<Record<string, unknown>>;
+  constraints: Record<string, unknown>;
+  data_constraints: Record<string, unknown>;
+  approval_rules: Array<Record<string, unknown>>;
+};
+export type Scenario = { id: string; description: string };
+export type VerificationRun = {
+  id: string;
+  agent_id: string;
+  scenario: string;
+  status: string;
+  execution_id: string | null;
+  result: Record<string, any> | null;
+  error: string | null;
+  created_at: string | null;
+  claimed_at: string | null;
+  finished_at: string | null;
+};
+export type HealthReport = {
+  status: string;
+  product: string;
+  layer: string;
+  posture: {
+    role: string;
+    default_secrets_allowed: boolean;
+    weak_secrets: string[];
+    secure: boolean;
+  };
+};
+
+export type SimulateBody = {
+  resource_kind: string;
+  action: string;
+  scope: string;
+  destination?: string | null;
+  payload?: Record<string, unknown> | null;
+};
+export type SimulationStep = { layer: string; outcome: string; detail: string };
+export type SimulationResult = {
+  decision: string;
+  reason: string;
+  risk_level: string;
+  risk_score: number;
+  contract_id: string | null;
+  contract_version: number | null;
+  steps: SimulationStep[];
+  models_trajectory: boolean;
+  advisory: boolean;
+  note?: string;
 };

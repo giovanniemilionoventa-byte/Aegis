@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { api, type EvidenceReport, type ExecutionRow } from "../api";
 
 /**
@@ -13,6 +14,7 @@ import { api, type EvidenceReport, type ExecutionRow } from "../api";
  * stored hashes agreeing with themselves.
  */
 export default function Evidence() {
+  const [params] = useSearchParams();
   const [executions, setExecutions] = useState<ExecutionRow[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [report, setReport] = useState<EvidenceReport | null>(null);
@@ -22,7 +24,11 @@ export default function Evidence() {
     api.executions().then(setExecutions).catch((err) =>
       setError(err instanceof Error ? err.message : "failed to load executions"),
     );
-  }, []);
+    // Deep link from Activity or an agent's verification run.
+    const requested = params.get("execution");
+    if (requested) open(requested);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
 
   const open = async (executionId: string) => {
     setError("");

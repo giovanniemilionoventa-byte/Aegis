@@ -354,21 +354,9 @@ def authorize_request(
                 reason = "No runtime contract is active for this agent."
         else:
             decision = "BLOCK"
-            reason = {
-                "no_active_contract": (
-                    "No runtime contract is active for this agent."
-                    if not claimed
-                    else "Declared contract_id does not match the resolved runtime contract."
-                ),
-                "contract_not_yet_valid": "Runtime contract is not yet valid.",
-                "contract_expired": "Runtime contract has expired.",
-                "untrusted_contract_id": (
-                    "Declared contract_id does not match the resolved runtime contract."
-                ),
-                "ambiguous_active_contract": "Runtime contract is ambiguous.",
-                "organization_mismatch": "Runtime contract organization mismatch.",
-                "agent_mismatch": "Runtime contract agent mismatch.",
-            }.get(exc.reason, "Runtime contract cannot be resolved.")
+            reason = contract_engine.resolution_reason(
+                exc.reason, claimed=bool(claimed)
+            )
             contract = None
     else:
         verdict = contract_engine.evaluate_contract(
@@ -387,6 +375,10 @@ def authorize_request(
             if decision != "BLOCK":
                 reason = verdict.reason
             decision = "BLOCK"
+        elif verdict.requires_approval and decision == "ALLOW":
+            # The contract can raise an ALLOW to APPROVAL, never the reverse.
+            decision = "APPROVAL"
+            reason = verdict.approval_reason or reason
 
     risk = risk_engine.evaluate(
         kind,

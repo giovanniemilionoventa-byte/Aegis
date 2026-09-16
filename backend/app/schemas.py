@@ -209,6 +209,7 @@ class EventOut(BaseModel):
     id: str
     organization_id: str
     agent_id: Optional[str]
+    seq: int = 0
     resource_kind: str
     action: str
     scope: str

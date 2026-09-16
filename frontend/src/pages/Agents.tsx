@@ -1,129 +1,124 @@
-import { FormEvent, useEffect, useState } from "react";
-import { api, type Agent, type Permission } from "../api";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { api, type Agent, type RuntimeContract } from "../api";
 
+/**
+ * Agent registry.
+ *
+ * This replaces the inline create-and-configure form that used to live here.
+ * Creating an agent and granting it authority are now one guided flow (see
+ * NewAgent), because doing them separately made it easy to leave an agent
+ * half-configured and then wonder why every request was refused.
+ *
+ * The "Authority" column is the useful one: an agent without an ACTIVE contract
+ * has none, whatever its permissions say.
+ */
 export default function Agents() {
+  const nav = useNavigate();
   const [agents, setAgents] = useState<Agent[]>([]);
-  const [selected, setSelected] = useState<Agent | null>(null);
-  const [perms, setPerms] = useState<Permission[]>([]);
-  const [token, setToken] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", provider: "demo", model: "local-demo", description: "" });
-  const [perm, setPerm] = useState({ resource_kind: "files", action: "READ", scope: "/Sales", effect: "allow" });
-
-  const refresh = () => api.agents().then(setAgents);
+  const [contracts, setContracts] = useState<Record<string, RuntimeContract | null>>({});
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    refresh();
+    api
+      .agents()
+      .then(async (list) => {
+        setAgents(list);
+        const entries = await Promise.all(
+          list.map(async (agent) => {
+            try {
+              return [agent.id, await api.activeContract(agent.id)] as const;
+            } catch {
+              return [agent.id, null] as const;
+            }
+          }),
+        );
+        setContracts(Object.fromEntries(entries));
+      })
+      .catch((err) => setError(err instanceof Error ? err.message : "failed"));
   }, []);
-
-  useEffect(() => {
-    if (selected) api.permissions(selected.id).then(setPerms);
-  }, [selected]);
-
-  async function create(e: FormEvent) {
-    e.preventDefault();
-    const res = await api.createAgent(form);
-    setToken(res.token);
-    setForm({ name: "", provider: "demo", model: "local-demo", description: "" });
-    await refresh();
-  }
 
   return (
     <>
-      <h2 className="page-title">Agent registry</h2>
-      <p className="page-sub">Identity is distinct from the human owner and from the model provider.</p>
-      <div className="grid grid-2">
-        <div className="card">
+      <div className="row" style={{ justifyContent: "space-between", alignItems: "baseline" }}>
+        <h2 className="page-title">Agents</h2>
+        <button className="btn" onClick={() => nav("/agents/new")}>
+          Add agent
+        </button>
+      </div>
+      <p className="page-sub">
+        Identity is distinct from the human owner and from the model provider. An
+        agent has no authority until an operator gives it a contract.
+      </p>
+      {error && <p className="flash">{error}</p>}
+
+      <div className="card">
+        {agents.length === 0 && <div className="empty">No agents yet.</div>}
+        {agents.length > 0 && (
           <table>
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Provider</th>
-                <th>Status</th>
+                <th>Kind</th>
+                <th>State</th>
+                <th>Authority</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {agents.map((a) => (
-                <tr key={a.id} onClick={() => setSelected(a)} style={{ cursor: "pointer" }}>
-                  <td>
-                    <strong>{a.name}</strong>
-                    <div className="mono">{a.id.slice(0, 8)}</div>
-                  </td>
-                  <td className="mono">{a.provider}/{a.model}</td>
-                  <td><span className={"badge badge-" + a.status}>{a.status}</span></td>
-                  <td>
-                    {a.status === "active" && (
+              {agents.map((agent) => {
+                const active = contracts[agent.id];
+                const revoked = agent.status !== "active";
+                const verification = agent.provider === "aegis-reference";
+                return (
+                  <tr key={agent.id}>
+                    <td>
+                      <Link to={`/agents/${agent.id}`}>{agent.name}</Link>
+                    </td>
+                    <td>
+                      {verification ? (
+                        <span className="badge badge-medium">verification harness</span>
+                      ) : (
+                        <span className="mono">{agent.provider}</span>
+                      )}
+                    </td>
+                    <td>
+                      <span className={"badge badge-" + (revoked ? "BLOCK" : "ALLOW")}>
+                        {revoked ? "revoked" : "active"}
+                      </span>
+                    </td>
+                    <td>
+                      {revoked ? (
+                        <span className="badge badge-BLOCK">none</span>
+                      ) : active ? (
+                        <span className="mono">
+                          {active.contract_id} v{active.version}
+                        </span>
+                      ) : (
+                        <span className="badge badge-BLOCK">no contract — denied</span>
+                      )}
+                    </td>
+                    <td>
                       <button
-                        className="btn danger small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          api.revokeAgent(a.id).then(refresh);
-                        }}
+                        className="btn secondary small"
+                        onClick={() => nav(`/agents/${agent.id}`)}
                       >
-                        Revoke
+                        Open
                       </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
-        </div>
-        <div className="card">
-          <h3>Register agent</h3>
-          <form onSubmit={create} className="grid" style={{ gap: 10 }}>
-            <input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-            <input placeholder="Provider" value={form.provider} onChange={(e) => setForm({ ...form, provider: e.target.value })} />
-            <input placeholder="Model" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
-            <textarea placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-            <button className="btn" type="submit">Issue signed token</button>
-          </form>
-          {token && (
-            <div>
-              <p className="page-sub">Show once. Store as AEGIS_AGENT_TOKEN.</p>
-              <div className="token-box">{token}</div>
-            </div>
-          )}
-        </div>
+        )}
       </div>
-      {selected && (
-        <div className="card" style={{ marginTop: 16 }}>
-          <h3>Scopes — {selected.name}</h3>
-          <table>
-            <thead>
-              <tr><th>Resource</th><th>Action</th><th>Scope</th><th>Effect</th></tr>
-            </thead>
-            <tbody>
-              {perms.map((p) => (
-                <tr key={p.id}>
-                  <td className="mono">{p.resource_kind}</td>
-                  <td className="mono">{p.action}</td>
-                  <td className="mono">{p.scope}</td>
-                  <td><span className={"badge badge-" + p.effect}>{p.effect}</span></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <form
-            className="row"
-            style={{ marginTop: 12 }}
-            onSubmit={async (e) => {
-              e.preventDefault();
-              await api.addPermission(selected.id, perm);
-              setPerms(await api.permissions(selected.id));
-            }}
-          >
-            <input value={perm.resource_kind} onChange={(e) => setPerm({ ...perm, resource_kind: e.target.value })} />
-            <input value={perm.action} onChange={(e) => setPerm({ ...perm, action: e.target.value })} />
-            <input value={perm.scope} onChange={(e) => setPerm({ ...perm, scope: e.target.value })} />
-            <select value={perm.effect} onChange={(e) => setPerm({ ...perm, effect: e.target.value })}>
-              <option value="allow">allow</option>
-              <option value="deny">deny</option>
-            </select>
-            <button className="btn small" type="submit">Grant</button>
-          </form>
-        </div>
-      )}
+
+      <p className="page-sub" style={{ marginTop: 14 }}>
+        An agent marked <em>verification harness</em> runs inside the Aegis agent
+        container and executes a fixed scenario on request. It is a test harness,
+        not a production agent.
+      </p>
     </>
   );
 }

@@ -28,6 +28,11 @@ class ContractDecision:
     allowed: bool
     reason: str
     contract: Optional[models.RuntimeContract] = None
+    # Phase 18: the contract may *raise* the requirement for this action to a
+    # human. It can never lower one: a contract cannot turn BLOCK or APPROVAL
+    # into ALLOW, only ALLOW into APPROVAL.
+    requires_approval: bool = False
+    approval_reason: Optional[str] = None
 
 
 def _matches(pattern: Optional[str], value: Optional[str]) -> bool:
@@ -321,11 +326,86 @@ def evaluate_contract(
     for reason in checks:
         if reason:
             return ContractDecision(allowed=False, reason=reason, contract=contract)
+    approval_reason = requires_human(contract, kind, action)
     return ContractDecision(
         allowed=True,
         reason="Request is within the runtime contract.",
         contract=contract,
+        requires_approval=approval_reason is not None,
+        approval_reason=approval_reason,
     )
+
+
+RESOLUTION_REASONS = {
+    "contract_not_yet_valid": "Runtime contract is not yet valid.",
+    "contract_expired": "Runtime contract has expired.",
+    "untrusted_contract_id": (
+        "Declared contract_id does not match the resolved runtime contract."
+    ),
+    "ambiguous_active_contract": "Runtime contract is ambiguous.",
+    "organization_mismatch": "Runtime contract organization mismatch.",
+    "agent_mismatch": "Runtime contract agent mismatch.",
+}
+
+
+def resolution_reason(reason: str, claimed: bool = False) -> str:
+    """The operator-facing explanation for a contract that would not resolve.
+
+    Phase 18. This lived only inside authorize_request, so the simulator grew a
+    second copy and immediately drifted: the same BLOCK was explained two
+    different ways depending on which path the operator asked through. One copy,
+    used by both.
+    """
+    if reason == "no_active_contract":
+        return (
+            "Declared contract_id does not match the resolved runtime contract."
+            if claimed
+            else "No runtime contract is active for this agent."
+        )
+    return RESOLUTION_REASONS.get(reason, "Runtime contract cannot be resolved.")
+
+
+def _approval_rule_matches(rule: dict, kind: str, action: str) -> bool:
+    """A rule with neither selector matches nothing, to avoid silent catch-alls."""
+    rule_kind = rule.get("resource_kind")
+    rule_action = rule.get("action")
+    if not rule_kind and not rule_action:
+        return False
+    if rule_kind and str(rule_kind).strip().lower() != kind:
+        return False
+    if rule_action and str(rule_action).strip().upper() != action:
+        return False
+    return True
+
+
+def requires_human(
+    contract: models.RuntimeContract, kind: str, action: str
+) -> Optional[str]:
+    """Whether the contract itself demands a human for this action.
+
+    Phase 18. approval_rules were validated and stored since Phase 11 but never
+    read, so a contract could not require review by itself and approval was only
+    expressible as an organization-wide policy. Now a contract can say "changes
+    to customer records need a person" for one agent without imposing it on
+    every agent in the tenant.
+
+    Only "require": "human" is honoured. An unrecognised requirement is treated
+    as requiring a human as well, because the safe reading of a rule we do not
+    understand is not to skip it.
+    """
+    for rule in contract.approval_rules or []:
+        if not isinstance(rule, dict):
+            continue
+        if not _approval_rule_matches(rule, kind, action):
+            continue
+        decision = str(rule.get("decision") or "").strip().upper()
+        if decision and decision != "APPROVAL":
+            continue
+        return (
+            "Runtime contract requires human approval for "
+            f"{kind}.{action.lower()}."
+        )
+    return None
 
 
 def claimed_contract_id(metadata: Optional[dict[str, Any]]) -> Optional[str]:

@@ -13,11 +13,13 @@ from .routers import (
     auth,
     authorize,
     behavior_patterns,
+    capabilities,
     contracts,
     evidence,
     gateway,
     policies,
     resources,
+    simulate,
     verification,
 )
 from .routers import broker as broker_router
@@ -32,8 +34,10 @@ CONTROL_ROUTERS = (
     resources,
     approvals,
     behavior_patterns,
+    capabilities,
     contracts,
     evidence,
+    simulate,
     verification,
 )
 ENFORCEMENT_ROUTERS = (authorize, gateway, agentctl)
