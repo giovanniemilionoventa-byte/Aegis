@@ -23,9 +23,14 @@ did not connect to execution. All three are now closed and observed.
 | Evidence integrity | Key never configured; erasing the chain passed verification | Key required; strip and truncation detected; auditor endpoint |
 | Tenant credentials | One shared secret for all tenants | Derived per tenant; cross-tenant use refused at the tool |
 | Agent execution | No agent had ever exercised the path | Reference agent, 13/13 checks against the live stack |
+| Compromised agent | Never tested as hostile end to end | 45 attacks; 1 finding, found and fixed (§8A) |
 
-Test suite: **485 passed, 0 skipped** (was 374 passed, 5 skipped). The five
+Test suite: **537 passed, 0 skipped** (was 374 passed, 5 skipped). The five
 skips were not silenced — they were the deployment tests, and they now run.
+
+The adversarial pass (§8A) ran 45 attacks and found one real hole, in Phase 17's
+own approval work: two concurrent redemptions of a single human approval both
+succeeded, 11 times in 25 runs. It is fixed, with a stress-run regression test.
 
 What Phase 17 does **not** do is listed in §10, including the one thing the
 handoff document asks for that is still open: the provider can still read every
@@ -419,6 +424,95 @@ Both initially looked like Aegis findings and were not:
    because it resolved by name. It now probes by container IP too, so its own
    evidence is a routing failure rather than a name-resolution failure.
 
+## 8A. Adversarial pass — one real finding, found and fixed
+
+The agent is treated as hostile throughout `backend/tests/test_phase17_adversarial.py`
+(45 attacks) plus the live attempts the reference agent makes from inside its
+container. Coverage: EAT forging and replay, contract bypass, approval bypass and
+replay, cross-tenant access, privilege escalation, malformed input, and tool
+output attempting to become authority.
+
+Forty-four attacks were defeated. One was not.
+
+### FINDING A-1 — concurrent redemption of one approval (fixed in this phase)
+
+**Severity: high.** One human approval could authorize two protected executions.
+
+`evaluate_grant` only *reads* `consumed_at`, and `consume` wrote it afterwards.
+Two redemptions arriving together could both pass the read before either wrote,
+so both proceeded. This was a defect in the Phase 17 approval work itself, not a
+pre-existing one — closing the approval loop introduced it.
+
+Reproduction: two threads redeem the same approved approval simultaneously
+against the real `authorize_request` path.
+
+```
+before fix:  11 failures / 25 runs   grants=[True, True], 2 ALLOW events
+after fix:    0 failures / 25 runs
+```
+
+Fix: `approval_grant.claim()` decides the winner in the database rather than
+from the earlier read —
+
+```sql
+UPDATE approvals SET consumed_at = ? WHERE id = ? AND consumed_at IS NULL
+```
+
+The first writer takes the row lock and matches one row; the second blocks until
+that transaction commits, then matches zero and must not execute. The claim sits
+in the same transaction as the execution event, so grant and event commit
+together and there is no window where one exists without the other.
+
+Regression test: `test_concurrent_redemption_of_one_approval_executes_at_most_once`.
+
+**Note on how this was found.** It was found because the test asserted a
+property ("at most one execution") and was then run 25 times rather than once. A
+single green run would have hidden it — the race fired in fewer than half of
+attempts. Concurrency assertions in this codebase should be stressed, not
+sampled.
+
+### Attacks defeated
+
+| Class | Attempt | Result |
+| --- | --- | --- |
+| EAT | forge without the key | `bad_signature` |
+| EAT | tamper with a genuine token | rejected |
+| EAT | replay at the broker | second attempt `eat_rejected` |
+| EAT | expired token | rejected |
+| EAT | reach the broker without the internal token | 401 |
+| Contract | claim an invented `contract_id` | BLOCK |
+| Contract | act after REVOKED / expired | BLOCK, authority gone |
+| Contract | use another agent's contract | BLOCK |
+| Contract | act outside capabilities / denied destination / denied field | BLOCK |
+| Approval | redeem for a different action, destination or contract version | refused |
+| Approval | redeem while pending, denied, or already consumed | refused |
+| Approval | **redeem twice concurrently** | **FINDING A-1, now refused** |
+| Tenant | adopt another agent's execution | 403 |
+| Tenant | share a `request_id` across agents | separate events |
+| Tenant | use tenant A's credential as tenant B | refused at the tool |
+| Tenant | body `org_id` differing from the EAT | `eat_rejected` |
+| Escalation | agent token on 11 control-plane routes | 403 on all |
+| Escalation | agent grants itself a permission | 403 |
+| Escalation | **agent approves its own request** | 403 |
+| Input | malformed and type-confused requests | never ALLOW |
+| Input | unknown tool / operation / path traversal | 400 or 404 |
+| Input | identity fields in the request body | ignored; token decides |
+| Injection | tool output carrying instructions and a `decision` field | inert data |
+| Injection | `decision` / `approved` / fake trajectory in metadata | BLOCK |
+
+### Answer to the brief's question
+
+**Can a compromised agent cause an unauthorized protected action?**
+
+On the evidence gathered here: **no**, with one qualification that is now
+closed. Every path tested either refuses the agent at the network layer, refuses
+it at authorization, or requires a human whose decision is bound to one exact
+request. The one case where the answer was briefly *yes* — two concurrent
+redemptions of a single approval — is fixed and has a stress-run regression test.
+
+This is a statement about the attacks listed above, not a proof of the absence
+of others.
+
 ## 9. Security Classification
 
 Only the strongest category actually supported by evidence.
@@ -470,7 +564,10 @@ Real ones only.
    no creation path sets it. Unchanged by this phase.
 9. **The c≥75 concurrency collapse from Phase 16.B is untouched.** Out of scope
    by instruction; it does not block the security workflow.
-10. **Performance was not re-measured with contracts active.** The 16.A/B/C
+10. **Concurrency assertions need stressing, not sampling.** Finding A-1
+    passed a single run and failed 11 times in 25. Any future test asserting a
+    single-use or exactly-once property should be run repeatedly.
+11. **Performance was not re-measured with contracts active.** The 16.A/B/C
     numbers were taken with the contract engine in pass-through, so they are a
     lower bound on the real cost of the full path. Any future benchmark must
     re-baseline.

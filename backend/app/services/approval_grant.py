@@ -19,9 +19,16 @@ A grant authorizes exactly one request:
 and it is valid only while it is approved, unexpired and unconsumed. Consumption
 is recorded on the row, so the same approval cannot drive a second execution.
 
-The evaluator never mutates anything. `consume` is a separate, explicit step the
-caller takes once it has committed the execution event, so a failure between
-the two leaves the grant unusable rather than silently re-runnable.
+Single use has to survive concurrency, which the first implementation did not:
+`evaluate_grant` only reads `consumed_at`, so two simultaneous redemptions could
+both pass that read before either wrote it back. Measured on SQLite, that fired
+in 11 of 25 runs and one human approval authorized two executions.
+
+So the read and the take are separate operations with different jobs.
+`evaluate_grant` never mutates: it answers "does this grant authorize this exact
+request?". `claim` then decides the winner in the database with a conditional
+UPDATE, and the caller keeps it in the same transaction as the execution event,
+so grant and event commit together and a loser cannot execute.
 """
 
 from __future__ import annotations
@@ -30,6 +37,7 @@ from dataclasses import dataclass
 from datetime import timedelta
 from typing import Optional
 
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from .. import config, models
@@ -137,10 +145,56 @@ def evaluate_grant(
     return GrantVerdict(True, "Authorized by human approval.", approval)
 
 
+def claim(db: Session, approval: models.Approval, now=None) -> bool:
+    """Atomically take ownership of the grant. True if this caller won it.
+
+    evaluate_grant only *reads* consumed_at, so two concurrent redemptions of
+    the same approval could both pass that check before either wrote it back.
+    Measured on SQLite, that race fired in 11 of 25 runs: one human approval
+    authorized two executions.
+
+    The winner is therefore decided by the database, not by the earlier read.
+    This is a conditional UPDATE whose WHERE clause carries the precondition:
+
+        UPDATE approvals SET consumed_at = ... WHERE id = ? AND consumed_at IS NULL
+
+    The first writer takes the row lock and matches one row; the second blocks
+    until that transaction commits and then matches zero, so it loses and must
+    not execute. Callers keep this in the same transaction as the execution
+    event they are about to write, so the grant and the event commit together
+    and there is no window where one exists without the other.
+    """
+    timestamp = coerce_utc(now) if now is not None else utcnow()
+    result = db.execute(
+        update(models.Approval)
+        .where(
+            models.Approval.id == approval.id,
+            models.Approval.consumed_at.is_(None),
+        )
+        .values(consumed_at=timestamp)
+        .execution_options(synchronize_session=False)
+    )
+    if result.rowcount != 1:
+        return False
+    db.refresh(approval)
+    return True
+
+
+def record_consuming_event(
+    db: Session, approval: models.Approval, execution_event_id: str
+) -> None:
+    """Attach the event that used the grant. Same transaction as claim()."""
+    approval.consumed_event_id = execution_event_id
+    db.flush()
+
+
 def consume(
     db: Session, approval: models.Approval, execution_event_id: str, now=None
 ) -> None:
-    """Burn the grant. Called only after the execution event is persisted."""
+    """Non-atomic burn, kept for callers that already hold exclusivity.
+
+    Prefer claim() + record_consuming_event() on any concurrent path.
+    """
     approval.consumed_at = coerce_utc(now) if now is not None else utcnow()
     approval.consumed_event_id = execution_event_id
     db.flush()

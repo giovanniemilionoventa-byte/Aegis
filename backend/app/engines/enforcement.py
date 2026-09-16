@@ -154,6 +154,14 @@ def _resume_approved_request(
     if execution is None:
         return None
 
+    # Take the grant atomically before doing any work with it. evaluate_grant
+    # above only read consumed_at; under concurrency two redemptions could both
+    # pass that read. The conditional UPDATE decides the winner, and stays in
+    # this transaction so the grant and the execution event commit together.
+    if not approval_grant.claim(db, verdict.approval):
+        db.rollback()
+        return None
+
     try:
         assert_execution_evidence_integrity(db, execution.id)
     except EvidenceIntegrityError as exc:
@@ -196,7 +204,7 @@ def _resume_approved_request(
     db.add(event)
     db.flush()
     seal_execution_event(db, event, execution)
-    approval_grant.consume(db, verdict.approval, event.id)
+    approval_grant.record_consuming_event(db, verdict.approval, event.id)
     db.commit()
 
     return AuthorizationOutcome(
