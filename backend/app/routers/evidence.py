@@ -166,3 +166,94 @@ def execution_evidence(
             for row in approvals
         ],
     }
+
+
+@router.get("/executions/{execution_id}/connector-calls")
+def execution_connector_calls(
+    execution_id: str,
+    user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Phase 19 — what was asked, what was authorized, what actually ran.
+
+    The sealed evidence chain answers "what did Aegis decide". This answers the
+    two questions Phase 19 adds:
+
+      * did the agent's account of what it was doing match the operation it
+        actually requested (declared_intent vs canonical_operation), and
+      * did anything actually happen at the protected service
+        (connector_operation, which is NULL unless it did).
+
+    A row where those disagree is the evidence of a divergence, not a bug in
+    the recording. declared_intent is agent-supplied text and is labelled as
+    untrusted in the response so nobody reading this mistakes it for a finding
+    of fact.
+
+    Tenant-scoped: the execution must belong to the caller's organization.
+    """
+    _execution_or_404(db, user, execution_id)
+    rows = (
+        db.query(models.ConnectorCall)
+        .filter(
+            models.ConnectorCall.organization_id == user.organization_id,
+            models.ConnectorCall.execution_id == execution_id,
+        )
+        .order_by(models.ConnectorCall.created_at.asc())
+        .all()
+    )
+    return {
+        "execution_id": execution_id,
+        "count": len(rows),
+        "note": (
+            "declared_intent is text supplied by the agent. It is recorded for "
+            "comparison and is not read by any authorization path. The "
+            "authoritative record is the sealed event chain."
+        ),
+        "calls": [
+            {
+                "id": row.id,
+                "created_at": row.created_at.isoformat() if row.created_at else None,
+                "agent_id": row.agent_id,
+                "request_id": row.request_id,
+                "event_id": row.event_id,
+                "tool": row.tool,
+                # The four facts, kept apart.
+                "requested_operation": row.requested_operation,
+                "canonical_operation": row.canonical_operation,
+                "declared_intent_untrusted": row.declared_intent,
+                "decision": row.decision,
+                "approval_id": row.approval_id,
+                "approval_granted": row.approval_granted,
+                "executed": row.executed,
+                "connector_operation": row.connector_operation,
+                "result_status": row.result_status,
+                "resource_ref": row.resource_ref,
+                "error_code": row.error_code,
+                "intent_matches_operation": _intent_matches(
+                    row.declared_intent, row.canonical_operation
+                ),
+            }
+            for row in rows
+        ],
+    }
+
+
+# Words an operator would expect to see in an honest description of each
+# canonical operation. A mismatch is a hint for a human, never a control:
+# nothing branches on it, and a "False" here has never prevented anything.
+_INTENT_HINTS = {
+    "gmail.SEARCH": ("search", "find", "look", "cerca", "trova"),
+    "gmail.READ": ("read", "open", "leggi", "apri", "review"),
+    "gmail.DRAFT": ("draft", "compose", "write", "prepare", "bozza", "scrivi"),
+    "gmail.SEND": ("send", "reply", "forward", "invia", "manda", "rispondi"),
+    "gmail.DELETE": ("delete", "remove", "trash", "elimina", "cancella"),
+}
+
+
+def _intent_matches(intent: str | None, canonical: str | None):
+    if not intent or not canonical:
+        return None
+    hints = _INTENT_HINTS.get(canonical)
+    if not hints:
+        return None
+    return any(word in intent.lower() for word in hints)

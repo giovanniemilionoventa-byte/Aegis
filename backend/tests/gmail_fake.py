@@ -37,6 +37,8 @@ def _response(status: int, body: Any) -> httpx.Response:
 class FakeGoogle:
     """A mailbox, an OAuth token endpoint, and a ledger of real side effects."""
 
+    DEFAULT_REFRESH_TOKEN = "stand-in-refresh-token"
+
     def __init__(self) -> None:
         self.access_token = "stand-in-access-token"
         self.refresh_calls = 0
@@ -48,7 +50,27 @@ class FakeGoogle:
         self.requests: list[tuple[str, str]] = []
         self._draft_seq = 0
         self._message_seq = 0
-        self.messages: dict[str, dict] = {}
+        # One mailbox per credential. A message id in mailbox A is simply not
+        # present in mailbox B, so a cross-tenant read fails the way it fails
+        # at Google -- 404 -- rather than by a check this harness invented.
+        self._mailboxes: dict[str, dict[str, dict]] = {self.access_token: {}}
+        self._access_for_refresh: dict[str, str] = {
+            self.DEFAULT_REFRESH_TOKEN: self.access_token
+        }
+        self._active = self.access_token
+
+    def add_mailbox(self, refresh_token: str, access_token: str) -> None:
+        """Register a second credential with a mailbox of its own."""
+        self._access_for_refresh[refresh_token] = access_token
+        self._mailboxes.setdefault(access_token, {})
+
+    def mailbox(self, access_token: Optional[str] = None) -> dict[str, dict]:
+        return self._mailboxes.setdefault(access_token or self.access_token, {})
+
+    @property
+    def messages(self) -> dict[str, dict]:
+        """The default mailbox, for the single-tenant tests."""
+        return self.mailbox(self.access_token)
 
     # -- mailbox setup -----------------------------------------------------
 
@@ -61,8 +83,9 @@ class FakeGoogle:
         subject: str = "",
         body: str = "",
         thread_id: Optional[str] = None,
+        access_token: Optional[str] = None,
     ) -> str:
-        self.messages[message_id] = {
+        self.mailbox(access_token)[message_id] = {
             "id": message_id,
             "threadId": thread_id or f"t-{message_id}",
             "snippet": body[:100],
@@ -100,14 +123,20 @@ class FakeGoogle:
             return self._token(data or {})
 
         bearer = (headers or {}).get("Authorization", "")
-        if bearer != f"Bearer {self.access_token}":
+        presented = bearer[7:] if bearer.startswith("Bearer ") else ""
+        if presented not in self._mailboxes:
             return _response(401, {"error": "unauthorized"})
+        self._active = presented
 
         path = url.split("gmail/v1/users/me", 1)[-1] if "gmail/v1" in url else url
 
         if path == "/profile":
             return _response(
-                200, {"emailAddress": "mailbox@example.test", "messagesTotal": len(self.messages)}
+                200,
+                {
+                    "emailAddress": "mailbox@example.test",
+                    "messagesTotal": len(self.mailbox(self._active)),
+                },
             )
         if path == "/messages" and method == "GET":
             return self._list(params or {})
@@ -132,14 +161,17 @@ class FakeGoogle:
         supplied = form.get("refresh_token")
         if supplied in self.rejected_refresh_tokens:
             return _response(400, {"error": "invalid_grant"})
-        return _response(
-            200, {"access_token": self.access_token, "expires_in": 3600}
-        )
+        granted = self._access_for_refresh.get(supplied)
+        if granted is None:
+            # An unknown refresh token is not a working credential. This is how
+            # a guessed or lifted token fails.
+            return _response(400, {"error": "invalid_grant"})
+        return _response(200, {"access_token": granted, "expires_in": 3600})
 
     def _list(self, params: dict) -> httpx.Response:
         query = str(params.get("q") or "").lower()
         matches = []
-        for message in self.messages.values():
+        for message in self.mailbox(self._active).values():
             headers = {
                 h["name"].lower(): h["value"] for h in message["payload"]["headers"]
             }
@@ -151,7 +183,7 @@ class FakeGoogle:
         return _response(200, {"messages": matches, "resultSizeEstimate": len(matches)})
 
     def _get(self, message_id: str, params: dict) -> httpx.Response:
-        message = self.messages.get(message_id)
+        message = self.mailbox(self._active).get(message_id)
         if message is None:
             return _response(404, {"error": "not found"})
         if params.get("format") == "full":
@@ -197,7 +229,7 @@ class FakeGoogle:
         return _response(200, {"id": message_id, "threadId": f"t-{message_id}"})
 
     def _trash(self, message_id: str) -> httpx.Response:
-        if message_id not in self.messages:
+        if message_id not in self.mailbox(self._active):
             return _response(404, {"error": "not found"})
         self.trashed.append(message_id)
         return _response(200, {"id": message_id, "labelIds": ["TRASH"]})

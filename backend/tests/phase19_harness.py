@@ -64,12 +64,17 @@ def isolate_oauth_store(tmp_path: Path, monkeypatch) -> Path:
     return target
 
 
-def connect_gmail(organization_id: str, *, email: str = "mailbox@example.test") -> None:
+def connect_gmail(
+    organization_id: str,
+    *,
+    email: str = "mailbox@example.test",
+    refresh_token: str = "stand-in-refresh-token",
+) -> None:
     """Record a Gmail connection the way the OAuth callback would."""
     gmail_store.save_connection(
         organization_id=organization_id,
         google_email=email,
-        refresh_token="stand-in-refresh-token",
+        refresh_token=refresh_token,
         scopes=["https://www.googleapis.com/auth/gmail.modify"],
         connected_by=None,
     )
@@ -189,7 +194,9 @@ def create_gmail_agent(
     return agent_id, agent_token, contract_id
 
 
-def build_tenant(client: TestClient, **kwargs) -> Tenant:
+def build_tenant(
+    client: TestClient, *, refresh_token: str = "stand-in-refresh-token", **kwargs
+) -> Tenant:
     operator = register_operator(client)
     install_canonical_policy(client, operator)
     agent_id, agent_token, contract_id = create_gmail_agent(client, operator, **kwargs)
@@ -197,7 +204,7 @@ def build_tenant(client: TestClient, **kwargs) -> Tenant:
         client.get(f"/api/agents/{agent_id}", headers=operator)
         .json()["organization_id"]
     )
-    connect_gmail(organization_id)
+    connect_gmail(organization_id, refresh_token=refresh_token)
     return Tenant(
         organization_id=organization_id,
         operator=operator,
