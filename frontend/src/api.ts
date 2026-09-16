@@ -87,6 +87,18 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ decision }),
     }),
+  contracts: (agentId: string) =>
+    request<RuntimeContract[]>(`/api/agents/${agentId}/contracts`),
+  activeContract: (agentId: string) =>
+    request<RuntimeContract>(`/api/agents/${agentId}/contracts/active`),
+  setContractStatus: (agentId: string, contractId: string, version: number, status: string) =>
+    request<RuntimeContract>(
+      `/api/agents/${agentId}/contracts/${contractId}/${version}/status`,
+      { method: "POST", body: JSON.stringify({ status }) },
+    ),
+  executions: () => request<ExecutionRow[]>("/api/executions"),
+  evidence: (executionId: string) =>
+    request<EvidenceReport>(`/api/executions/${executionId}/evidence`),
   resources: () => request<ResourceRow[]>("/api/resources"),
   devices: () => request<DeviceRow[]>("/api/devices"),
 };
@@ -203,4 +215,72 @@ export type DeviceRow = {
   platform: string;
   status: string;
   last_seen: string;
+};
+
+export type RuntimeContract = {
+  id: string;
+  organization_id: string;
+  agent_id: string;
+  contract_id: string;
+  version: number;
+  status: string;
+  purpose: string;
+  capabilities: Array<Record<string, unknown>>;
+  resources: Array<Record<string, unknown>>;
+  constraints: Record<string, unknown>;
+  data_constraints: Record<string, unknown>;
+  workflow: Record<string, unknown> | null;
+  approval_rules: Array<Record<string, unknown>>;
+  valid_from: string | null;
+  expires_at: string | null;
+  created_at: string;
+};
+export type ExecutionRow = {
+  id: string;
+  agent_id: string;
+  created_at: string;
+  evidence_chain_tip: string | null;
+  event_count: number;
+};
+export type EvidenceEvent = {
+  event_id: string;
+  seq: number;
+  request_id: string;
+  resource_kind: string;
+  action: string;
+  scope: string;
+  destination: string | null;
+  decision: string;
+  reason: string;
+  payload_hash: string | null;
+  previous_evidence_hash: string | null;
+  evidence_hash: string | null;
+  recomputed_evidence_hash: string | null;
+  digest_matches: boolean | null;
+  created_at: string;
+};
+export type EvidenceApproval = {
+  id: string;
+  status: string;
+  resource_kind: string;
+  action: string;
+  scope: string;
+  contract_id: string | null;
+  contract_version: number | null;
+  param_hash: string | null;
+  reviewed_by: string | null;
+  consumed_at: string | null;
+  consumed_event_id: string | null;
+};
+export type EvidenceReport = {
+  execution: {
+    id: string;
+    agent_id: string;
+    created_at: string;
+    evidence_chain_tip: string | null;
+  };
+  verdict: { valid: boolean; reason: string | null; first_bad_event: string | null };
+  event_count: number;
+  chain: EvidenceEvent[];
+  approvals: EvidenceApproval[];
 };

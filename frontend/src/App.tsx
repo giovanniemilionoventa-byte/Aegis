@@ -8,6 +8,8 @@ import Policies from "./pages/Policies";
 import Events from "./pages/Events";
 import Approvals from "./pages/Approvals";
 import Playground from "./pages/Playground";
+import Contracts from "./pages/Contracts";
+import Evidence from "./pages/Evidence";
 
 function Shell({ children }: { children: ReactNode }) {
   const [me, setMe] = useState<{ user: User; organization: Org } | null>(null);
@@ -20,8 +22,10 @@ function Shell({ children }: { children: ReactNode }) {
   const links = [
     ["/", "Overview"],
     ["/agents", "Agents"],
+    ["/contracts", "Contracts"],
     ["/policies", "Policies"],
     ["/events", "Audit"],
+    ["/evidence", "Evidence"],
     ["/approvals", "Approvals"],
     ["/playground", "Authorize"],
   ];
@@ -77,8 +81,10 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Private><Overview /></Private>} />
       <Route path="/agents" element={<Private><Agents /></Private>} />
+      <Route path="/contracts" element={<Private><Contracts /></Private>} />
       <Route path="/policies" element={<Private><Policies /></Private>} />
       <Route path="/events" element={<Private><Events /></Private>} />
+      <Route path="/evidence" element={<Private><Evidence /></Private>} />
       <Route path="/approvals" element={<Private><Approvals /></Private>} />
       <Route path="/playground" element={<Private><Playground /></Private>} />
     </Routes>
