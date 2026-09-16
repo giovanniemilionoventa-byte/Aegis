@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-09-16T14:34:55.681340+00:00",
+  "harness": "in-process TestClient, Gmail API stand-in, SQLite",
+  "iterations_per_operation": 40,
+  "not_claimed": [
+    "production-scale throughput",
+    "real Gmail API latency",
+    "model token cost or spend",
+    "anything about a deployment that is not this one"
+  ],
+  "observations": {
+    "aegis_overhead_median_ms": 17.094,
+    "aegis_overhead_note": "A denied operation never reaches the connector, so its whole cost is authorization, sealing evidence and recording the connector-call row. Treat it as the floor Aegis adds to any request.",
+    "approval_latency": "NOT MEASURED. It is a human deciding. The grant's TTL (900s) bounds how long that decision stays usable, not how long it takes.",
+    "connector_calls_recorded": 205,
+    "connector_share_median_ms": 0.739,
+    "connector_share_note": "Difference between an allowed read and a denied delete. Against the stand-in this is within run-to-run noise and can come out negative, which is the honest reading: the stand-in costs nothing, so essentially all of the measured time is Aegis plus SQLite. Do not report this number as a connector cost. With real Gmail it is replaced by Google's latency, which is not measured here.",
+    "events_recorded": 205,
+    "evidence_rows_per_operation": 1,
+    "gmail_api_latency": "NOT MEASURED. Needs a real Google account.",
+    "model_calls_per_task": "NOT MEASURED. The agent loop is one model call per turn plus one per tool-result round; with the canonical four-step task that is 5 model calls and 4 tool calls, but the real figure depends on the model and is not measured without an API key.",
+    "search_is_not_one_request": "gmail.search issues one list request plus one metadata fetch PER RESULT RETURNED -- not per max_results. A query matching one message costs 2 requests; one matching twenty costs 21. The connector caps results at 25, so the ceiling is 26. This is the first thing to batch if it ever matters."
+  },
+  "operations": {
+    "gmail.delete_denied": {
+      "count": 40,
+      "gmail_api_requests_per_operation": 0.0,
+      "max_ms": 18.605,
+      "mean_ms": 16.955,
+      "median_ms": 17.094,
+      "p95_ms": 18.496
+    },
+    "gmail.draft": {
+      "count": 40,
+      "gmail_api_requests_per_operation": 1.0,
+      "max_ms": 22.023,
+      "mean_ms": 17.947,
+      "median_ms": 17.507,
+      "p95_ms": 20.954
+    },
+    "gmail.read": {
+      "count": 40,
+      "gmail_api_requests_per_operation": 1.0,
+      "max_ms": 23.393,
+      "mean_ms": 18.15,
+      "median_ms": 17.833,
+      "p95_ms": 21.151
+    },
+    "gmail.search": {
+      "count": 40,
+      "gmail_api_requests_per_operation": 2.0,
+      "max_ms": 19.08,
+      "mean_ms": 16.942,
+      "median_ms": 16.886,
+      "p95_ms": 18.504
+    },
+    "gmail.send_approval_required": {
+      "count": 40,
+      "gmail_api_requests_per_operation": 0.0,
+      "max_ms": 71.298,
+      "mean_ms": 17.857,
+      "median_ms": 16.2,
+      "p95_ms": 21.7
+    }
+  },
+  "schema": "aegis.phase19.cost_observations/v1"
+}
