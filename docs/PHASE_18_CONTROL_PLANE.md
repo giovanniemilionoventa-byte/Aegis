@@ -215,9 +215,21 @@ Nothing is promoted beyond its evidence.
 
 1. **No heartbeat.** "Active" is configuration. Aegis does not know whether an
    agent is running, and the UI says so on every page that could mislead.
-2. **Stale approvals look live.** An approval from an abandoned run sits in the
-   queue with time left on it. The operator can tell them apart by the execution
-   id under **Inspect**, but nothing surfaces it. Found during §4.1; not fixed.
+2. **Stale approvals cannot be distinguished by Aegis, only flagged.** An
+   approval outlives the attempt that raised it: agents wait a bounded time for
+   a human and then give up, but the grant stays valid until it expires. Found
+   during §4.1, where the driver approved an abandoned run's request believing
+   it was releasing the one in flight.
+
+   The queue now shows each request's **execution** and **age**, and marks rows
+   older than three minutes *"agent may have stopped waiting"*. That is a
+   judgement aid and nothing more. Aegis genuinely cannot tell the two cases
+   apart — it has no heartbeat, and re-submissions of an already-pending request
+   write no new events — so the honest fix was to show the operator what it does
+   know and name the question they are actually being asked. Approving a stale
+   request was never dangerous in itself: the grant is bound to one request and
+   single-use. The risk is the operator believing they released something they
+   did not.
 3. **One connected tool.** Only `crm` executes. Everything else is decision-only.
 4. **The protected tool is a mock.**
 5. **The provider can still derive every tenant's credential.** CAN USE ≠ CAN

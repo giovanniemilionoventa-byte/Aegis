@@ -58,12 +58,43 @@ export default function Approvals() {
     return `${Math.max(1, Math.round(remaining / 60000))} min left`;
   };
 
+  const ageMinutes = (row: ApprovalRow) =>
+    (Date.now() - new Date(row.created_at).getTime()) / 60000;
+
+  const ageLabel = (row: ApprovalRow) => {
+    const minutes = ageMinutes(row);
+    if (minutes < 1) return "just now";
+    return `${Math.round(minutes)} min ago`;
+  };
+
+  /**
+   * An approval outlives the attempt that raised it.
+   *
+   * Agents wait a bounded time for a human and then give up, but the grant
+   * stays valid until it expires. So a request from an abandoned run sits in
+   * this queue looking exactly like one with an agent still retrying behind it,
+   * and approving the wrong one means the operator believes they released the
+   * action currently in flight when they did not.
+   *
+   * Aegis cannot tell the difference — it has no heartbeat, and re-submissions
+   * of an already-pending request do not write new events. What it can do is
+   * show the age and the execution, and say which question the operator is
+   * actually being asked. That is a judgement aid, not a control: the grant is
+   * bound and single-use either way.
+   */
+  const likelyAbandoned = (row: ApprovalRow) => ageMinutes(row) >= 3;
+
   return (
     <>
       <h2 className="page-title">Human approval</h2>
       <p className="page-sub">
         Approving lets the agent's next attempt at this exact request run, once.
         A changed request is not covered, and the grant cannot be reused.
+      </p>
+      <p className="page-sub">
+        Check the execution before you decide. An agent that has given up waiting
+        leaves its request here until it expires, so an old row can look exactly
+        like a live one — and approving it releases nothing.
       </p>
       {error && <p className="flash">{error}</p>}
 
@@ -76,6 +107,8 @@ export default function Approvals() {
               <tr>
                 <th>Agent</th>
                 <th>Action</th>
+                <th>Execution</th>
+                <th>Raised</th>
                 <th>Expires</th>
                 <th>Why</th>
                 <th></th>
@@ -89,6 +122,20 @@ export default function Approvals() {
                     <td className="mono">
                       {row.resource_kind}.{row.action} {row.scope}
                       {row.destination ? ` → ${row.destination}` : ""}
+                    </td>
+                    <td className="mono">
+                      {row.execution_id ? row.execution_id.slice(0, 18) : "—"}
+                    </td>
+                    <td className="mono">
+                      {ageLabel(row)}
+                      {likelyAbandoned(row) && (
+                        <>
+                          {" "}
+                          <span className="badge badge-medium" title="Agents wait a bounded time for a human and then stop. This request is old enough that the agent behind it has probably given up, so approving it may not release anything.">
+                            agent may have stopped waiting
+                          </span>
+                        </>
+                      )}
                     </td>
                     <td className="mono">{expiryLabel(row)}</td>
                     <td>{row.reason}</td>
@@ -114,7 +161,7 @@ export default function Approvals() {
                   </tr>
                   {expanded === row.id && (
                     <tr>
-                      <td colSpan={5}>
+                      <td colSpan={7}>
                         <p className="page-sub" style={{ marginTop: 0 }}>
                           What this approval will authorize, exactly:
                         </p>

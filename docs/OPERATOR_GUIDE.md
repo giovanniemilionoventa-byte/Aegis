@@ -136,6 +136,15 @@ Your agent must still be running and still retrying. If nobody approves within
 the agent's wait window, the agent gives up and the run reports a failure. That
 is the honest outcome, not a bug.
 
+**Check the execution before you decide.** When an agent gives up, its request
+stays in this queue until it expires, looking exactly like one with an agent
+still waiting behind it. The queue shows each request's execution and its age,
+and flags rows older than a few minutes as *"agent may have stopped waiting"* —
+but that is a hint, not a fact. Aegis has no heartbeat and cannot tell the two
+apart. Approving a stale request is not dangerous, because the grant is bound to
+that one request and expires unused; the danger is believing you just released
+the action currently in flight when you did not.
+
 ## 7. Read what happened
 
 **Activity** shows every attempt grouped by execution, so a sequence reads as
