@@ -14,6 +14,7 @@ import Contracts from "./pages/Contracts";
 import NewAgent from "./pages/NewAgent";
 import AgentDetail from "./pages/AgentDetail";
 import Evidence from "./pages/Evidence";
+import Gmail from "./pages/Gmail";
 
 function Shell({ children }: { children: ReactNode }) {
   const [me, setMe] = useState<{ user: User; organization: Org } | null>(null);
@@ -27,6 +28,7 @@ function Shell({ children }: { children: ReactNode }) {
     ["/", "Overview"],
     ["/agents", "Agents"],
     ["/contracts", "Contracts"],
+    ["/gmail", "Gmail"],
     ["/policies", "Policies"],
     ["/approvals", "Approvals"],
     ["/activity", "Activity"],
@@ -90,6 +92,7 @@ export default function App() {
       <Route path="/agents/new" element={<Private><NewAgent /></Private>} />
       <Route path="/agents/:agentId" element={<Private><AgentDetail /></Private>} />
       <Route path="/contracts" element={<Private><Contracts /></Private>} />
+      <Route path="/gmail" element={<Private><Gmail /></Private>} />
       <Route path="/policies" element={<Private><Policies /></Private>} />
       <Route path="/events" element={<Private><Events /></Private>} />
       <Route path="/activity" element={<Private><Activity /></Private>} />

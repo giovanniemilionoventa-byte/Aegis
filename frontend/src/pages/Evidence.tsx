@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { api, type EvidenceReport, type ExecutionRow } from "../api";
+import { api, type ConnectorCall, type EvidenceReport, type ExecutionRow } from "../api";
 
 /**
  * Execution evidence, verified on demand.
@@ -18,6 +18,7 @@ export default function Evidence() {
   const [executions, setExecutions] = useState<ExecutionRow[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [report, setReport] = useState<EvidenceReport | null>(null);
+  const [calls, setCalls] = useState<ConnectorCall[]>([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -34,10 +35,19 @@ export default function Evidence() {
     setError("");
     setSelected(executionId);
     setReport(null);
+    setCalls([]);
     try {
       setReport(await api.evidence(executionId));
     } catch (err) {
       setError(err instanceof Error ? err.message : "failed to verify");
+    }
+    try {
+      // Phase 19. Separate from the chain on purpose: the sealed events are
+      // the authority, this is the observation of what the connector did.
+      // A failure to load it must not make a verified chain look unverified.
+      setCalls((await api.connectorCalls(executionId)).calls);
+    } catch {
+      setCalls([]);
     }
   };
 
@@ -161,6 +171,64 @@ export default function Evidence() {
               )}
             </>
           )}
+        </div>
+      )}
+
+      {selected && calls.length > 0 && (
+        <div className="card">
+          <h3 style={{ marginTop: 0 }}>Protected-service calls</h3>
+          <p className="page-sub" style={{ marginTop: 0 }}>
+            What the agent said it was doing, what it actually asked for, and
+            whether anything reached the protected service. The middle column is
+            the one Aegis ruled on. The first is agent-supplied text and is not
+            evidence of anything except what the agent claimed.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Agent&rsquo;s account (untrusted)</th>
+                <th>Operation ruled on</th>
+                <th>Decision</th>
+                <th>Actually ran</th>
+                <th>Touched</th>
+              </tr>
+            </thead>
+            <tbody>
+              {calls.map((call) => (
+                <tr key={call.id}>
+                  <td>
+                    {call.declared_intent_untrusted ? (
+                      <span
+                        title={
+                          call.intent_matches_operation === false
+                            ? "This description does not match the operation that was sent."
+                            : undefined
+                        }
+                      >
+                        {call.intent_matches_operation === false && "⚠ "}
+                        {call.declared_intent_untrusted}
+                      </span>
+                    ) : (
+                      <span className="muted">none given</span>
+                    )}
+                  </td>
+                  <td className="mono">{call.canonical_operation}</td>
+                  <td>
+                    {call.decision}
+                    {call.approval_granted && " (approved)"}
+                  </td>
+                  <td>
+                    {call.executed ? (
+                      <span className="mono">{call.connector_operation}</span>
+                    ) : (
+                      <span className="muted">nothing</span>
+                    )}
+                  </td>
+                  <td className="mono">{call.resource_ref ?? "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </>

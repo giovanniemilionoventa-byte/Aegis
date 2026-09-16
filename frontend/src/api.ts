@@ -38,6 +38,49 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   return (await res.json()) as T;
 }
 
+// Phase 19 — the Gmail connection, as the operator sees it.
+//
+// Note what is absent from GmailConnection: there is no token field, because
+// no endpoint returns one. The dashboard shows which mailbox is connected and
+// what was granted; the credential itself never leaves the server.
+export type GmailConnection = {
+  organization_id: string;
+  google_email: string;
+  scopes: string[];
+  connected_at: string;
+  connected_by: string | null;
+  status: string;
+};
+
+export type GmailStatus = {
+  oauth_client_configured: boolean;
+  encryption_key_configured: boolean;
+  connected: boolean;
+  connection: GmailConnection | null;
+  requested_scopes: string[];
+  redirect_uri: string;
+};
+
+export type ConnectorCall = {
+  id: string;
+  created_at: string | null;
+  agent_id: string | null;
+  request_id: string | null;
+  tool: string;
+  requested_operation: string;
+  canonical_operation: string;
+  declared_intent_untrusted: string | null;
+  decision: string;
+  approval_id: string | null;
+  approval_granted: boolean;
+  executed: boolean;
+  connector_operation: string | null;
+  result_status: string;
+  resource_ref: string | null;
+  error_code: string | null;
+  intent_matches_operation: boolean | null;
+};
+
 export const api = {
   login: (email: string, password: string) =>
     request<{ access_token: string }>("/api/auth/login", {
@@ -55,6 +98,20 @@ export const api = {
       body: JSON.stringify(payload),
     }),
   me: () => request<{ user: User; organization: Org }>("/api/auth/me"),
+  gmailStatus: () => request<GmailStatus>("/api/gmail/status"),
+  gmailConnect: () =>
+    request<{ authorization_url: string; expires_in: number }>(
+      "/api/gmail/oauth/start",
+      { method: "POST" },
+    ),
+  gmailDisconnect: () =>
+    request<{ disconnected: boolean; note: string }>("/api/gmail/disconnect", {
+      method: "POST",
+    }),
+  connectorCalls: (executionId: string) =>
+    request<{ execution_id: string; count: number; note: string; calls: ConnectorCall[] }>(
+      `/api/executions/${executionId}/connector-calls`,
+    ),
   stats: () => request<Stats>("/api/stats"),
   agents: () => request<Agent[]>("/api/agents"),
   createAgent: (body: { name: string; provider: string; model: string; description: string }) =>
