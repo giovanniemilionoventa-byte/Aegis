@@ -653,6 +653,7 @@ def test_stale_contract_at_dispatch_blocks_execution(monolith, monkeypatch):
             self.contract_id = "sales-contract"
             self.contract_version = 1
             self.authorized_payload = {}
+            self.approval_granted = False
 
     event = models.Event(
         organization_id="org-1",

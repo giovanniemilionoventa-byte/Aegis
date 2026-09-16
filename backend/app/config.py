@@ -88,3 +88,55 @@ VERIFY_AGENT_TOKEN = _env("AEGIS_VERIFY_AGENT_TOKEN", "")
 
 # Approval grants are single-use and short-lived (Phase 17).
 APPROVAL_TTL_SECONDS = int(_env("AEGIS_APPROVAL_TTL_SECONDS", "900"))
+
+
+# ---------------------------------------------------------------------------
+# Phase 19 — real Gmail as the first real protected service.
+#
+# Every value here is server-side. None of it is ever handed to an agent, put
+# in a model prompt, returned by an API, or written to the evidence chain.
+# ---------------------------------------------------------------------------
+
+# Google OAuth client. Created by a human in Google Cloud Console; see
+# docs/PHASE_19_GMAIL.md. The client secret lives in .env, which is gitignored.
+GOOGLE_OAUTH_CLIENT_ID = _env("AEGIS_GOOGLE_CLIENT_ID", "")
+GOOGLE_OAUTH_CLIENT_SECRET = _env("AEGIS_GOOGLE_CLIENT_SECRET", "")
+GOOGLE_OAUTH_REDIRECT_URI = _env(
+    "AEGIS_GOOGLE_REDIRECT_URI", "http://localhost:8000/api/gmail/oauth/callback"
+)
+
+# Google endpoints. Overridable so tests can point the connector at a local
+# stand-in without editing code; production leaves them alone.
+GOOGLE_AUTH_ENDPOINT = _env(
+    "AEGIS_GOOGLE_AUTH_ENDPOINT", "https://accounts.google.com/o/oauth2/v2/auth"
+)
+GOOGLE_TOKEN_ENDPOINT = _env(
+    "AEGIS_GOOGLE_TOKEN_ENDPOINT", "https://oauth2.googleapis.com/token"
+)
+GMAIL_API_BASE_URL = _env("AEGIS_GMAIL_API_BASE_URL", "https://gmail.googleapis.com")
+
+# Where sealed refresh tokens are kept. Mounted on the control plane (writes on
+# consent) and the Gmail connector (reads to call Google) and nowhere else.
+GMAIL_OAUTH_STORE_PATH = _env("AEGIS_GMAIL_STORE_PATH", "/oauth/gmail_connections.json")
+GMAIL_OAUTH_ENCRYPTION_KEY = _env("AEGIS_OAUTH_ENCRYPTION_KEY", "")
+
+# The scopes Aegis asks Google for. gmail.modify covers search, read, drafting
+# and sending. Aegis does NOT request https://mail.google.com/, which would add
+# permanent-delete rights it has no canonical operation for: the connector
+# cannot perform an operation Google never granted, which is a second, external
+# floor under the DENY that policy already applies to gmail.delete.
+GMAIL_OAUTH_SCOPES = [
+    scope.strip()
+    for scope in _env(
+        "AEGIS_GMAIL_SCOPES", "https://www.googleapis.com/auth/gmail.modify"
+    ).split(",")
+    if scope.strip()
+]
+
+GMAIL_TIMEOUT_SECONDS = float(_env("AEGIS_GMAIL_TIMEOUT_SECONDS", "20"))
+
+# Phase 19: the AI agent's own model configuration. Read by the agent runtime
+# in infra/ai-agent, never by the backend. The agent holds this and its Aegis
+# token; it holds nothing belonging to Gmail.
+AGENT_LLM_BASE_URL = _env("AEGIS_AGENT_LLM_BASE_URL", "")
+AGENT_LLM_MODEL = _env("AEGIS_AGENT_LLM_MODEL", "")

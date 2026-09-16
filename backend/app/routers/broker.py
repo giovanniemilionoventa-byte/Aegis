@@ -87,8 +87,25 @@ def _call_tool(
     organization_id: str,
 ) -> dict:
     if not config.TOOL_URL:
+        # In-process fallback for single-container deployments and tests. Same
+        # connectors, same credential check; only the network hop is missing.
         from ..protected.crm import InvalidToolCredential, protected_crm
 
+        if tool == "gmail":
+            from ..protected.gmail import GmailConnectorError, gmail_connector
+            from ..protected.gmail import (
+                authenticate_connector_credential as gmail_authenticate,
+            )
+
+            try:
+                gmail_authenticate(secret, organization_id)
+                return gmail_connector.execute(
+                    operation,
+                    organization_id=organization_id,
+                    payload=payload,
+                )
+            except GmailConnectorError as exc:
+                raise HTTPException(status_code=502, detail=exc.code) from exc
         if tool != "crm":
             raise HTTPException(status_code=400, detail="Unknown protected tool")
         try:

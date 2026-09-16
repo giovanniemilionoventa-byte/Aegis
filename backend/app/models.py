@@ -370,3 +370,62 @@ class VerificationRun(Base):
     created_at = Column(DateTime, default=utcnow)
     claimed_at = Column(DateTime, nullable=True)
     finished_at = Column(DateTime, nullable=True)
+
+
+class ConnectorCall(Base):
+    """Phase 19 — what the agent said, what Aegis decided, what actually ran.
+
+    The execution evidence chain already records the authorization decision for
+    a typed request. It does not record two things Phase 19 needs to be able to
+    show separately:
+
+      * what the agent *claimed* it was doing, in its own words, and
+      * what the connector *actually* did afterwards.
+
+    Those are different facts, and conflating them is exactly the failure mode
+    the phase is about. An agent that says "I'll just read this email" and then
+    calls gmail.delete produces one row here with declared_intent describing a
+    read and canonical_operation naming the delete. Aegis rules on the second.
+
+    DECLARED_INTENT IS UNTRUSTED DATA. It is agent-supplied text, stored so an
+    auditor can see the divergence, truncated, and never read by any
+    authorization path. Nothing in the enforcement code branches on it.
+
+    This table is deliberately outside the HMAC evidence chain: it is an
+    observability record, not an authority record, and appending to it must
+    never be able to invalidate the chain. The authoritative decision remains
+    the sealed Event.
+
+    NO MESSAGE CONTENT. resource_ref holds a Gmail message or draft id, never a
+    subject, body or address.
+    """
+
+    __tablename__ = "connector_calls"
+
+    id = Column(String, primary_key=True, default=new_id)
+    organization_id = Column(String, ForeignKey("organizations.id"), nullable=False, index=True)
+    agent_id = Column(String, ForeignKey("agents.id"), nullable=True, index=True)
+    execution_id = Column(String, nullable=True, index=True)
+    request_id = Column(String, nullable=True, index=True)
+    event_id = Column(String, nullable=True)
+
+    tool = Column(String, nullable=False)
+    # What the client asked for, as it arrived: "gmail/send".
+    requested_operation = Column(String, nullable=False)
+    # The canonical typed operation Aegis actually ruled on: "gmail.SEND".
+    canonical_operation = Column(String, nullable=False)
+    # Agent-supplied, untrusted, never authoritative.
+    declared_intent = Column(Text, nullable=True)
+
+    decision = Column(String, nullable=False)
+    approval_id = Column(String, nullable=True)
+    approval_granted = Column(Boolean, nullable=False, default=False)
+
+    executed = Column(Boolean, nullable=False, default=False)
+    # The operation the connector ran, or NULL when nothing ran.
+    connector_operation = Column(String, nullable=True)
+    result_status = Column(String, nullable=False, default="not_executed")
+    resource_ref = Column(String, nullable=True)
+    error_code = Column(String, nullable=True)
+
+    created_at = Column(DateTime, default=utcnow, index=True)

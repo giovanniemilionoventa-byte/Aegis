@@ -38,7 +38,14 @@ from typing import Any
 from . import config
 
 CREDENTIAL_CONTEXT = "aegis-tool-credential:v1"
-SUPPORTED_TOOLS = ("crm",)
+
+# Phase 19 adds "gmail". Note what this credential is and is not: it is the
+# credential the broker presents to the *connector*, proving the call came
+# through Aegis on behalf of a named tenant. It is not the Google credential.
+# Gmail's OAuth refresh token never passes through the broker at all -- it is
+# read by the connector from its own store (gmail_store.py), one hop further
+# in, on a volume the broker does not mount.
+SUPPORTED_TOOLS = ("crm", "gmail")
 
 
 class CredentialAccessDenied(Exception):

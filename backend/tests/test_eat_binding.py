@@ -399,6 +399,7 @@ def test_phase10_permission_block_does_not_produce_eat(monkeypatch):
 
 def test_phase12b_trajectory_violation_does_not_produce_eat(monkeypatch):
     event = SimpleNamespace(
+        id="event-traj",
         decision="BLOCK",
         reason="Invalid workflow transition.",
         request_id="req-traj",
@@ -417,6 +418,7 @@ def test_phase12b_trajectory_violation_does_not_produce_eat(monkeypatch):
         contract_id="sales-contract",
         contract_version=1,
         authorized_payload={"to": "ada@acme.test"},
+        approval_granted=False,
     )
     monkeypatch.setattr(
         "app.routers.gateway.authorize_request", lambda *args, **kwargs: outcome
@@ -451,6 +453,7 @@ def test_phase12b_trajectory_violation_does_not_produce_eat(monkeypatch):
 
 def test_dispatch_uses_authorized_payload_not_request_copy(monkeypatch):
     event = SimpleNamespace(
+        id="event-authz",
         decision="ALLOW",
         reason="allowed",
         request_id="req-authz",
@@ -470,6 +473,7 @@ def test_dispatch_uses_authorized_payload_not_request_copy(monkeypatch):
         contract_id=None,
         contract_version=None,
         authorized_payload=authorized,
+        approval_granted=False,
     )
     monkeypatch.setattr(
         "app.routers.gateway.authorize_request", lambda *args, **kwargs: outcome
