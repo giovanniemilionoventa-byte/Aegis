@@ -239,6 +239,7 @@ def seed_if_empty(db: Session) -> None:
     _seed_demo_contracts(db, org.id, sales_agent.id, reader.id)
 
     _seed_verification_agent(db, org.id, user.id)
+    _seed_gmail(db, org.id, user.id)
 
     db.commit()
     print(f"[aegis] seeded org=acme user={DEMO_EMAIL} password={DEMO_PASSWORD}")
@@ -329,6 +330,146 @@ def _seed_verification_agent(db: Session, org_id: str, owner_id: str) -> None:
             decision="APPROVAL",
             priority=2,
         )
+    )
+
+
+GMAIL_SCOPE = "mailbox"
+
+
+def _seed_gmail(db: Session, org_id: str, owner_id: str) -> None:
+    """The canonical Phase 19 Gmail posture, expressed in the existing engines.
+
+        gmail.search  ALLOW
+        gmail.read    ALLOW
+        gmail.draft   ALLOW
+        gmail.send    APPROVAL_REQUIRED
+        gmail.delete  DENY
+
+    Nothing here is a new policy mechanism. search/read/draft are permitted and
+    have no restrictive policy, so the policy engine's default applies. send has
+    an organization policy of APPROVAL *and* a contract approval rule, so it
+    needs a human whichever way it is reached. delete is denied three times over,
+    deliberately:
+
+      1. the agent holds no DELETE permission, so least privilege refuses it;
+      2. an organization policy BLOCKs gmail.DELETE at the highest priority,
+         which catches an agent that *was* granted the permission;
+      3. the runtime contract does not list DELETE as a capability.
+
+    Each layer is asserted separately in tests/test_phase19_policy.py, because
+    "it is denied" is a weaker claim than "it is denied even when the layer
+    above it is wrong". A fourth floor sits outside Aegis: the OAuth scope
+    requested does not grant permanent deletion at all.
+    """
+    from .contract_store import save_contract
+
+    db.add(
+        models.Resource(
+            organization_id=org_id,
+            kind="gmail",
+            name="Gmail Mailbox",
+            identifier="gmail://mailbox",
+            sensitivity="confidential",
+        )
+    )
+
+    db.add_all(
+        [
+            models.Policy(
+                organization_id=org_id,
+                name="Gmail delete is never allowed",
+                description=(
+                    "Deleting mail is not an action an agent may take, with or "
+                    "without approval."
+                ),
+                resource_kind="gmail",
+                action="DELETE",
+                scope_pattern="*",
+                decision="BLOCK",
+                priority=1,
+            ),
+            models.Policy(
+                organization_id=org_id,
+                name="Sending mail needs a human",
+                description="An agent may compose; a person decides to send.",
+                resource_kind="gmail",
+                action="SEND",
+                scope_pattern="*",
+                decision="APPROVAL",
+                priority=3,
+            ),
+        ]
+    )
+
+    token = (config.GMAIL_AGENT_TOKEN or "").strip()
+    if not token:
+        # No identity configured, so no agent is registered. The dashboard
+        # reports it as not configured rather than implying one exists.
+        return
+
+    agent = models.Agent(
+        organization_id=org_id,
+        owner_id=owner_id,
+        name="Gmail Assistant",
+        provider="external-llm",
+        model=config.AGENT_LLM_MODEL or "unconfigured",
+        description=(
+            "An untrusted external AI agent with a real model behind it. It "
+            "holds this Aegis token and nothing else: no Google credential, no "
+            "route to Gmail, no way to act except by asking Aegis."
+        ),
+    )
+    db.add(agent)
+    db.flush()
+
+    # Least privilege: four of the five canonical operations. DELETE is absent.
+    for action in ("SEARCH", "READ", "DRAFT", "SEND"):
+        db.add(
+            models.Permission(
+                agent_id=agent.id,
+                resource_kind="gmail",
+                action=action,
+                scope=GMAIL_SCOPE,
+                effect="allow",
+            )
+        )
+
+    db.add(
+        models.Credential(
+            agent_id=agent.id,
+            token_hash=hash_token(token),
+            token_prefix=token[:16],
+            status="active",
+            expires_at=_seed_expiry(),
+        )
+    )
+
+    save_contract(
+        db,
+        {
+            "organization_id": org_id,
+            "agent_id": agent.id,
+            "contract_id": "gmail-assistant",
+            "version": 1,
+            "status": "ACTIVE",
+            "purpose": (
+                "Find and read mail, draft replies, and send only what a human "
+                "has approved."
+            ),
+            "capabilities": [
+                {
+                    "name": "gmail",
+                    "resource_kind": "gmail",
+                    "actions": ["SEARCH", "READ", "DRAFT", "SEND"],
+                }
+            ],
+            "resources": [{"kind": "gmail", "scope": GMAIL_SCOPE}],
+            "constraints": {"payload_size": {"max_bytes": 16384}},
+            "data_constraints": {},
+            "approval_rules": [
+                {"resource_kind": "gmail", "action": "SEND", "require": "human"}
+            ],
+        },
     )
 
 

@@ -17,6 +17,7 @@ from .routers import (
     contracts,
     evidence,
     gateway,
+    gmail,
     policies,
     resources,
     simulate,
@@ -37,6 +38,7 @@ CONTROL_ROUTERS = (
     capabilities,
     contracts,
     evidence,
+    gmail,
     simulate,
     verification,
 )

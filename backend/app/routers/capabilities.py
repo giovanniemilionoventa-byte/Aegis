@@ -31,6 +31,10 @@ router = APIRouter(tags=["capabilities"])
 # executable; the rest are decision-only until a tool is connected.
 KNOWN_ACTIONS = {
     "crm": ["READ", "UPDATE", "DELETE"],
+    # Phase 19. gmail is the second enforceable kind: unlike email/files/
+    # payments, a real connector is wired to it, so enforceable=true here is a
+    # statement about a real side effect and not a placeholder.
+    "gmail": ["SEARCH", "READ", "DRAFT", "SEND", "DELETE"],
     "email": ["SEND"],
     "files": ["READ", "EXPORT"],
     "payments": ["TRANSFER"],
@@ -65,7 +69,9 @@ def list_capabilities(
                     "enforceable": action in executable_ops,
                     "irreversible": (kind, action) in IRREVERSIBLE,
                     "registered_resource": kind in registered,
-                    "default_scope": "customers" if kind == "crm" else "*",
+                    "default_scope": {"crm": "customers", "gmail": "mailbox"}.get(
+                        kind, "*"
+                    ),
                 }
             )
     return {
