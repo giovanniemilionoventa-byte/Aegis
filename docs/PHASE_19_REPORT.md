@@ -69,6 +69,36 @@ word.
 
 ---
 
+## 2b. Phase 19.1 — onboarding and per-agent mailbox access
+
+Added after the Phase 19 code landed and before any real-Gmail run, because the
+dashboard could not walk an operator through the flow and because connecting a
+mailbox was quietly wider than it looked.
+
+| Property | Status | Evidence |
+|---|---|---|
+| An agent with Gmail permissions and no grant is refused | VERIFIED | `test_phase19_dashboard_oauth.py` |
+| A grant cannot widen a permission, a policy or a contract | VERIFIED | a granted search-only agent still cannot read |
+| An ungranted agent's send never reaches the approval queue | VERIFIED | no `approval_id`, nothing queued |
+| An operator cannot grant, read or revoke another tenant's agent | VERIFIED | 404 on all three routes |
+| No `connection_id` exists in the API for a caller to manipulate | VERIFIED (by construction) | the connection is resolved from the authenticated organization |
+| The OAuth callback takes its tenant from the signed state, not the query string | VERIFIED | extra `org_id` / `agent_id` parameters change nothing |
+| An invalid, forged, expired or wrongly-signed state is rejected | VERIFIED | 5 parametrised cases plus expiry and wrong-key |
+| Disconnecting revokes every agent grant | VERIFIED | reconnecting does not re-arm the old agents |
+| Revoking a grant stops the next call; revoking the agent stops it too | VERIFIED | both asserted against the mailbox ledger |
+| The dashboard never receives a refresh token or the client secret | VERIFIED | every control-plane route the UI calls is checked |
+| The dashboard is not handed the Google client id | VERIFIED | `oauth/start` returns an Aegis route |
+| No refresh token or authorization code reaches the logs | VERIFIED | process output captured during a full call path |
+| `/setup` returns no credential and no internal hostname | VERIFIED | checked against every secret in the deployment |
+| The simulator and the gateway agree about mailbox access | VERIFIED | same service, asserted before and after the grant |
+| `gmail.send` still needs approval; `gmail.delete` still denied | VERIFIED | unchanged by any of the above |
+
+**LIMITATION — the Google client id is still visible during consent.** It is a
+query parameter of Google's own authorization endpoint and Google treats it as
+public. The server-side redirect means the dashboard neither receives nor
+constructs it; it does not hide it from the address bar, and the code, the
+tests and the documentation all say so rather than implying otherwise.
+
 ## 3. Security properties NOT demonstrated
 
 Stated plainly, because a claim without evidence is worse than no claim.
@@ -90,15 +120,16 @@ Stated plainly, because a claim without evidence is worse than no claim.
 Run with `cd backend && python3 -m pytest -q`:
 
 ```
-662 passed, 47 skipped
+699 passed, 47 skipped
 ```
 
-Baseline before Phase 19 was **539 passed, 47 skipped**. Phase 19 adds **123
-tests**, and the skip count is unchanged — no Phase 19 test skips.
+Baseline before Phase 19 was **539 passed, 47 skipped**. Phase 19 and 19.1 add
+**160 tests**, and the skip count is unchanged — no Phase 19 test skips.
 
 | File | Tests |
 |---|---|
 | `test_phase19_adversarial.py` | 54 |
+| `test_phase19_dashboard_oauth.py` | 36 |
 | `test_phase19_network.py` | 22 |
 | `test_phase19_credential_isolation.py` | 16 |
 | `test_phase19_policy.py` | 11 |
@@ -125,7 +156,15 @@ Three pre-existing tests were modified. None of them changed what is asserted.
    dataclass since Phase 17 — so the stubs were simply incomplete. Fields were
    added; every assertion is unchanged.
 
-2. In `test_phase19_adversarial.py`, two tests written during this phase were
+2. Two Phase 19 tests changed in 19.1 because the security contract got
+   **stronger**. A Gmail request with no connection, or no grant, used to reach
+   the connector and return a 409/503 — an error from the protected side. It is
+   now a deterministic BLOCK from Aegis, sealed into the evidence chain, before
+   any credential is resolved. The assertions follow the stronger contract:
+   `test_9b_a_tenant_without_a_connection_gets_nothing` and
+   `test_disconnecting_removes_the_credential_entirely`.
+
+3. In `test_phase19_adversarial.py`, two tests written during this phase were
    **passing for the wrong reason** and were fixed before being committed as
    evidence of anything. `INTERNAL_TOOL_TOKEN` is empty in the test
    environment, so every request to the connector's internal API was refused

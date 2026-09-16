@@ -33,11 +33,86 @@ The agent is not on that last arrow anywhere, and cannot be: see
 
 ---
 
-## What a human has to do
+## Two different people, two different setups
 
-Two things cannot be automated, and this document exists mostly for them. Both
-are identity-sensitive: they require a person to log in as themselves and agree
-to something.
+Almost everything that makes Gmail confusing comes from mixing these up.
+
+**A. The administrator**, once per deployment. Creates a Google Cloud project
+and an OAuth client, and puts two values in `.env`. Nobody else ever does this,
+and a customer must never be asked to.
+
+**B. The customer**, for each mailbox. Signs in to the dashboard, creates an
+agent, chooses what it may do, clicks *Connect Gmail*, approves at Google, and
+grants the agent access. No Google Cloud, no console, no environment
+variables, no client id.
+
+If a customer is being walked through Google Cloud Console, something is wrong
+with the deployment, not with the customer.
+
+---
+
+# B. Customer setup
+
+This is the whole path. It takes a few minutes and needs nothing technical.
+
+1. **Sign in** to the Aegis dashboard.
+2. **Agents → Add agent.** Give it a name and say what it is for.
+3. **Choose what it may do.** Everything is denied until you say otherwise. For
+   a mail assistant, a sensible starting point is:
+   - `gmail.search` — Allow
+   - `gmail.read` — Allow
+   - `gmail.draft` — Allow
+   - `gmail.send` — Needs a human
+   - `gmail.delete` — leave denied
+4. **Create agent.** You are shown the agent token **once**. Copy it now; Aegis
+   keeps only a hash of it and cannot show it again. If you lose it, rotate the
+   credential and you get a new one.
+5. **On the agent's page, find the Gmail card.** It shows two separate things:
+   - whether your organization has a mailbox connected, and
+   - whether *this agent* has been granted it.
+6. **Connect Gmail** (if no mailbox is connected yet). Your browser goes to
+   Google. Choose the account, review what is being asked, and approve. You are
+   returned to Aegis automatically.
+7. **Grant access** to this agent. This is a separate click on purpose:
+   connecting a mailbox does not hand it to every agent you have.
+8. **Check the table.** It now shows what this agent may actually do, evaluated
+   by Aegis right now — not a description of what was intended.
+
+```
+Agent: Sales Assistant        Status: Active
+
+Gmail
+  Mailbox (organization)   ● connected — you@example.com
+  Access for this agent    ● granted          [ Revoke access ]
+
+What this agent may do
+  ✓ gmail.search   Allowed
+  ✓ gmail.read     Allowed
+  ✓ gmail.draft    Allowed
+  ⚠ gmail.send     Human approval required
+  ✕ gmail.delete   Denied
+```
+
+**To take it away again:** *Revoke access* on the agent removes that agent's
+access and leaves the mailbox connected for the others. *Disconnect* on the
+Gmail page deletes Aegis's copy of the credential and revokes every agent's
+access at once.
+
+**What you will never be asked for:** a Google password, a client secret, a
+token, or anything pasted into a form. Your password is typed at Google, and
+Aegis never sees it.
+
+---
+
+# A. Administrator setup, once per deployment
+
+## What the administrator has to do
+
+Two things cannot be automated. Both are identity-sensitive: they require a
+person to log in as themselves and agree to something.
+
+Step 1 is the administrator's, once. Step 2 is the customer's, and is written
+out from their side in section B above.
 
 **You will never be asked to paste a password, a token, a client secret or a
 private key into a chat.** Everything below is typed into Google's own console
@@ -86,7 +161,8 @@ Where: <https://console.cloud.google.com>
 
 ### 2. Consent, as the mailbox owner
 
-1. Open the dashboard, go to **Gmail**, click **Connect Gmail**.
+1. Open the dashboard, go to the agent's page, and click **Connect Gmail**
+   in the Gmail card. (The standalone **Gmail** page has the same button.)
 2. Google asks which account. Choose the **test mailbox**, not your real one.
 3. Google lists what is being requested. It will say something like *"Read,
    compose, send, and permanently delete all your email from Gmail"* — that is
@@ -101,9 +177,9 @@ Where: <https://console.cloud.google.com>
 5. **Allow**.
 
 **What success looks like:** the browser lands on a plain page saying *"Aegis
-is connected to <address>"*, and the Gmail page shows the mailbox, the granted
-scopes, and a Disconnect button. No token is shown anywhere, because no
-endpoint returns one.
+is connected to <address>"*, and the Gmail card shows the mailbox. The agent is
+**still not ready** at this point — grant it access, which is the next click.
+No token is shown anywhere, because no endpoint returns one.
 
 ### 3. Give the agent a model
 
@@ -195,6 +271,47 @@ Only the last row is a runtime proof. The rest are configuration and unit
 checks, and nothing in this repository claims otherwise.
 
 ---
+
+## Who may use the mailbox
+
+The connection is **per organization**: one mailbox, one credential, no
+duplicated refresh tokens. Permission to *use* it is **per agent**.
+
+```
+organization ──owns──> one Gmail connection (sealed refresh token)
+      │
+      ├── Agent A  ──grant──> may use it
+      ├── Agent B             no grant: every Gmail request is refused
+      └── Agent C  ──grant──> may use it
+```
+
+An agent with Gmail permissions, an active contract allowing Gmail, and no
+grant is refused — the gateway checks this before dispatch and the refusal is
+sealed into the evidence chain like any other decision. This is not a second
+policy engine: the grant decides whether the agent may touch the mailbox at
+all, and nothing about which operations are allowed. A granted search-only
+agent still cannot read.
+
+There is deliberately **no connection id** anywhere in the API. The connection
+is resolved from the authenticated agent's own organization, so there is no
+field a caller could use to name another tenant's mailbox. Every grant route
+resolves the agent through the caller's organization too: an operator sending
+another tenant's `agent_id` gets a 404, not a grant.
+
+Disconnecting revokes every grant, so connecting a different mailbox later
+cannot silently re-arm agents that had access to the old one.
+
+## A note on the Google client id
+
+The dashboard never receives or constructs the Google authorization URL. It
+asks Aegis for somewhere to go, gets an Aegis route, and the server answers a
+302 to Google.
+
+The client id is still visible in the address bar during consent. That is how
+OAuth works — it is a query parameter of Google's own endpoint, and Google
+treats the client id as public. The **client secret** has never left the server
+and still does not. Do not read the server-side redirect as hiding the client
+id; it isn't, and it doesn't need to.
 
 ## Where the credential lives
 
