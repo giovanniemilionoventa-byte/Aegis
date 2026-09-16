@@ -334,8 +334,18 @@ def test_9b_a_tenant_without_a_connection_gets_nothing(client, fake, tmp_path):
         agent_token=agent_token,
         contract_id=contract_id,
     )
+    # Phase 19.1 changed what this looks like, and strengthened it. Before,
+    # the request reached the connector, which answered "not connected" as a
+    # 409/503 -- an error from the protected side. Now Aegis refuses it itself,
+    # as a sealed BLOCK decision, before any credential is resolved. The
+    # assertion follows the stronger contract: a deterministic denial that is
+    # in the evidence chain, not an error that happens to have the same effect.
     response = call(client, tenant, "search", payload={"query": "anything"})
-    assert response.status_code in (409, 502, 503)
+    assert response.status_code == 200
+    body = response.json()
+    assert body["decision"] == "BLOCK"
+    assert body["executed"] is False
+    assert "connected" in body["reason"].lower()
 
 
 # -- 10: revocation ---------------------------------------------------------

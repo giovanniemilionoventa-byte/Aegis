@@ -429,3 +429,55 @@ class ConnectorCall(Base):
     error_code = Column(String, nullable=True)
 
     created_at = Column(DateTime, default=utcnow, index=True)
+
+
+
+class GmailGrant(Base):
+    """Which agents may use the tenant's connected mailbox.
+
+    Phase 19.1. Before this, connecting Gmail made the mailbox usable by every
+    agent in the tenant that happened to hold a gmail permission. That is a
+    reasonable default and a bad one: connecting a mailbox is a single act by
+    one person, and it silently widened the authority of agents they may never
+    have thought about.
+
+    So the connection stays tenant-scoped -- one mailbox, one credential, no
+    duplicated refresh tokens -- and the *use* of it is granted per agent. An
+    agent with gmail permissions, a contract that allows gmail, and no grant is
+    refused. The gateway checks this before dispatch and the refusal is sealed
+    into the evidence chain like any other.
+
+    WHAT THIS IS NOT. It is not a second policy engine: it decides nothing about
+    which operations are allowed, only whether this agent may touch this
+    tenant's mailbox at all. Permissions, policy and the runtime contract still
+    decide everything else, and a grant cannot widen any of them.
+
+    TENANT BINDING. organization_id is stored and every lookup filters on it, so
+    a grant row can only ever connect an agent to its own tenant's mailbox.
+    There is no connection_id a caller could supply: the connection is resolved
+    from the authenticated agent's organization, never from the request.
+    """
+
+    __tablename__ = "gmail_grants"
+
+    id = Column(String, primary_key=True, default=new_id)
+    organization_id = Column(String, ForeignKey("organizations.id"), nullable=False, index=True)
+    agent_id = Column(String, ForeignKey("agents.id"), nullable=False, index=True)
+    # Snapshot of the mailbox at grant time, for the operator's benefit. Not
+    # authority: the live connection is resolved from the store at call time.
+    google_email = Column(String, nullable=True)
+    status = Column(String, nullable=False, default="active", index=True)
+    granted_by = Column(String, ForeignKey("users.id"), nullable=True)
+    created_at = Column(DateTime, default=utcnow)
+    revoked_at = Column(DateTime, nullable=True)
+
+    __table_args__ = (
+        Index(
+            "uq_gmail_grant_one_active_per_agent",
+            "organization_id",
+            "agent_id",
+            unique=True,
+            sqlite_where=text("status = 'active'"),
+            postgresql_where=text("status = 'active'"),
+        ),
+    )

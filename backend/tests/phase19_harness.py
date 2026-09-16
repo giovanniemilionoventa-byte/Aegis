@@ -195,7 +195,11 @@ def create_gmail_agent(
 
 
 def build_tenant(
-    client: TestClient, *, refresh_token: str = "stand-in-refresh-token", **kwargs
+    client: TestClient,
+    *,
+    refresh_token: str = "stand-in-refresh-token",
+    grant_mailbox: bool = True,
+    **kwargs,
 ) -> Tenant:
     operator = register_operator(client)
     install_canonical_policy(client, operator)
@@ -205,6 +209,14 @@ def build_tenant(
         .json()["organization_id"]
     )
     connect_gmail(organization_id, refresh_token=refresh_token)
+    # Phase 19.1. Connecting the mailbox is no longer enough: mailbox access is
+    # granted per agent. Done through the real API so the harness exercises the
+    # same path an operator does.
+    if grant_mailbox:
+        granted = client.post(
+            f"/api/gmail/agents/{agent_id}/grant", headers=operator
+        )
+        assert granted.status_code == 200, granted.text
     return Tenant(
         organization_id=organization_id,
         operator=operator,

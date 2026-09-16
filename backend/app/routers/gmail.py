@@ -35,13 +35,14 @@ from urllib.parse import urlencode
 
 import httpx
 from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from .. import config, gmail_store, models
 from ..database import get_db
-from ..security import get_current_user
+from ..security import decode_access_token, get_current_user
+from ..services import gmail_access
 
 router = APIRouter(prefix="/gmail", tags=["gmail"])
 
@@ -154,19 +155,34 @@ def gmail_status(
     configured = bool(
         config.GOOGLE_OAUTH_CLIENT_ID and config.GOOGLE_OAUTH_CLIENT_SECRET
     )
+    grants = gmail_access.agents_with_access(db, user.organization_id)
+    names = {
+        row.id: row.name
+        for row in db.query(models.Agent)
+        .filter(models.Agent.organization_id == user.organization_id)
+        .all()
+    }
     return {
         "oauth_client_configured": configured,
         "encryption_key_configured": bool(config.GMAIL_OAUTH_ENCRYPTION_KEY),
         "connected": info is not None,
         "connection": info.as_dict() if info else None,
         "requested_scopes": list(config.GMAIL_OAUTH_SCOPES),
-        "redirect_uri": config.GOOGLE_OAUTH_REDIRECT_URI,
+        # Phase 19.1: connecting a mailbox gives no agent access to it. This
+        # list is who actually has it, so an operator is never guessing.
+        "agents_with_access": [
+            {
+                "agent_id": row.agent_id,
+                "agent_name": names.get(row.agent_id, "(unknown agent)"),
+                "granted_at": row.created_at.isoformat() if row.created_at else None,
+            }
+            for row in grants
+        ],
     }
 
 
-@router.post("/oauth/start", response_model=ConnectStart)
-def start_oauth(user: models.User = Depends(get_current_user)):
-    """Build the Google consent URL the operator will visit.
+def _authorization_url(user: models.User) -> str:
+    """Build the Google consent URL.
 
     access_type=offline and prompt=consent are both required to be handed a
     refresh token: without them Google returns an access token only, and the
@@ -183,8 +199,53 @@ def start_oauth(user: models.User = Depends(get_current_user)):
         "include_granted_scopes": "false",
         "state": _sign_state(user.organization_id, user.id),
     }
+    return f"{config.GOOGLE_AUTH_ENDPOINT}?{urlencode(params)}"
+
+
+@router.get("/oauth/start")
+def start_oauth_redirect(
+    token: str = Query(..., description="The operator's Aegis access token."),
+    db: Session = Depends(get_db),
+):
+    """Send the operator's browser to Google, from the server.
+
+    Phase 19.1. The dashboard previously received the authorization URL as JSON
+    and redirected itself, which meant the Google client id passed through the
+    frontend. It does not any more: the browser is sent here and the server
+    answers 302.
+
+    HONEST LIMIT. The client id is still visible in the address bar during
+    consent, because it is a query parameter of Google's own authorization
+    endpoint — that is how OAuth works, and Google treats the client id as
+    public. What changed is that the dashboard neither receives nor configures
+    it. The client SECRET has never left the server and still does not.
+
+    The token is a query parameter because a browser navigation carries no
+    Authorization header. It is the operator's ordinary session token, checked
+    the ordinary way; an agent token is rejected by the control-plane
+    middleware before this function runs.
+    """
+    try:
+        payload = decode_access_token(token)
+    except HTTPException as exc:
+        raise HTTPException(status_code=401, detail="Not authenticated") from exc
+    user = db.query(models.User).filter(models.User.id == payload["sub"]).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return RedirectResponse(url=_authorization_url(user), status_code=302)
+
+
+@router.post("/oauth/start", response_model=ConnectStart)
+def start_oauth(user: models.User = Depends(get_current_user)):
+    """The URL the dashboard should navigate to: an Aegis route, not Google's.
+
+    Kept so the dashboard has one call that both checks configuration and
+    returns somewhere to go. What it returns is this deployment's own
+    /api/gmail/oauth/start, which then redirects.
+    """
+    _require_oauth_client()
     return ConnectStart(
-        authorization_url=f"{config.GOOGLE_AUTH_ENDPOINT}?{urlencode(params)}",
+        authorization_url="/api/gmail/oauth/start",
         expires_in=STATE_TTL_SECONDS,
     )
 
@@ -289,7 +350,10 @@ def _lookup_email(access_token: Optional[str]) -> str:
 
 
 @router.post("/disconnect")
-def disconnect(user: models.User = Depends(get_current_user)):
+def disconnect(
+    user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
     """Forget the stored credential for this tenant.
 
     This deletes Aegis's copy. It does not revoke the grant at Google -- the
@@ -303,10 +367,119 @@ def disconnect(user: models.User = Depends(get_current_user)):
     except gmail_store.GmailStoreError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     gmail_connector.forget_tokens(user.organization_id)
+    # Phase 19.1: drop every agent's access too. Leaving grants behind would
+    # mean that connecting a *different* mailbox later silently re-armed every
+    # agent that had access to the old one.
+    dropped = gmail_access.revoke_all_for_organization(db, user.organization_id)
     return {
         "disconnected": removed,
+        "agent_grants_revoked": dropped,
         "note": (
-            "Aegis has deleted its copy of the credential. To revoke the grant "
-            "at Google as well, visit myaccount.google.com/permissions."
+            "Aegis has deleted its copy of the credential and revoked every "
+            "agent's access to it. To revoke the grant at Google as well, "
+            "visit myaccount.google.com/permissions."
         ),
     }
+
+
+# ---------------------------------------------------------------------------
+# Per-agent mailbox access
+#
+# The connection is tenant-scoped; permission to use it is per agent. Every
+# route below resolves the agent through the caller's own organization, so
+# there is no agent_id an operator could send that reaches another tenant's
+# agent — the lookup simply returns nothing and the route 404s.
+#
+# There is deliberately no connection_id parameter anywhere. The connection is
+# the tenant's, resolved server-side; a caller-supplied connection identifier
+# is precisely the field a cross-tenant attack would aim at.
+# ---------------------------------------------------------------------------
+
+
+def _agent_or_404(db: Session, user: models.User, agent_id: str) -> models.Agent:
+    agent = (
+        db.query(models.Agent)
+        .filter(
+            models.Agent.id == agent_id,
+            models.Agent.organization_id == user.organization_id,
+        )
+        .first()
+    )
+    if not agent:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    return agent
+
+
+@router.get("/agents/{agent_id}")
+def agent_gmail_status(
+    agent_id: str,
+    user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Can this specific agent use the mailbox, and why or why not."""
+    agent = _agent_or_404(db, user, agent_id)
+    access = gmail_access.evaluate(db, agent)
+    return {
+        "agent_id": agent.id,
+        "agent_name": agent.name,
+        "agent_status": agent.status,
+        "connected": access.connected,
+        "granted": access.granted,
+        "allowed": access.allowed,
+        "reason": access.reason,
+        "google_email": access.google_email,
+    }
+
+
+@router.post("/agents/{agent_id}/grant")
+def grant_agent_access(
+    agent_id: str,
+    user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Let this agent use the tenant's connected mailbox.
+
+    Refuses when there is nothing to grant access to, rather than recording a
+    grant that would mislead an operator into thinking the agent is ready.
+    """
+    agent = _agent_or_404(db, user, agent_id)
+    try:
+        connection = gmail_store.get_connection(user.organization_id)
+    except gmail_store.GmailStoreError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    if connection is None or connection.status != "connected":
+        raise HTTPException(
+            status_code=409,
+            detail="No Gmail mailbox is connected for this organization",
+        )
+    if agent.status != "active":
+        raise HTTPException(
+            status_code=409, detail="Agent is revoked and cannot be granted access"
+        )
+    row = gmail_access.grant(
+        db,
+        organization_id=user.organization_id,
+        agent_id=agent.id,
+        granted_by=user.id,
+        google_email=connection.google_email,
+    )
+    return {
+        "agent_id": agent.id,
+        "granted": True,
+        "google_email": row.google_email,
+        "granted_at": row.created_at.isoformat() if row.created_at else None,
+    }
+
+
+@router.post("/agents/{agent_id}/revoke")
+def revoke_agent_access(
+    agent_id: str,
+    user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Take the mailbox away from this agent, leaving the connection intact."""
+    agent = _agent_or_404(db, user, agent_id)
+    revoked = gmail_access.revoke(
+        db, organization_id=user.organization_id, agent_id=agent.id
+    )
+    return {"agent_id": agent.id, "granted": False, "revoked": revoked}

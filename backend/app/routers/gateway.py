@@ -7,7 +7,7 @@ from .. import config, models, schemas
 from ..contract_store import ContractResolutionError, assert_contract_current_for_dispatch
 from ..database import get_db
 from ..engines.enforcement import authorize_request
-from ..services import connector_evidence
+from ..services import connector_evidence, gmail_access
 from ..services.evidence_verifier import (
     EvidenceIntegrityError,
     reseal_execution_event,
@@ -162,6 +162,37 @@ def invoke_tool(
     executed = False
     tool_result = None
     error_code = None
+
+    # Phase 19.1 — mailbox access is granted per agent, not inherited from the
+    # tenant. An agent with gmail permissions and a contract that allows gmail
+    # is still refused unless an operator granted it this mailbox.
+    #
+    # Checked after authorization so the refusal is a real, sealed event rather
+    # than an unrecorded early return, and applied to APPROVAL as well as ALLOW:
+    # raising an approval request for an agent that could never execute it would
+    # put a decision in front of a human that means nothing.
+    if tool_name == "gmail" and event.decision != "BLOCK" and not outcome.replayed:
+        access = gmail_access.evaluate(db, agent)
+        if not access.allowed:
+            was_approval = event.decision == "APPROVAL"
+            event.decision = "BLOCK"
+            event.reason = access.reason
+            reseal_execution_event(db, event)
+            if was_approval and outcome.approval_id:
+                # authorize_request had already queued an approval for the
+                # operator. Leaving it there would ask a human to decide on an
+                # action that cannot run whatever they answer -- and a queue
+                # full of those is how a real request gets approved by mistake.
+                pending = (
+                    db.query(models.Approval)
+                    .filter(models.Approval.id == outcome.approval_id)
+                    .first()
+                )
+                if pending is not None and pending.status == "pending":
+                    pending.status = "denied"
+                    pending.reason = access.reason
+                outcome.approval_id = None
+            db.commit()
 
     contract_status = None
     contract_valid_from = None

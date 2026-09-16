@@ -247,5 +247,33 @@ def test_disconnecting_removes_the_credential_entirely(client, tenant, fake, sto
     with pytest.raises(gmail_store.GmailStoreError):
         gmail_store.reveal_refresh_token(tenant.organization_id)
 
-    # And the agent can no longer act on that mailbox.
-    assert call(client, tenant, "search", payload={"query": "marco"}).status_code in (409, 502, 503)
+    # And the agent can no longer act on that mailbox. As of Phase 19.1 this
+    # is a sealed BLOCK from Aegis rather than an error from the connector:
+    # disconnecting also revokes every agent's grant, so the request is refused
+    # before a credential is looked for.
+    after = call(client, tenant, "search", payload={"query": "marco"})
+    assert after.status_code == 200
+    assert after.json()["decision"] == "BLOCK"
+    assert after.json()["executed"] is False
+
+
+def test_disconnecting_revokes_every_agent_grant(client, tenant, fake):
+    """A later reconnection must not silently re-arm the old agents."""
+    from app.services import gmail_access
+    from app.database import SessionLocal
+
+    result = client.post("/api/gmail/disconnect", headers=tenant.operator)
+    assert result.json()["agent_grants_revoked"] >= 1
+
+    db = SessionLocal()
+    try:
+        assert gmail_access.agents_with_access(db, tenant.organization_id) == []
+    finally:
+        db.close()
+
+    # Reconnecting the mailbox does not bring the grants back.
+    from .phase19_harness import connect_gmail
+
+    connect_gmail(tenant.organization_id)
+    blocked = call(client, tenant, "search", payload={"query": "marco"})
+    assert blocked.json()["decision"] == "BLOCK"
