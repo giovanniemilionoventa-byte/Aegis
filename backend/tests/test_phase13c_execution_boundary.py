@@ -131,11 +131,25 @@ def test_agent_does_not_use_host_network():
 
 
 def test_agent_has_no_unnecessary_secrets():
+    """The agent may hold its own credential and nothing else.
+
+    Phase 18 note. This used to assert that the substring "token" appeared
+    nowhere in the agent's environment, which held while the agent container had
+    no identity at all: Phase 17 handed the reference agent its token through
+    `docker exec -e`, so compose never carried one.
+
+    An agent must hold its own credential -- that is how it authenticates to the
+    gateway -- so the blanket substring check is replaced by the precise rule it
+    stood for: the only token the agent may carry is AEGIS_AGENT_TOKEN, and none
+    of the protected secrets may appear at all. Everything previously forbidden
+    is still forbidden, and the evidence key is now forbidden explicitly too.
+    """
     compose = _parse_compose(COMPOSE_FILE.read_text(encoding="utf-8"))
     env = compose["services"]["agent"]["environment"]
     secret_keys = {
         "AEGIS_SECRET_KEY",
         "AEGIS_EAT_KEY",
+        "AEGIS_EVIDENCE_SECRET_KEY",
         "AEGIS_INTERNAL_GATEWAY_TOKEN",
         "AEGIS_INTERNAL_TOOL_TOKEN",
         "AEGIS_CRM_SECRET",
@@ -143,7 +157,21 @@ def test_agent_has_no_unnecessary_secrets():
         "USER_LLM_API_KEY",
     }
     assert secret_keys.isdisjoint(env)
-    joined = " ".join(f"{k}={v}" for k, v in env.items()).lower()
+
+    # Its own agent credential is the single permitted secret.
+    token_keys = {key for key in env if "token" in key.lower()}
+    assert token_keys <= {"AEGIS_AGENT_TOKEN"}, (
+        f"agent carries unexpected token material: {sorted(token_keys - {'AEGIS_AGENT_TOKEN'})}"
+    )
+    if "AEGIS_AGENT_TOKEN" in env:
+        # Supplied by reference, never a literal baked into the repository.
+        assert env["AEGIS_AGENT_TOKEN"].startswith("${")
+
+    joined = " ".join(
+        f"{key}={value}"
+        for key, value in env.items()
+        if key != "AEGIS_AGENT_TOKEN"
+    ).lower()
     assert "secret" not in joined
     assert "token" not in joined
     assert "sqlite" not in joined

@@ -341,3 +341,32 @@ class RuntimeContract(Base):
             postgresql_where=text("status = 'ACTIVE'"),
         ),
     )
+
+
+class VerificationRun(Base):
+    """Phase 18 — an operator's request for a runtime verification run.
+
+    The control plane cannot reach the enforcement gateway (they share no
+    network, by design), so the dashboard cannot push work at an agent. It
+    records the request here instead, and the agent *claims* it from the
+    gateway over agent_net -- the one path the deployment boundary leaves open.
+
+    This row carries no authority. It names a scenario; it does not carry code,
+    credentials or permissions. Every action the agent then takes is authorized
+    exactly as any other agent action would be.
+    """
+
+    __tablename__ = "verification_runs"
+
+    id = Column(String, primary_key=True, default=new_id)
+    organization_id = Column(String, ForeignKey("organizations.id"), nullable=False, index=True)
+    agent_id = Column(String, ForeignKey("agents.id"), nullable=False, index=True)
+    requested_by = Column(String, ForeignKey("users.id"), nullable=True)
+    scenario = Column(String, nullable=False, default="canonical")
+    status = Column(String, nullable=False, default="PENDING", index=True)
+    execution_id = Column(String, nullable=True)
+    result = Column(JSON, nullable=True)
+    error = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=utcnow)
+    claimed_at = Column(DateTime, nullable=True)
+    finished_at = Column(DateTime, nullable=True)

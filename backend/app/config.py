@@ -76,5 +76,15 @@ EVIDENCE_ALLOW_UNSEALED = _flag("AEGIS_EVIDENCE_ALLOW_UNSEALED", False)
 # 0 restores the previous never-expires behaviour.
 AGENT_TOKEN_TTL_DAYS = int(_env("AEGIS_AGENT_TOKEN_TTL_DAYS", "90"))
 
+# Phase 18: the runtime-verification agent's own credential.
+#
+# The agent container needs an identity before an operator has logged in, and
+# the operator must not have to edit infrastructure to give it one. So
+# scripts/init-env.sh generates this token, compose hands it to the agent
+# container, and the seed registers an agent whose credential hash matches. It
+# is an ordinary agent token, enforced exactly like any other -- it is not a
+# tool credential, an EAT key or an internal service token.
+VERIFY_AGENT_TOKEN = _env("AEGIS_VERIFY_AGENT_TOKEN", "")
+
 # Approval grants are single-use and short-lived (Phase 17).
 APPROVAL_TTL_SECONDS = int(_env("AEGIS_APPROVAL_TTL_SECONDS", "900"))

@@ -27,6 +27,7 @@ services:
       AEGIS_DATABASE_URL: sqlite:////data/aegis.db
       AEGIS_SECRET_KEY: ${AEGIS_SECRET_KEY:?Run scripts/init-env.sh to generate .env}
       AEGIS_EVIDENCE_SECRET_KEY: ${AEGIS_EVIDENCE_SECRET_KEY:?Run scripts/init-env.sh to generate .env}
+      AEGIS_VERIFY_AGENT_TOKEN: ${AEGIS_VERIFY_AGENT_TOKEN:?Run scripts/init-env.sh to generate .env}
       AEGIS_DEMO_TOKEN_PATH: /data/demo_token.txt
     volumes:
       - aegis-data:/data
@@ -131,6 +132,7 @@ services:
       - /tmp
     environment:
       AEGIS_BASE_URL: http://enforcement-gateway:8000
+      AEGIS_AGENT_TOKEN: ${AEGIS_VERIFY_AGENT_TOKEN:?Run scripts/init-env.sh to generate .env}
       AEGIS_GATEWAY_HOST: enforcement-gateway:8000
       AEGIS_CONTROL_HOST: control-plane:8000
       AEGIS_BROKER_HOST: credential-broker:8000

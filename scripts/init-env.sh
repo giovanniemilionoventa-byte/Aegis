@@ -26,6 +26,9 @@ AEGIS_EVIDENCE_SECRET_KEY=$(gen)
 AEGIS_INTERNAL_GATEWAY_TOKEN=$(gen)
 AEGIS_INTERNAL_TOOL_TOKEN=$(gen)
 AEGIS_CRM_SECRET=$(gen)
+# Identity of the runtime-verification agent that runs in the agent container.
+# An ordinary agent token, enforced like any other.
+AEGIS_VERIFY_AGENT_TOKEN=aegis_$(gen)
 ENV
 
 chmod 600 "$TARGET"

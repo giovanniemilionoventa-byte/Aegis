@@ -238,9 +238,98 @@ def seed_if_empty(db: Session) -> None:
     # correctly denied until an operator writes one.
     _seed_demo_contracts(db, org.id, sales_agent.id, reader.id)
 
+    _seed_verification_agent(db, org.id, user.id)
+
     db.commit()
     print(f"[aegis] seeded org=acme user={DEMO_EMAIL} password={DEMO_PASSWORD}")
     print(f"[aegis] sales copilot token written to /tmp/aegis_demo_token.txt")
+
+
+def _seed_verification_agent(db: Session, org_id: str, owner_id: str) -> None:
+    """Register the agent that lives in the agent container.
+
+    Phase 18. The container is handed AEGIS_VERIFY_AGENT_TOKEN at start; this
+    registers the matching identity so the token is a real, enforced agent
+    credential rather than a special case in the auth path. Without the env var
+    nothing is created, and the dashboard reports the verification agent as not
+    configured instead of pretending it exists.
+    """
+    from .contract_store import save_contract
+
+    token = (config.VERIFY_AGENT_TOKEN or "").strip()
+    if not token:
+        return
+
+    agent = models.Agent(
+        organization_id=org_id,
+        owner_id=owner_id,
+        name="Runtime Verification Agent",
+        provider="aegis-reference",
+        model="deterministic",
+        description=(
+            "Controlled test harness running in the agent container. Not a "
+            "production agent: it executes a fixed scenario so an operator can "
+            "watch Aegis authorize and refuse real actions."
+        ),
+    )
+    db.add(agent)
+    db.flush()
+
+    for kind, action, scope in [
+        ("crm", "READ", "customers"),
+        ("crm", "UPDATE", "customers"),
+    ]:
+        db.add(
+            models.Permission(
+                agent_id=agent.id,
+                resource_kind=kind,
+                action=action,
+                scope=scope,
+                effect="allow",
+            )
+        )
+
+    db.add(
+        models.Credential(
+            agent_id=agent.id,
+            token_hash=hash_token(token),
+            token_prefix=token[:16],
+            status="active",
+            expires_at=_seed_expiry(),
+        )
+    )
+
+    save_contract(
+        db,
+        {
+            "organization_id": org_id,
+            "agent_id": agent.id,
+            "contract_id": "runtime-verification",
+            "version": 1,
+            "status": "ACTIVE",
+            "purpose": "Read customer records; correct one with human approval.",
+            "capabilities": [
+                {"name": "crm", "resource_kind": "crm", "actions": ["READ", "UPDATE"]}
+            ],
+            "resources": [{"kind": "crm", "scope": "customers"}],
+            "constraints": {"payload_size": {"max_bytes": 4096}},
+            "data_constraints": {"denied_fields": ["ssn", "secret", "password"]},
+            "approval_rules": [],
+        },
+    )
+
+    db.add(
+        models.Policy(
+            organization_id=org_id,
+            name="Customer record changes need a human",
+            description="CRM updates are reviewed before they run.",
+            resource_kind="crm",
+            action="UPDATE",
+            scope_pattern="*",
+            decision="APPROVAL",
+            priority=2,
+        )
+    )
 
 
 def _seed_demo_contracts(

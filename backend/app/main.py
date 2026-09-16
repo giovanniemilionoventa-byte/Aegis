@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from .config import AEGIS_ROLE, CORS_ORIGINS
 from .database import SessionLocal, ensure_schema
 from .routers import (
+    agentctl,
     agents,
     approvals,
     auth,
@@ -17,6 +18,7 @@ from .routers import (
     gateway,
     policies,
     resources,
+    verification,
 )
 from .routers import broker as broker_router
 from .routers import tool as tool_router
@@ -32,12 +34,13 @@ CONTROL_ROUTERS = (
     behavior_patterns,
     contracts,
     evidence,
+    verification,
 )
-ENFORCEMENT_ROUTERS = (authorize, gateway)
+ENFORCEMENT_ROUTERS = (authorize, gateway, agentctl)
 BROKER_ROUTERS = (broker_router,)
 TOOL_ROUTERS = (tool_router,)
 
-_ENFORCEMENT_PREFIXES = ("/api/authorize", "/api/gateway")
+_ENFORCEMENT_PREFIXES = ("/api/authorize", "/api/gateway", "/api/agentctl")
 
 
 def _role_routers(role: str):
