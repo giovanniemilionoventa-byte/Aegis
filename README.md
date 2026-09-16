@@ -191,6 +191,38 @@ READ is still not implemented.
 | 14–15 | Tamper-evidence gap documented, then HMAC-SHA256 chain |
 | 16.A–16.C | Performance baseline, load/concurrency, cloud multi-tenant |
 | 17 | Runtime proof, contract activation, approval loop, reference agent |
+| 18 | Operator control plane, verification runs, adversarial API suite |
+| 19 | Real Gmail connector, Google OAuth, a real external AI agent, egress boundary |
+
+## Real Gmail, and a real agent (Phase 19)
+
+Phase 19 replaces both ends of the demonstration with real ones. Gmail sits
+behind a typed connector with five operations — `search`, `read`, `draft`,
+`send`, `delete` — and no sixth: there is no `execute(method, url, payload)`,
+no caller-supplied path, and no field in any request that becomes a Gmail URL.
+The agent is a real AI agent with a model behind it that decides for itself
+what to ask for.
+
+The canonical posture, decided by the policy and contract engines that already
+existed rather than by anything new:
+
+| Operation | Posture |
+| --- | --- |
+| `gmail.search` / `gmail.read` / `gmail.draft` | ALLOW |
+| `gmail.send` | APPROVAL_REQUIRED — a person approves each one, once |
+| `gmail.delete` | DENY — refused by permissions, by policy, by contract, and by the OAuth scope requested |
+
+The agent holds its Aegis token and a model API key, and nothing else. It has
+no Google credential and no route to Gmail: its network is internal, the
+connector is on no network it is on, and its model traffic leaves through a
+proxy whose host allow-list does not contain Google.
+
+**What is and is not verified.** Every Gmail test in this repository runs
+against a stand-in, not a real mailbox, and the runtime network boundary needs
+a Docker daemon that CI here does not have. See
+[`docs/PHASE_19_REPORT.md`](docs/PHASE_19_REPORT.md) for the labelled list, and
+[`docs/PHASE_19_GMAIL.md`](docs/PHASE_19_GMAIL.md) for the two human steps that
+unblock the real run.
 
 ## Principles
 
