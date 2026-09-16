@@ -29,6 +29,32 @@ AEGIS_CRM_SECRET=$(gen)
 # Identity of the runtime-verification agent that runs in the agent container.
 # An ordinary agent token, enforced like any other.
 AEGIS_VERIFY_AGENT_TOKEN=aegis_$(gen)
+# Identity of the Phase 19 AI agent. Also an ordinary agent token: it is the
+# only credential that container holds, and it grants nothing at Google.
+AEGIS_GMAIL_AGENT_TOKEN=aegis_$(gen)
+# Seals the Google refresh tokens at rest (backend/app/secretbox.py).
+AEGIS_OAUTH_ENCRYPTION_KEY=$(gen)
+
+# ---------------------------------------------------------------------------
+# Phase 19 values a HUMAN must fill in. Left empty on purpose -- this script
+# cannot create a Google OAuth client or buy model credits for you, and an
+# invented value would produce a stack that looks configured and is not.
+#
+# Google OAuth client, from Google Cloud Console. See docs/PHASE_19_GMAIL.md
+# for exactly which buttons to press.
+AEGIS_GOOGLE_CLIENT_ID=
+AEGIS_GOOGLE_CLIENT_SECRET=
+AEGIS_GOOGLE_REDIRECT_URI=http://localhost:8000/api/gmail/oauth/callback
+#
+# The AI agent's model. Any OpenAI-compatible provider. The host below must
+# also appear in AEGIS_EGRESS_ALLOWLIST or the agent cannot reach it.
+AEGIS_AGENT_LLM_BASE_URL=https://api.deepseek.com/v1
+AEGIS_AGENT_LLM_API_KEY=
+AEGIS_AGENT_LLM_MODEL=deepseek-chat
+#
+# The complete list of hosts the agent container may reach. Adding a Google
+# host here would defeat the Phase 19 network boundary; do not.
+AEGIS_EGRESS_ALLOWLIST=api.deepseek.com
 ENV
 
 chmod 600 "$TARGET"

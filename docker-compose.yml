@@ -12,9 +12,19 @@ networks:
     internal: true
   public_net:
     driver: bridge
+  # Phase 19. Non-internal, and attached to exactly one service each. These
+  # are the only two routes off the host in the whole deployment.
+  google_net:
+    driver: bridge
+  egress_net:
+    driver: bridge
 
 volumes:
   aegis-data:
+  # Phase 19. Sealed Google refresh tokens. Mounted by the control plane
+  # (writes on consent) and the Gmail connector (reads to call Google), and by
+  # nothing else. Grep this file for aegis-oauth: there must be exactly two.
+  aegis-oauth:
 
 services:
   control-plane:
@@ -28,9 +38,20 @@ services:
       AEGIS_SECRET_KEY: ${AEGIS_SECRET_KEY:?Run scripts/init-env.sh to generate .env}
       AEGIS_EVIDENCE_SECRET_KEY: ${AEGIS_EVIDENCE_SECRET_KEY:?Run scripts/init-env.sh to generate .env}
       AEGIS_VERIFY_AGENT_TOKEN: ${AEGIS_VERIFY_AGENT_TOKEN:?Run scripts/init-env.sh to generate .env}
+      AEGIS_GMAIL_AGENT_TOKEN: ${AEGIS_GMAIL_AGENT_TOKEN:?Run scripts/init-env.sh to generate .env}
       AEGIS_DEMO_TOKEN_PATH: /data/demo_token.txt
+      # Phase 19 — Google OAuth. Empty by default: a human creates the client
+      # in Google Cloud Console and puts it in .env. Until then /api/gmail
+      # reports "not configured" instead of pretending a mailbox is connected.
+      AEGIS_GOOGLE_CLIENT_ID: ${AEGIS_GOOGLE_CLIENT_ID:-}
+      AEGIS_GOOGLE_CLIENT_SECRET: ${AEGIS_GOOGLE_CLIENT_SECRET:-}
+      AEGIS_GOOGLE_REDIRECT_URI: ${AEGIS_GOOGLE_REDIRECT_URI:-http://localhost:8000/api/gmail/oauth/callback}
+      AEGIS_OAUTH_ENCRYPTION_KEY: ${AEGIS_OAUTH_ENCRYPTION_KEY:?Run scripts/init-env.sh to generate .env}
+      AEGIS_GMAIL_STORE_PATH: /oauth/gmail_connections.json
+      AEGIS_AGENT_LLM_MODEL: ${AEGIS_AGENT_LLM_MODEL:-}
     volumes:
       - aegis-data:/data
+      - aegis-oauth:/oauth
     networks:
       - public_net
     ports:
@@ -97,6 +118,7 @@ services:
       AEGIS_INTERNAL_GATEWAY_TOKEN: ${AEGIS_INTERNAL_GATEWAY_TOKEN:?Run scripts/init-env.sh to generate .env}
       AEGIS_INTERNAL_TOOL_TOKEN: ${AEGIS_INTERNAL_TOOL_TOKEN:?Run scripts/init-env.sh to generate .env}
       AEGIS_TOOL_URL: http://protected-tool:8000/api
+      AEGIS_GMAIL_TOOL_URL: http://gmail-connector:8000/api
       AEGIS_CRM_SECRET: ${AEGIS_CRM_SECRET:?Run scripts/init-env.sh to generate .env}
     networks:
       - broker_net
@@ -115,6 +137,89 @@ services:
     networks:
       - tool_net
     restart: unless-stopped
+
+  # Phase 19 — the only container that holds a Google credential, and one of
+  # only two with a route off the host. It mounts aegis-oauth read-only: it
+  # needs to use the refresh token, not to write one. It is NOT on agent_net,
+  # so an agent cannot address it at all.
+  gmail-connector:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: aegis-gmail-connector
+    environment:
+      AEGIS_ROLE: protected-tool
+      AEGIS_INTERNAL_TOOL_TOKEN: ${AEGIS_INTERNAL_TOOL_TOKEN:?Run scripts/init-env.sh to generate .env}
+      AEGIS_CRM_SECRET: ${AEGIS_CRM_SECRET:?Run scripts/init-env.sh to generate .env}
+      AEGIS_GOOGLE_CLIENT_ID: ${AEGIS_GOOGLE_CLIENT_ID:-}
+      AEGIS_GOOGLE_CLIENT_SECRET: ${AEGIS_GOOGLE_CLIENT_SECRET:-}
+      AEGIS_OAUTH_ENCRYPTION_KEY: ${AEGIS_OAUTH_ENCRYPTION_KEY:?Run scripts/init-env.sh to generate .env}
+      AEGIS_GMAIL_STORE_PATH: /oauth/gmail_connections.json
+    volumes:
+      - aegis-oauth:/oauth:ro
+    networks:
+      - tool_net
+      - google_net
+    restart: unless-stopped
+
+  # Phase 19 — the agent's only route off the host, and it goes one place.
+  # Host allow-list, CONNECT only, port 443 only. Google is not on the list.
+  egress-proxy:
+    build:
+      context: .
+      dockerfile: infra/egress-proxy/Dockerfile
+    container_name: aegis-egress-proxy
+    user: "10002:10002"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      AEGIS_EGRESS_ALLOWLIST: ${AEGIS_EGRESS_ALLOWLIST:-api.deepseek.com}
+      AEGIS_EGRESS_PORT: "8888"
+    networks:
+      - agent_net
+      - egress_net
+    restart: unless-stopped
+
+  # Phase 19 — a real external AI agent. Untrusted by construction.
+  #
+  # It holds its Aegis token and a model API key. It has no Google credential,
+  # no OAuth client secret, no EAT key, no internal service token, and no route
+  # to Gmail: agent_net is internal, and its model traffic leaves through the
+  # allow-listed proxy above. It is not given a task by default -- an operator
+  # runs it with one.
+  ai-agent:
+    build:
+      context: .
+      dockerfile: infra/ai-agent/Dockerfile
+    container_name: aegis-ai-agent
+    user: "10001:10001"
+    read_only: true
+    privileged: false
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+    environment:
+      AEGIS_BASE_URL: http://enforcement-gateway:8000
+      AEGIS_AGENT_TOKEN: ${AEGIS_GMAIL_AGENT_TOKEN:?Run scripts/init-env.sh to generate .env}
+      AEGIS_AGENT_LLM_BASE_URL: ${AEGIS_AGENT_LLM_BASE_URL:-https://api.deepseek.com/v1}
+      AEGIS_AGENT_LLM_API_KEY: ${AEGIS_AGENT_LLM_API_KEY:-}
+      AEGIS_AGENT_LLM_MODEL: ${AEGIS_AGENT_LLM_MODEL:-deepseek-chat}
+      HTTPS_PROXY: http://egress-proxy:8888
+      HTTP_PROXY: http://egress-proxy:8888
+      NO_PROXY: enforcement-gateway,localhost,127.0.0.1
+    networks:
+      - agent_net
+    depends_on:
+      enforcement-gateway:
+        condition: service_healthy
+    restart: "no"
+    command: ["sleep", "infinity"]
 
   agent:
     build:

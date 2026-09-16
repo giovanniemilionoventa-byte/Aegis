@@ -146,3 +146,9 @@ AGENT_LLM_MODEL = _env("AEGIS_AGENT_LLM_MODEL", "")
 # container, matched by a seeded credential. It is an ordinary agent token,
 # enforced like any other, and it is the *only* credential that agent holds.
 GMAIL_AGENT_TOKEN = _env("AEGIS_GMAIL_AGENT_TOKEN", "")
+
+# Phase 19: the Gmail connector runs in its own container, because it is the
+# only component that needs a route to the internet and the only one that
+# mounts the OAuth store. When this is set the broker sends gmail there instead
+# of to the CRM protected-tool.
+GMAIL_TOOL_URL = _env("AEGIS_GMAIL_TOOL_URL", "")

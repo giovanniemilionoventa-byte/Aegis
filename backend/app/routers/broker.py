@@ -118,9 +118,13 @@ def _call_tool(
             )
         except InvalidToolCredential as exc:
             raise HTTPException(status_code=502, detail="tool_rejected") from exc
+    # gmail lives in its own container (the only one with an egress route and
+    # the only one holding the Google credential); everything else goes to the
+    # CRM protected-tool.
+    tool_url = config.GMAIL_TOOL_URL if tool == "gmail" and config.GMAIL_TOOL_URL else config.TOOL_URL
     try:
         response = httpx.post(
-            f"{config.TOOL_URL.rstrip('/')}/internal/tools/{tool}/{operation}",
+            f"{tool_url.rstrip('/')}/internal/tools/{tool}/{operation}",
             json={
                 "secret": secret,
                 "scope": scope,
