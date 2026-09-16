@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, type GmailStatus } from "../api";
+import { Link } from "react-router-dom";
+import { api, getToken, type GmailStatus } from "../api";
 
 /**
  * Connecting a real mailbox, and showing an operator what that did and did not
@@ -43,10 +44,12 @@ export default function Gmail() {
     setBusy(true);
     setNote("");
     try {
+      // Checks configuration and returns an Aegis route -- never a Google URL.
+      // The server builds the consent URL and answers 302, so this page never
+      // handles the Google client id.
       const started = await api.gmailConnect();
-      // Google's consent screen is entered by the operator, in their own
-      // browser session. Aegis never handles the password and never sees it.
-      window.location.href = started.authorization_url;
+      const token = getToken();
+      window.location.href = `${started.authorization_url}?token=${encodeURIComponent(token ?? "")}`;
     } catch (err) {
       setError(err instanceof Error ? err.message : "failed");
     } finally {
@@ -125,8 +128,8 @@ export default function Gmail() {
             )}
           </ul>
           <p className="muted">
-            Redirect URI this deployment expects:{" "}
-            <code>{status?.redirect_uri}</code>
+            Ask your Aegis administrator to complete it; a customer is not
+            expected to configure Google Cloud.
           </p>
         </div>
       )}
@@ -169,6 +172,42 @@ export default function Gmail() {
               No mailbox connected. Agents with Gmail permissions will be
               refused until one is.
             </p>
+          )}
+        </div>
+      )}
+
+      {status?.connected && (
+        <div className="card">
+          <h3>Agents with access</h3>
+          <p className="muted">
+            Connecting this mailbox gave no agent access to it. Access is
+            granted per agent, on the agent&rsquo;s own page, and disconnecting
+            revokes every grant.
+          </p>
+          {status.agents_with_access.length === 0 ? (
+            <p className="muted">
+              No agent has access yet. Every Gmail request will be refused until
+              one is granted.
+            </p>
+          ) : (
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Agent</th>
+                  <th>Granted</th>
+                </tr>
+              </thead>
+              <tbody>
+                {status.agents_with_access.map((row) => (
+                  <tr key={row.agent_id}>
+                    <td>
+                      <Link to={`/agents/${row.agent_id}`}>{row.agent_name}</Link>
+                    </td>
+                    <td>{row.granted_at}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </div>
       )}

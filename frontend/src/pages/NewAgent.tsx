@@ -320,6 +320,14 @@ export default function NewAgent() {
             enforcement gateway. It is not a credential for any protected system:
             those never leave the broker.
           </p>
+          {granted.some((cap) => cap.resource_kind === "gmail") && (
+            <p className="page-sub">
+              <strong>One step left.</strong> This agent has Gmail capabilities
+              but no mailbox yet. Connecting a mailbox and granting this agent
+              access are two separate acts, both on the agent&rsquo;s page — until
+              the grant exists, every Gmail request it makes is refused.
+            </p>
+          )}
           <div className="row">
             <button
               className="btn"

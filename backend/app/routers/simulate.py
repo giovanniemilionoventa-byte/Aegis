@@ -47,6 +47,7 @@ from ..engines import policy as policy_engine
 from ..engines import risk as risk_engine
 from ..engines.behavior import TrajectoryStep
 from ..security import get_current_user
+from ..services import gmail_access
 
 router = APIRouter(tags=["simulation"])
 
@@ -207,6 +208,29 @@ def simulate(
                     "layer": "contract",
                     "outcome": "PASS",
                     "detail": f"Within contract {contract.contract_id} v{contract.version}.",
+                }
+            )
+
+    # Phase 19.1 — the gateway refuses a gmail request from an agent that has
+    # not been granted the tenant's mailbox. The simulator has to apply the same
+    # gate or it will answer ALLOW for a request the gateway blocks, and an
+    # operator will trust the wrong one. Same service, not a second copy.
+    if kind == "gmail" and decision != "BLOCK":
+        access = gmail_access.evaluate(db, agent)
+        if not access.allowed:
+            decision = "BLOCK"
+            reason = access.reason
+            steps.append(
+                {"layer": "mailbox access", "outcome": "BLOCK", "detail": access.reason}
+            )
+        else:
+            steps.append(
+                {
+                    "layer": "mailbox access",
+                    "outcome": "PASS",
+                    "detail": (
+                        f"Granted access to {access.google_email or 'the connected mailbox'}."
+                    ),
                 }
             )
 

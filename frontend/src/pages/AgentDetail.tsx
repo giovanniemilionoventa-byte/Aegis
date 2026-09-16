@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import AgentGmailCard from "../components/AgentGmailCard";
+import AgentSetupCard from "../components/AgentSetupCard";
 import {
   api,
   type Agent,
@@ -207,6 +209,12 @@ export default function AgentDetail() {
           </table>
         )}
       </div>
+
+      {/* ---- Gmail, on the page where the agent is configured ---- */}
+      <AgentGmailCard agentId={agent.id} agentRevoked={revoked} />
+
+      {/* ---- how to point a real agent at Aegis ---- */}
+      <AgentSetupCard agentId={agent.id} />
 
       {/* ---- contract ---- */}
       <div className="card" style={{ marginTop: 16 }}>

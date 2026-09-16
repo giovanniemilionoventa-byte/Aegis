@@ -472,3 +472,212 @@ def test_status_lists_exactly_the_agents_with_access(client, tenant, fake):
     status = client.get("/api/gmail/status", headers=tenant.operator).json()
     granted = {row["agent_id"] for row in status["agents_with_access"]}
     assert other[0] in granted
+
+
+# -- the agent setup endpoint ----------------------------------------------
+
+
+def test_setup_lists_only_the_operations_this_agent_may_name(client, fake):
+    search_only = build_tenant(client, name="Search Only Setup", actions=("SEARCH",))
+    setup = client.get(
+        f"/api/agents/{search_only.agent_id}/setup", headers=search_only.operator
+    ).json()
+    canonical = {row["canonical"] for row in setup["operations"]}
+    assert canonical == {"gmail.SEARCH"}
+    assert setup["auth_header"] == "X-Agent-Token"
+
+
+def test_setup_never_contains_a_credential(client, tenant, fake):
+    from app import config, gmail_store
+
+    setup = client.get(f"/api/agents/{tenant.agent_id}/setup", headers=tenant.operator)
+    text = setup.text
+    for secret in (
+        tenant.agent_token,
+        gmail_store.reveal_refresh_token(tenant.organization_id),
+        config.GOOGLE_OAUTH_CLIENT_SECRET,
+        config.GOOGLE_OAUTH_CLIENT_ID,
+        config.CRM_SECRET,
+        config.EAT_KEY,
+        config.INTERNAL_TOOL_TOKEN,
+        config.INTERNAL_GATEWAY_TOKEN,
+    ):
+        if secret:
+            assert secret not in text
+    # And it does not leak the internal topology either.
+    assert "credential-broker" not in text
+    assert "protected-tool" not in text
+    assert "gmail-connector" not in text
+
+
+def test_setup_is_tenant_scoped_and_not_readable_by_an_agent(client, tenant, fake):
+    rival = build_tenant(client, name="Rival Setup")
+    assert (
+        client.get(f"/api/agents/{tenant.agent_id}/setup", headers=rival.operator).status_code
+        == 404
+    )
+    assert (
+        client.get(
+            f"/api/agents/{tenant.agent_id}/setup",
+            headers={"X-Agent-Token": tenant.agent_token},
+        ).status_code
+        in (401, 403)
+    )
+
+
+# -- the simulator agrees with the gateway ----------------------------------
+
+
+def test_the_simulator_and_the_gateway_agree_about_mailbox_access(client, fake):
+    """An operator must not be told ALLOW for something the gateway blocks."""
+    tenant = build_tenant(client, name="Simulated", grant_mailbox=False)
+    body = {"resource_kind": "gmail", "action": "SEARCH", "scope": "mailbox"}
+
+    simulated = client.post(
+        f"/api/agents/{tenant.agent_id}/simulate", headers=tenant.operator, json=body
+    ).json()
+    real = call(client, tenant, "search", payload={"query": "marco"}).json()
+    assert simulated["decision"] == real["decision"] == "BLOCK"
+    assert any(step["layer"] == "mailbox access" for step in simulated["steps"])
+
+    client.post(f"/api/gmail/agents/{tenant.agent_id}/grant", headers=tenant.operator)
+
+    simulated = client.post(
+        f"/api/agents/{tenant.agent_id}/simulate", headers=tenant.operator, json=body
+    ).json()
+    real = call(client, tenant, "search", payload={"query": "marco"}).json()
+    assert simulated["decision"] == real["decision"] == "ALLOW"
+
+
+def test_the_simulator_still_reports_send_as_approval_and_delete_as_block(client, tenant, fake):
+    for action, expected in (("SEND", "APPROVAL"), ("DELETE", "BLOCK")):
+        simulated = client.post(
+            f"/api/agents/{tenant.agent_id}/simulate",
+            headers=tenant.operator,
+            json={"resource_kind": "gmail", "action": action, "scope": "mailbox"},
+        ).json()
+        assert simulated["decision"] == expected, action
+
+
+# -- the operator walkthrough ----------------------------------------------
+
+
+def test_the_whole_onboarding_path_in_order(client, fake, store_path):
+    """The exact sequence the dashboard walks, with the state at each step.
+
+    Not a convenience wrapper: every call is one the UI makes, in the order it
+    makes them, and the assertions are what the operator is shown in between.
+    A step that silently made the agent ready early would fail here.
+    """
+    # 1. Sign in (register, for a fresh tenant).
+    operator = register_operator(client)
+
+    # 2. Create the agent. It starts with no authority at all.
+    created = client.post(
+        "/api/agents",
+        headers=operator,
+        json={"name": "Sales Assistant", "provider": "custom", "model": "external", "description": ""},
+    )
+    assert created.status_code == 200
+    agent_id = created.json()["agent"]["id"]
+    agent_token = created.json()["token"]
+    # The token is returned exactly once, here.
+    assert agent_token.startswith("aegis_")
+
+    setup = client.get(f"/api/agents/{agent_id}/setup", headers=operator).json()
+    assert setup["operations"] == [], "a new agent may name nothing"
+
+    # 3. Grant capabilities.
+    install_canonical_policy(client, operator)
+    for action in ("SEARCH", "READ", "DRAFT", "SEND"):
+        assert client.post(
+            f"/api/agents/{agent_id}/permissions",
+            headers=operator,
+            json={"resource_kind": "gmail", "action": action, "scope": "mailbox", "effect": "allow"},
+        ).status_code == 200
+
+    contract = client.post(
+        f"/api/agents/{agent_id}/contracts",
+        headers=operator,
+        json={
+            "organization_id": "ignored",
+            "agent_id": "ignored",
+            "contract_id": f"walkthrough-{uuid4().hex[:8]}",
+            "version": 1,
+            "status": "ACTIVE",
+            "purpose": "Mail assistant",
+            "capabilities": [
+                {"name": "gmail", "resource_kind": "gmail", "actions": ["SEARCH", "READ", "DRAFT", "SEND"]}
+            ],
+            "resources": [{"kind": "gmail", "scope": "mailbox"}],
+            "constraints": {},
+            "data_constraints": {},
+            "approval_rules": [{"resource_kind": "gmail", "action": "SEND", "require": "human"}],
+        },
+    )
+    assert contract.status_code in (200, 201)
+
+    organization_id = client.get(f"/api/agents/{agent_id}", headers=operator).json()[
+        "organization_id"
+    ]
+    from .phase19_harness import Tenant
+
+    tenant = Tenant(
+        organization_id=organization_id,
+        operator=operator,
+        agent_id=agent_id,
+        agent_token=agent_token,
+        contract_id="walkthrough",
+    )
+
+    # 4. Capabilities alone are not enough: no mailbox, so nothing works.
+    status = client.get(f"/api/gmail/agents/{agent_id}", headers=operator).json()
+    assert status["connected"] is False
+    assert status["allowed"] is False
+    blocked = call(client, tenant, "search", payload={"query": "marco"}).json()
+    assert blocked["decision"] == "BLOCK"
+
+    # 5. Connect the mailbox. The dashboard is handed an Aegis route.
+    start = client.post("/api/gmail/oauth/start", headers=operator).json()
+    assert start["authorization_url"] == "/api/gmail/oauth/start"
+    connect_gmail(organization_id)  # stands in for the Google round trip
+
+    # 6. Connected, and STILL not ready: the grant is a separate act.
+    status = client.get(f"/api/gmail/agents/{agent_id}", headers=operator).json()
+    assert status["connected"] is True
+    assert status["granted"] is False
+    assert status["allowed"] is False
+    still_blocked = call(client, tenant, "search", payload={"query": "marco"}).json()
+    assert still_blocked["decision"] == "BLOCK"
+
+    # 7. Grant this agent the mailbox.
+    assert client.post(f"/api/gmail/agents/{agent_id}/grant", headers=operator).status_code == 200
+    status = client.get(f"/api/gmail/agents/{agent_id}", headers=operator).json()
+    assert status["allowed"] is True
+    assert status["google_email"] == "mailbox@example.test"
+
+    # 8. Agent ready. The posture is the canonical one.
+    assert call(client, tenant, "search", payload={"query": "marco"}).json()["executed"] is True
+    assert call(client, tenant, "read", payload={"message_id": "m-1"}).json()["executed"] is True
+    assert (
+        call(client, tenant, "draft", payload={"to": "m@e.test", "subject": "s", "body": "b"})
+        .json()["executed"]
+        is True
+    )
+    assert (
+        call(client, tenant, "send", payload={"to": "m@e.test", "subject": "s", "body": "b"})
+        .json()["decision"]
+        == "APPROVAL"
+    )
+    assert call(client, tenant, "delete", payload={"message_id": "m-1"}).json()["decision"] == "BLOCK"
+    assert fake.sent == []
+    assert fake.trashed == []
+
+    # 9. The setup card now lists exactly the four granted operations.
+    setup = client.get(f"/api/agents/{agent_id}/setup", headers=operator).json()
+    assert {row["canonical"] for row in setup["operations"]} == {
+        "gmail.SEARCH",
+        "gmail.READ",
+        "gmail.DRAFT",
+        "gmail.SEND",
+    }

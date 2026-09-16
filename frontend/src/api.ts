@@ -58,7 +58,37 @@ export type GmailStatus = {
   connected: boolean;
   connection: GmailConnection | null;
   requested_scopes: string[];
-  redirect_uri: string;
+  // Phase 19.1: connecting a mailbox gives no agent access to it. This is who
+  // actually has it, so an operator is never guessing.
+  agents_with_access: Array<{
+    agent_id: string;
+    agent_name: string;
+    granted_at: string | null;
+  }>;
+};
+
+export type AgentGmailStatus = {
+  agent_id: string;
+  agent_name: string;
+  agent_status: string;
+  connected: boolean;
+  granted: boolean;
+  allowed: boolean;
+  reason: string;
+  google_email: string | null;
+};
+
+export type AgentSetup = {
+  agent_id: string;
+  agent_name: string;
+  status: string;
+  gateway_base_url_env: string;
+  gateway_path_pattern: string;
+  auth_header: string;
+  request_shape: Record<string, unknown>;
+  operations: Array<{ canonical: string; path: string; scope: string }>;
+  credential: { shown_once: boolean; note: string };
+  never_supplied_to_agents: string[];
 };
 
 export type ConnectorCall = {
@@ -105,9 +135,23 @@ export const api = {
       { method: "POST" },
     ),
   gmailDisconnect: () =>
-    request<{ disconnected: boolean; note: string }>("/api/gmail/disconnect", {
-      method: "POST",
-    }),
+    request<{ disconnected: boolean; agent_grants_revoked: number; note: string }>(
+      "/api/gmail/disconnect",
+      { method: "POST" },
+    ),
+  agentGmail: (agentId: string) =>
+    request<AgentGmailStatus>(`/api/gmail/agents/${agentId}`),
+  grantAgentGmail: (agentId: string) =>
+    request<{ agent_id: string; granted: boolean; google_email: string | null }>(
+      `/api/gmail/agents/${agentId}/grant`,
+      { method: "POST" },
+    ),
+  revokeAgentGmail: (agentId: string) =>
+    request<{ agent_id: string; granted: boolean; revoked: boolean }>(
+      `/api/gmail/agents/${agentId}/revoke`,
+      { method: "POST" },
+    ),
+  agentSetup: (agentId: string) => request<AgentSetup>(`/api/agents/${agentId}/setup`),
   connectorCalls: (executionId: string) =>
     request<{ execution_id: string; count: number; note: string; calls: ConnectorCall[] }>(
       `/api/executions/${executionId}/connector-calls`,

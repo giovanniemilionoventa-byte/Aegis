@@ -201,3 +201,92 @@ def add_permission(
     db.commit()
     db.refresh(perm)
     return perm
+
+
+@router.get("/{agent_id}/setup")
+def agent_setup(
+    agent_id: str,
+    user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Everything an external AI agent needs to talk to Aegis. And nothing else.
+
+    Phase 19.1. An operator who has just created an agent has to connect their
+    own runtime to it, and until now the dashboard told them nothing about how.
+    The gap was filled by reading the source, which is not a product.
+
+    WHAT IS HERE: the enforcement endpoint, the request shape, the canonical
+    operations this agent is actually allowed to name, and the tool schema an
+    OpenAI-style function-calling model expects.
+
+    WHAT IS NOT, AND WILL NOT BE:
+      * the agent's token. It is shown once, at creation or rotation, because
+        Aegis stores only its hash and genuinely cannot show it again. An
+        endpoint that could re-display it would mean Aegis was keeping it.
+      * any Gmail credential, OAuth client, or internal service token. Those
+        are not the agent's to hold, and this endpoint is exactly where someone
+        would be tempted to leak one for convenience.
+      * the broker URL, the tool URL, or any internal address. An agent has one
+        address it may use.
+    """
+    agent = (
+        db.query(models.Agent)
+        .filter(
+            models.Agent.id == agent_id,
+            models.Agent.organization_id == user.organization_id,
+        )
+        .first()
+    )
+    if not agent:
+        raise HTTPException(status_code=404, detail="Agent not found")
+
+    from .gateway import TOOL_MAP
+
+    operations = []
+    for permission in agent.permissions:
+        if permission.effect.lower() != "allow":
+            continue
+        spec = TOOL_MAP.get(permission.resource_kind)
+        if not spec:
+            continue
+        for wire_name, canonical in spec["operations"].items():
+            if canonical == permission.action:
+                operations.append(
+                    {
+                        "canonical": f"{permission.resource_kind}.{canonical}",
+                        "path": f"/api/gateway/tools/{permission.resource_kind}/{wire_name}",
+                        "scope": permission.scope,
+                    }
+                )
+
+    return {
+        "agent_id": agent.id,
+        "agent_name": agent.name,
+        "status": agent.status,
+        # The single address an agent uses. Not the control plane, which agent
+        # credentials are refused from outright, and not the broker or the tool.
+        "gateway_base_url_env": "AEGIS_BASE_URL",
+        "gateway_path_pattern": "/api/gateway/tools/{tool}/{operation}",
+        "auth_header": "X-Agent-Token",
+        "request_shape": {
+            "scope": "string",
+            "payload": "object — the typed parameters for this operation",
+            "metadata": {"declared_intent": "string, optional, recorded and untrusted"},
+            "execution_id": "string, optional — groups related calls",
+            "request_id": "string, optional — idempotency key",
+        },
+        "operations": sorted(operations, key=lambda row: row["canonical"]),
+        "credential": {
+            "shown_once": True,
+            "note": (
+                "Aegis stores only a hash of the agent token and cannot show it "
+                "again. Rotate the credential if it was lost."
+            ),
+        },
+        "never_supplied_to_agents": [
+            "Google OAuth client id or secret",
+            "Gmail refresh or access tokens",
+            "the credential broker's address or credentials",
+            "internal service tokens",
+        ],
+    }
