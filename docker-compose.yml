@@ -22,8 +22,14 @@ networks:
 volumes:
   aegis-data:
   # Phase 19. Sealed Google refresh tokens. Mounted by the control plane
-  # (writes on consent) and the Gmail connector (reads to call Google), and by
-  # nothing else. Grep this file for aegis-oauth: there must be exactly two.
+  # (writes on consent), the Gmail connector (reads to call Google), and the
+  # enforcement gateway (read-only — it only ever checks whether a mailbox is
+  # connected, via gmail_store.get_connection(); it never unseals a token).
+  # Without that third mount the gateway's connection check silently sees an
+  # empty store and refuses every Gmail operation with "no mailbox connected,"
+  # regardless of the real state — found running this stack for real in
+  # Phase 19's first live Gmail OAuth verification. Grep this file for
+  # aegis-oauth: there must be exactly three.
   aegis-oauth:
 
 services:
@@ -84,6 +90,7 @@ services:
       AEGIS_INTERNAL_GATEWAY_TOKEN: ${AEGIS_INTERNAL_GATEWAY_TOKEN:?Run scripts/init-env.sh to generate .env}
     volumes:
       - aegis-data:/data
+      - aegis-oauth:/oauth:ro
     networks:
       - agent_net
       - broker_net

@@ -6,8 +6,9 @@ say which is which, because they prove different strengths of statement:
 
   1. The compose file. Asserted below by parsing docker-compose.yml: the agent
      is attached only to an internal network, the Gmail connector is not on
-     that network, and the sealed credential volume is mounted by two services
-     and no others. This is a configuration check and it runs everywhere.
+     that network, and the sealed credential volume is mounted by three
+     services and no others — one of which is read-only for two of them. This
+     is a configuration check and it runs everywhere.
 
   2. The egress proxy's allow-list. Asserted below by calling the real host
      matcher: Google hosts are refused, including lookalikes. This is a unit
@@ -96,20 +97,47 @@ def test_only_two_services_have_an_external_route(compose):
     assert external == {"gmail-connector", "egress-proxy", "control-plane"}
 
 
-def test_oauth_store_is_mounted_by_exactly_two_services(compose):
-    """The sealed Google credential reaches two containers. Which two matters."""
+def test_oauth_store_is_mounted_by_exactly_three_services(compose):
+    """The sealed Google credential reaches three containers. Which three matters.
+
+    A fourth is not a hypothetical: enforcement-gateway was missing from this
+    set until Phase 19's first live Gmail OAuth run found it the hard way. The
+    gateway is where every Gmail ALLOW/BLOCK decision is actually made
+    (routers/gateway.py calls gmail_access.evaluate(), which calls
+    gmail_store.get_connection()), but it held no mount at all, so /oauth did
+    not exist inside that container and the store read silently came back
+    empty. Every Gmail request was refused with "no mailbox connected" —
+    correctly fail-closed, but for the wrong reason, and unfixable from the
+    dashboard because the dashboard talks to control-plane, which had the
+    mount and reported the truth. Two containers agreeing with each other
+    while the one that decides sees something else is exactly the kind of gap
+    this test exists to catch before it reaches a real deployment again.
+    """
     holders = {
         name
         for name, service in compose["services"].items()
         if any(str(v).startswith("aegis-oauth:") for v in (service.get("volumes") or []))
     }
-    assert holders == {"control-plane", "gmail-connector"}
+    assert holders == {"control-plane", "gmail-connector", "enforcement-gateway"}
 
 
 def test_the_connector_mounts_the_credential_store_read_only(compose):
     mounts = [
         str(v)
         for v in compose["services"]["gmail-connector"]["volumes"]
+        if str(v).startswith("aegis-oauth:")
+    ]
+    assert mounts == ["aegis-oauth:/oauth:ro"]
+
+
+def test_the_gateway_mounts_the_credential_store_read_only(compose):
+    """The gateway only ever checks connection status, never unseals a token.
+
+    It has no business writing to this volume, so it doesn't get write access.
+    """
+    mounts = [
+        str(v)
+        for v in compose["services"]["enforcement-gateway"]["volumes"]
         if str(v).startswith("aegis-oauth:")
     ]
     assert mounts == ["aegis-oauth:/oauth:ro"]
