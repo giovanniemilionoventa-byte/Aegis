@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   api,
-  getToken,
   type AgentGmailStatus,
   type GmailStatus,
   type SimulationResult,
@@ -88,12 +87,16 @@ export default function AgentGmailCard({
     load();
   }, [load]);
 
-  const connect = () => {
+  const connect = async () => {
     // Navigate to Aegis, not to Google. The server builds the consent URL and
-    // answers 302, so this page never handles the Google client id.
-    const token = getToken();
-    if (!token) return;
-    window.location.href = `/api/gmail/oauth/start?token=${encodeURIComponent(token)}`;
+    // answers 302, so this page never handles the Google client id. The address
+    // carries a one-use ticket, never the session token.
+    try {
+      const started = await api.gmailConnect();
+      window.location.href = started.authorization_url;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "failed");
+    }
   };
 
   const setGrant = async (grant: boolean) => {

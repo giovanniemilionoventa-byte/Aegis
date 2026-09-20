@@ -1,90 +1,178 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api, setToken } from "../api";
+import { api, ApiError, setToken } from "../api";
+import LangSwitch from "../components/LangSwitch";
+import { useLang, useT } from "../i18n";
+
+// Documented in the README as the local demo account. It only exists when the
+// server reports `features.demo` (never in production), and it is never
+// pre-filled: signing in with it is an explicit click.
+const DEMO = { email: "admin@acme.test", password: "aegis-demo" };
 
 export default function Login() {
-  const [mode, setMode] = useState<"login" | "register">("login");
-  const [email, setEmail] = useState("admin@acme.test");
-  const [password, setPassword] = useState("aegis-demo");
-  const [fullName, setFullName] = useState("Ada Admin");
-  const [org, setOrg] = useState("Acme Corp");
-  const [error, setError] = useState("");
+  const t = useT();
+  const lang = useLang();
   const nav = useNavigate();
+  const [mode, setMode] = useState<"login" | "register">("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [org, setOrg] = useState("");
+  const [invite, setInvite] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [demo, setDemo] = useState(false);
 
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
+  useEffect(() => {
+    api.health().then((health) => setDemo(Boolean(health.features?.demo))).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    document.title = `${mode === "login" ? t("login.title") : t("login.registerTitle")} · Aegis`;
+  }, [mode, lang, t]);
+
+  const explain = (err: unknown) => {
+    if (!(err instanceof ApiError)) return t("common.failed");
+    if (err.status === 429) return t("login.tooMany");
+    if (mode === "login" && err.status === 401) return t("login.badLogin");
+    if (mode === "register" && err.status === 403) return t("login.badInvite");
+    return err.message;
+  };
+
+  const enter = async (attempt: () => Promise<{ access_token: string }>) => {
     setError("");
+    setBusy(true);
     try {
-      const res =
-        mode === "login"
-          ? await api.login(email, password)
-          : await api.register({
-              organization_name: org,
-              full_name: fullName,
-              email,
-              password,
-            });
-      setToken(res.access_token);
+      setToken((await attempt()).access_token);
       nav("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Auth failed");
+      setError(explain(err));
+    } finally {
+      setBusy(false);
     }
-  }
+  };
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    enter(() =>
+      mode === "login"
+        ? api.login(email, password)
+        : api.register({
+            organization_name: org,
+            full_name: fullName,
+            email,
+            password,
+            invite_code: invite.trim() || undefined,
+          }),
+    );
+  };
+
+  const registering = mode === "register";
 
   return (
     <div className="auth-wrap">
-      <div className="card auth-card">
-        <div className="brand" style={{ marginBottom: 12 }}>
-          <div className="brand-mark" />
+      <main className="card auth-card">
+        <div className="brand">
+          <div className="brand-mark" aria-hidden="true" />
           <div>
-            <h1>AEGIS</h1>
-            <span>control plane</span>
+            <strong>AEGIS</strong>
+            <span>{t("shell.tagline")}</span>
           </div>
         </div>
-        <p className="page-sub">
-          Independent security layer between AI agents and real systems.
-        </p>
-        <form onSubmit={onSubmit} className="grid" style={{ gap: 12 }}>
-          {mode === "register" && (
+        <h1 className="page-title">{registering ? t("login.registerTitle") : t("login.title")}</h1>
+        <p className="page-sub">{t("login.lead")}</p>
+
+        <form onSubmit={submit} className="grid" style={{ gap: 14 }}>
+          {registering && (
             <>
               <label className="field">
-                Organization
-                <input value={org} onChange={(e) => setOrg(e.target.value)} />
+                {t("login.org")}
+                <input
+                  value={org}
+                  onChange={(event) => setOrg(event.target.value)}
+                  autoComplete="organization"
+                  required
+                />
               </label>
               <label className="field">
-                Full name
-                <input value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                {t("login.name")}
+                <input
+                  value={fullName}
+                  onChange={(event) => setFullName(event.target.value)}
+                  autoComplete="name"
+                  required
+                />
               </label>
             </>
           )}
           <label className="field">
-            Email
-            <input value={email} onChange={(e) => setEmail(e.target.value)} />
+            {t("login.email")}
+            <input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              autoComplete="username"
+              required
+            />
           </label>
           <label className="field">
-            Password
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            {t("login.password")}
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete={registering ? "new-password" : "current-password"}
+              minLength={registering ? 12 : undefined}
+              required
+            />
+            {registering && <span className="hint">{t("login.passwordHint")}</span>}
           </label>
-          {error && <p className="flash">{error}</p>}
-          <button className="btn" type="submit">
-            {mode === "login" ? "Enter control plane" : "Create organization"}
+          {registering && (
+            <label className="field">
+              {t("login.invite")}
+              <input
+                value={invite}
+                onChange={(event) => setInvite(event.target.value)}
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <span className="hint">{t("login.inviteHint")}</span>
+            </label>
+          )}
+          {error && (
+            <p className="flash" role="alert">
+              {error}
+            </p>
+          )}
+          <button className="btn large" type="submit" disabled={busy}>
+            {busy ? t("common.wait") : registering ? t("login.registerSubmit") : t("login.submit")}
           </button>
         </form>
-        <p style={{ marginTop: 16, fontSize: 13 }}>
-          {mode === "login" ? (
-            <a href="#" onClick={(e) => { e.preventDefault(); setMode("register"); }}>
-              Create a new organization
-            </a>
-          ) : (
-            <a href="#" onClick={(e) => { e.preventDefault(); setMode("login"); }}>
-              Back to sign in
-            </a>
+
+        <div className="grid" style={{ gap: 10, marginTop: 16 }}>
+          <button
+            type="button"
+            className="btn secondary"
+            onClick={() => {
+              setError("");
+              setMode(registering ? "login" : "register");
+            }}
+          >
+            {registering ? t("login.toLogin") : t("login.toRegister")}
+          </button>
+          {demo && !registering && (
+            <button
+              type="button"
+              className="btn secondary"
+              disabled={busy}
+              onClick={() => enter(() => api.login(DEMO.email, DEMO.password))}
+            >
+              {t("login.demo")}
+            </button>
           )}
-        </p>
-        <p className="page-sub" style={{ marginTop: 8 }}>
-          Demo: admin@acme.test / aegis-demo
-        </p>
-      </div>
+          <LangSwitch />
+        </div>
+      </main>
     </div>
   );
 }
