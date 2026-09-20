@@ -1,0 +1,124 @@
+# Aegis on one small server in the EU.
+#
+# Three containers. Caddy terminates HTTPS and is the only thing that publishes
+# a port. The control plane is the dashboard and the API for people. The
+# enforcement gateway is the one address a customer's agents call. They share a
+# SQLite database on a named volume (WAL mode), which is right for a pilot on one
+# machine and is the first thing to replace with Postgres when there is a second.
+#
+#   bash scripts/deploy-hosted.sh          # writes .env, then runs:
+#   docker compose -f docker-compose.hosted.yml up -d --build
+#
+# Deliberately NOT here: the credential broker, the protected tool, the Gmail
+# connector and the egress proxy. They belong to the Gmail pilot and to the local
+# demo (docker-compose.yml). The gateway has no broker in this file, so its tool
+# path is not mounted at all: it answers /api/authorize and nothing that executes.
+
+name: aegis-hosted
+
+x-aegis: &aegis
+  build:
+    context: .
+    dockerfile: backend/Dockerfile
+  restart: unless-stopped
+  user: "10001:10001"
+  read_only: true
+  tmpfs:
+    - /tmp
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  networks:
+    - edge
+  volumes:
+    - aegis-data:/data
+
+x-aegis-env: &aegis-env
+  AEGIS_ENV: production
+  AEGIS_DATABASE_URL: sqlite:////data/aegis.db
+  AEGIS_SECRET_KEY: ${AEGIS_SECRET_KEY:?run scripts/deploy-hosted.sh to create .env}
+  AEGIS_EAT_KEY: ${AEGIS_EAT_KEY:?run scripts/deploy-hosted.sh to create .env}
+  AEGIS_EVIDENCE_SECRET_KEY: ${AEGIS_EVIDENCE_SECRET_KEY:?run scripts/deploy-hosted.sh to create .env}
+  AEGIS_PUBLIC_APP_URL: https://${APP_DOMAIN:?set APP_DOMAIN in .env}
+  AEGIS_PUBLIC_GATEWAY_URL: https://${GATEWAY_DOMAIN:?set GATEWAY_DOMAIN in .env}
+  # Caddy is the only client, so its forwarded address is the real client address.
+  UVICORN_PROXY_HEADERS: "1"
+  UVICORN_FORWARDED_ALLOW_IPS: "*"
+  # Shed load with a fast 503 instead of letting requests pile up and stall.
+  UVICORN_LIMIT_CONCURRENCY: "60"
+  UVICORN_TIMEOUT_KEEP_ALIVE: "5"
+  # Request lines carry approval-link tokens; do not write them to logs.
+  UVICORN_ACCESS_LOG: "0"
+
+services:
+  control-plane:
+    <<: *aegis
+    environment:
+      <<: *aegis-env
+      AEGIS_ROLE: control-plane
+      AEGIS_INVITE_CODES: ${AEGIS_INVITE_CODES:-}
+      AEGIS_SMTP_HOST: ${AEGIS_SMTP_HOST:-}
+      AEGIS_SMTP_PORT: ${AEGIS_SMTP_PORT:-587}
+      AEGIS_SMTP_USER: ${AEGIS_SMTP_USER:-}
+      AEGIS_SMTP_PASSWORD: ${AEGIS_SMTP_PASSWORD:-}
+      AEGIS_SMTP_FROM: ${AEGIS_SMTP_FROM:-}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health')",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  enforcement-gateway:
+    <<: *aegis
+    environment:
+      <<: *aegis-env
+      AEGIS_ROLE: enforcement-gateway
+    depends_on:
+      control-plane:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health')",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?set APP_DOMAIN in .env}
+      GATEWAY_DOMAIN: ${GATEWAY_DOMAIN:?set GATEWAY_DOMAIN in .env}
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL in .env}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - edge
+    depends_on:
+      - control-plane
+      - enforcement-gateway
+
+networks:
+  edge:
+
+volumes:
+  aegis-data:
+  caddy-data:
+  caddy-config:

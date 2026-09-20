@@ -1,0 +1,47 @@
+# HTTPS for Aegis. Caddy gets and renews the certificates by itself.
+# The two names come from .env (APP_DOMAIN, GATEWAY_DOMAIN, ACME_EMAIL).
+
+{
+	email {$ACME_EMAIL}
+}
+
+# The dashboard and the API for people.
+{$APP_DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+		-Server
+	}
+
+	# Nothing legitimate here is large. The application checks the same limit,
+	# but only for bodies that declare a length; this one covers all of them.
+	request_body {
+		max_size 64KB
+	}
+
+	reverse_proxy control-plane:8000
+}
+
+# The address customers' agents call. No dashboard, no browser, so no CSP.
+{$GATEWAY_DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+
+	request_body {
+		max_size 64KB
+	}
+
+	reverse_proxy enforcement-gateway:8000
+}

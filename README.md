@@ -14,6 +14,28 @@ Aegis runtime  →  ALLOW | APPROVAL | BLOCK
 Execution evidence (audit)
 ```
 
+## Avvio rapido
+
+**Sul tuo PC (Windows)**, serve solo Docker Desktop acceso:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\start.ps1
+```
+
+Crea le chiavi, avvia tutto e apre http://localhost:8000. Accesso demo:
+`admin@acme.test` / `aegis-demo` (esiste solo in locale, mai in produzione).
+Su Linux/macOS: `bash scripts/init-env.sh && docker compose up -d --build`.
+
+**Online, per i clienti:** un server in UE, un dominio e `bash scripts/deploy-hosted.sh`.
+Una sola immagine contiene backend e dashboard: si apre da un indirizzo, senza
+installare nulla. Guida di una pagina, con cosa è verificato e cosa no:
+[`docs/DEPLOY_HOSTED.md`](docs/DEPLOY_HOSTED.md).
+
+**Collegare un agente (n8n, Make, uno script):** dashboard, «Collega un agente»,
+copia indirizzo e chiave, nodo «HTTP Request» → «Import cURL». Le richieste che
+richiedono una persona compaiono in «Approvazioni» con destinatari, oggetto e inizio
+del testo, anche dal telefono tramite il link nell'email di notifica.
+
 ## What this proves
 
 An agent attempts an action. Aegis identifies it, resolves the agent's runtime
@@ -193,6 +215,7 @@ READ is still not implemented.
 | 17 | Runtime proof, contract activation, approval loop, reference agent |
 | 18 | Operator control plane, verification runs, adversarial API suite |
 | 19 | Real Gmail connector, Google OAuth, a real external AI agent, egress boundary |
+| 20 | Hosted pilot: production mode, invite-only signup, approvals a person can judge (server-derived recipients, preview, one-tap link), connect-an-agent card, one-command deploy — see [`docs/PHASE_20_HOSTED_PILOT.md`](docs/PHASE_20_HOSTED_PILOT.md) |
 
 ## Real Gmail, and a real agent (Phase 19)
 
@@ -243,5 +266,10 @@ benchmarks/           16.A/B/C performance tooling and results
 docs/                 phase reports
 docs/evidence/        committed runtime evidence artifacts
 scripts/init-env.sh   generate deployment secrets
-docker-compose.yml
+scripts/start.ps1     one-command local start on Windows
+scripts/deploy-hosted.sh  one-command hosted deploy (EU server + domain)
+scripts/backup.sh     consistent daily SQLite backup
+deploy/Caddyfile      HTTPS for the hosted deployment
+docker-compose.yml    local stack (demo agent, Gmail profile)
+docker-compose.hosted.yml  hosted stack: Caddy + control plane + gateway
 ```
