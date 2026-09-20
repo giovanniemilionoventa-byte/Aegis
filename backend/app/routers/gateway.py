@@ -7,7 +7,7 @@ from .. import config, models, schemas
 from ..contract_store import ContractResolutionError, assert_contract_current_for_dispatch
 from ..database import get_db
 from ..engines.enforcement import authorize_request
-from ..services import connector_evidence, gmail_access
+from ..services import approval_notify, connector_evidence, gmail_access
 from ..services.evidence_verifier import (
     EvidenceIntegrityError,
     reseal_execution_event,
@@ -288,7 +288,7 @@ def invoke_tool(
         requested_operation=requested_operation,
         canonical_operation=canonical_operation,
         intent=intent,
-        decision=event.decision,
+        decision=outcome.final_decision or event.decision,
         approval_id=outcome.approval_id,
         approval_granted=outcome.approval_granted,
         executed=executed,
@@ -296,12 +296,17 @@ def invoke_tool(
         result=tool_result if executed else None,
     )
 
+    if outcome.approval_id and event.decision == "APPROVAL" and not outcome.replayed:
+        # A new request is waiting for a human: tell the reviewers, in the
+        # background, without ever slowing or failing this request.
+        approval_notify.enqueue(outcome.approval_id)
+
     return schemas.GatewayResponse(
         request_id=event.request_id,
-        decision=event.decision,
+        decision=outcome.final_decision or event.decision,
         risk_score=event.risk_score,
         risk_level=event.risk_level,
-        reason=event.reason,
+        reason=outcome.final_reason or event.reason,
         approval_id=outcome.approval_id,
         agent_id=event.agent_id,
         organization_id=event.organization_id,

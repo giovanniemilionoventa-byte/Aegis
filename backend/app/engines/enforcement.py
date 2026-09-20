@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from .. import config, models, schemas
 from ..contract_store import ContractResolutionError, resolve_active_contract_for_agent
 from ..security import utcnow
-from ..services import approval_grant
+from ..services import approval_grant, approval_preview
 from ..services.evidence_verifier import (
     EvidenceIntegrityError,
     assert_execution_evidence_integrity,
@@ -19,6 +19,7 @@ from ..services.evidence_verifier import (
 )
 from . import behavior as behavior_engine
 from . import contract as contract_engine
+from . import destination as destination_engine
 from . import permission as permission_engine
 from . import policy as policy_engine
 from . import risk as risk_engine
@@ -38,6 +39,12 @@ class AuthorizationOutcome:
     # approval rather than by a direct ALLOW decision.
     approval_granted: bool = False
     approval_reason: Optional[str] = None
+    # Phase 20: what to tell the agent when it differs from the stored event. A
+    # replayed request whose approval was denied or expired is still, on record,
+    # the APPROVAL it was; the agent is told BLOCK so it stops waiting. The
+    # sealed event is never rewritten to say otherwise.
+    final_decision: Optional[str] = None
+    final_reason: Optional[str] = None
 
 
 def _maybe_alert(db: Session, event: models.Event) -> None:
@@ -77,6 +84,69 @@ def _payload_digest(payload: Optional[dict]) -> str:
             payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True
         )
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def _apply_derived_destination(
+    db: Session, agent: models.Agent, body: schemas.AuthorizeRequest
+) -> tuple[schemas.AuthorizeRequest, Optional[str]]:
+    """Rule on the recipients in the request, not on what the agent declared.
+
+    For a send, the destination (and for plain email the scope, which is the
+    recipient class) is read from the payload and classified against the
+    organization's own domains. Returns the request to rule on and, when a send
+    names no recipient while the deployment requires one, the reason to BLOCK.
+    """
+    kind = body.resource_kind.lower()
+    act = body.action.upper()
+    if (kind, act) not in destination_engine.SEND_ACTIONS:
+        return body, None
+    organization = db.get(models.Organization, agent.organization_id)
+    domains = organization.internal_domains if organization else None
+    if domains is None and not config.REQUIRE_DERIVED_DESTINATION:
+        # An organization that never told Aegis its domains, outside strict mode
+        # (development): rule on what was declared, as before. Every organization
+        # created through registration has its domains set, and production is
+        # always strict, where "no domains" means everything is external.
+        return body, None
+    derived = destination_engine.derive(kind, act, _effective_payload(body), domains)
+    if derived is None or derived.classification is None:
+        if config.REQUIRE_DERIVED_DESTINATION:
+            return body, (
+                "The request names no recipient, so it cannot be classified as "
+                "internal or external."
+            )
+        return body, None
+    update = {"destination": derived.classification}
+    if kind == "email":
+        # For plain email the scope *is* the recipient class. For gmail it is
+        # the mailbox, and stays exactly as it was.
+        update["scope"] = derived.classification
+    return body.model_copy(update=update), None
+
+
+def _terminal_approval_answer(approval: Optional[models.Approval]) -> Optional[str]:
+    """Why a waiting request will never be approved, or None if it still can be."""
+    if approval is None:
+        return None
+    state = approval_grant.effective_status(approval)
+    if state == "denied":
+        return "A reviewer denied this request."
+    if state == "expired":
+        return "No one approved this request in time, so it expired."
+    return None
+
+
+def _pending_cap_reached(db: Session, agent: models.Agent) -> bool:
+    open_requests = (
+        db.query(models.Approval)
+        .filter(
+            models.Approval.agent_id == agent.id,
+            models.Approval.status == "pending",
+            models.Approval.expires_at > utcnow(),
+        )
+        .count()
+    )
+    return open_requests >= config.MAX_PENDING_APPROVALS_PER_AGENT
 
 
 def _idempotent_payload_matches(
@@ -224,6 +294,7 @@ def authorize_request(
     agent: models.Agent,
     body: schemas.AuthorizeRequest,
 ) -> AuthorizationOutcome:
+    body, forced_block = _apply_derived_destination(db, agent, body)
     request_id = body.request_id or body.client_request_id or str(uuid4())
 
     existing = (
@@ -252,6 +323,18 @@ def authorize_request(
             granted = _resume_approved_request(db, agent, existing, body)
             if granted is not None:
                 return granted
+            # Phase 20: a request that can never be approved must not keep
+            # answering "wait". Denied or expired means the agent stops.
+            terminal = _terminal_approval_answer(approval)
+            if terminal is not None:
+                return AuthorizationOutcome(
+                    event=existing,
+                    approval_id=approval.id if approval else None,
+                    replayed=True,
+                    authorized_payload=_effective_payload(body),
+                    final_decision="BLOCK",
+                    final_reason=terminal,
+                )
         return AuthorizationOutcome(
             event=existing,
             approval_id=approval.id if approval else None,
@@ -380,6 +463,17 @@ def authorize_request(
             decision = "APPROVAL"
             reason = verdict.approval_reason or reason
 
+    if forced_block:
+        decision = "BLOCK"
+        reason = forced_block
+    elif decision == "APPROVAL" and _pending_cap_reached(db, agent):
+        # A stuck or hostile agent cannot fill the operator's queue.
+        decision = "BLOCK"
+        reason = (
+            "Too many of this agent's requests are already waiting for a human. "
+            "Decide them, or wait for them to expire."
+        )
+
     risk = risk_engine.evaluate(
         kind,
         act,
@@ -436,6 +530,9 @@ def authorize_request(
         )
         db.add(approval)
         db.flush()
+        # Phase 20: what the reviewer will be shown, built from the payload the
+        # server is about to authorize. Sealed, and never part of the evidence.
+        approval_preview.attach(approval, kind, act, _effective_payload(body))
         approval_id = approval.id
 
     db.commit()

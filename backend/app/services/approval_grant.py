@@ -65,6 +65,34 @@ def default_expiry():
     return utcnow() + timedelta(seconds=config.APPROVAL_TTL_SECONDS)
 
 
+def effective_status(approval: models.Approval, now=None) -> str:
+    """Where this approval stands right now.
+
+    The stored status only moves when a human decides. Time also decides: a
+    pending request nobody answered, or an approval nobody used, is over once
+    its expiry passes, whatever the row still says.
+    """
+    if approval.consumed_at is not None:
+        return "consumed"
+    status = (approval.status or "").lower()
+    if status in {"pending", "approved"}:
+        expires_at = coerce_utc(approval.expires_at)
+        clock = coerce_utc(now) if now is not None else utcnow()
+        if expires_at is not None and clock >= expires_at:
+            return "expired"
+    return status
+
+
+# What an agent should do next, given the effective status.
+NEXT_STEP = {
+    "pending": "wait",
+    "approved": "resubmit",
+    "denied": "stop",
+    "expired": "stop",
+    "consumed": "done",
+}
+
+
 def _mismatch(field: str) -> GrantVerdict:
     return GrantVerdict(
         granted=False,

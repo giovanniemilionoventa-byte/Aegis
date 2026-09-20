@@ -1,7 +1,28 @@
-from datetime import datetime
-from typing import Optional
+from datetime import datetime, timezone
+from typing import Annotated, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PlainSerializer
+
+
+def _utc_z(value: datetime) -> str:
+    """ISO 8601 with an explicit UTC marker.
+
+    The database stores naive UTC, and a naive string ("2026-09-19T16:00:00")
+    is read by a browser as *local* time, so an approval created a minute ago
+    showed as 121 minutes old for anyone off UTC. Every datetime the API returns
+    now says "Z".
+    """
+    aware = (
+        value.replace(tzinfo=timezone.utc)
+        if value.tzinfo is None
+        else value.astimezone(timezone.utc)
+    )
+    return aware.isoformat().replace("+00:00", "Z")
+
+
+# Used on output models only. Input documents keep plain datetime so that what a
+# client sends, and what the contract validator parses, is unchanged.
+UTCDatetime = Annotated[datetime, PlainSerializer(_utc_z, return_type=str, when_used="json")]
 
 
 class TokenResponse(BaseModel):
@@ -14,11 +35,17 @@ class LoginRequest(BaseModel):
     password: str
 
 
+# A deliberately simple shape check (something@domain.tld, no spaces, one @).
+# Deliverability is proven by the first email, not by a regex.
+EMAIL_PATTERN = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
+
+
 class RegisterRequest(BaseModel):
-    organization_name: str
-    full_name: str
-    email: str
-    password: str
+    organization_name: str = Field(min_length=1, max_length=120)
+    full_name: str = Field(min_length=1, max_length=120)
+    email: str = Field(max_length=254, pattern=EMAIL_PATTERN)
+    password: str = Field(min_length=1, max_length=256)
+    invite_code: Optional[str] = Field(default=None, max_length=200)
 
 
 class UserOut(BaseModel):
@@ -36,7 +63,7 @@ class OrganizationOut(BaseModel):
     id: str
     name: str
     slug: str
-    created_at: datetime
+    created_at: UTCDatetime
 
     class Config:
         from_attributes = True
@@ -52,6 +79,10 @@ class AgentCreate(BaseModel):
     provider: str = "demo"
     model: str = "local-demo"
     description: str = ""
+    # "recommended" gives the agent a sensible starting authority (read freely,
+    # send and update through a human, never delete, move money or export).
+    # Absent, the agent starts with nothing, exactly as before.
+    preset: Optional[str] = None
 
 
 class AgentOut(BaseModel):
@@ -63,8 +94,9 @@ class AgentOut(BaseModel):
     description: str
     owner_id: str
     organization_id: str
-    created_at: datetime
-    revoked_at: Optional[datetime] = None
+    created_at: UTCDatetime
+    revoked_at: Optional[UTCDatetime] = None
+    last_seen_at: Optional[UTCDatetime] = None
 
     class Config:
         from_attributes = True
@@ -74,7 +106,7 @@ class AgentCredentialOut(BaseModel):
     agent: AgentOut
     token: str
     token_prefix: str
-    expires_at: Optional[datetime] = None
+    expires_at: Optional[UTCDatetime] = None
 
 
 class PermissionCreate(BaseModel):
@@ -120,7 +152,7 @@ class PolicyOut(BaseModel):
     decision: str
     priority: int
     enabled: bool
-    created_at: datetime
+    created_at: UTCDatetime
 
     class Config:
         from_attributes = True
@@ -150,7 +182,7 @@ class DeviceOut(BaseModel):
     hostname: str
     platform: str
     status: str
-    last_seen: datetime
+    last_seen: UTCDatetime
 
     class Config:
         from_attributes = True
@@ -222,7 +254,7 @@ class EventOut(BaseModel):
     execution_id: Optional[str] = None
     evidence_hash: Optional[str] = None
     previous_evidence_hash: Optional[str] = None
-    created_at: datetime
+    created_at: UTCDatetime
 
     class Config:
         from_attributes = True
@@ -235,7 +267,7 @@ class AlertOut(BaseModel):
     message: str
     status: str
     event_id: Optional[str]
-    created_at: datetime
+    created_at: UTCDatetime
 
     class Config:
         from_attributes = True
@@ -251,20 +283,54 @@ class ApprovalOut(BaseModel):
     status: str
     reason: str
     reviewed_by: Optional[str]
-    created_at: datetime
-    reviewed_at: Optional[datetime]
+    created_at: UTCDatetime
+    reviewed_at: Optional[UTCDatetime]
     # Phase 17 - the binding that makes this grant authorize one request, once.
     execution_id: Optional[str] = None
     request_id: Optional[str] = None
     contract_id: Optional[str] = None
     contract_version: Optional[int] = None
     param_hash: Optional[str] = None
-    expires_at: Optional[datetime] = None
-    consumed_at: Optional[datetime] = None
+    expires_at: Optional[UTCDatetime] = None
+    consumed_at: Optional[UTCDatetime] = None
     consumed_event_id: Optional[str] = None
+    # Phase 20 - what a person needs to decide. `status` is what a human last
+    # did; `effective_status` also accounts for time (a request nobody answered
+    # is expired). `preview` is decrypted for the authenticated reviewer only.
+    effective_status: Optional[str] = None
+    agent_name: Optional[str] = None
+    preview: Optional[dict] = None
 
     class Config:
         from_attributes = True
+
+
+class ApprovalLinkOut(BaseModel):
+    """What the one-tap page shows: the request and how to answer it, nothing
+    of the internal binding (execution, request, contract, digest)."""
+
+    id: str
+    agent_name: Optional[str] = None
+    resource_kind: str
+    action: str
+    scope: str
+    destination: Optional[str] = None
+    reason: str
+    status: str
+    effective_status: Optional[str] = None
+    created_at: UTCDatetime
+    expires_at: Optional[UTCDatetime] = None
+    preview: Optional[dict] = None
+
+
+class ApprovalStatusOut(BaseModel):
+    """What an agent may learn about its own approval, and what to do next."""
+
+    approval_id: str
+    status: str
+    next: str
+    expires_at: Optional[UTCDatetime] = None
+    decided_at: Optional[UTCDatetime] = None
 
 
 class ApprovalDecision(BaseModel):
@@ -307,8 +373,8 @@ class BehaviorPatternOut(BaseModel):
     severity: str
     definition: dict
     enabled: bool
-    created_at: datetime
-    updated_at: Optional[datetime] = None
+    created_at: UTCDatetime
+    updated_at: Optional[UTCDatetime] = None
 
     class Config:
         from_attributes = True
@@ -377,11 +443,11 @@ class RuntimeContractOut(BaseModel):
     data_constraints: dict
     workflow: Optional[dict] = None
     approval_rules: list
-    valid_from: Optional[datetime] = None
-    expires_at: Optional[datetime] = None
+    valid_from: Optional[UTCDatetime] = None
+    expires_at: Optional[UTCDatetime] = None
     integrity: Optional[dict] = None
-    created_at: datetime
-    updated_at: Optional[datetime] = None
+    created_at: UTCDatetime
+    updated_at: Optional[UTCDatetime] = None
 
     class Config:
         from_attributes = True

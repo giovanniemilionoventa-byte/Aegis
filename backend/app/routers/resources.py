@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_db
-from ..security import get_current_user
+from ..security import get_current_user, utcnow
 
 router = APIRouter(tags=["control-plane"])
 
@@ -55,13 +56,13 @@ def list_devices(
 def list_events(
     user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),
-    limit: int = 100,
+    limit: int = Query(100, ge=1, le=500),
 ):
     return (
         db.query(models.Event)
         .filter(models.Event.organization_id == user.organization_id)
         .order_by(models.Event.created_at.desc())
-        .limit(min(limit, 500))
+        .limit(limit)
         .all()
     )
 
@@ -98,6 +99,11 @@ def stats(
         .filter(
             models.Approval.organization_id == oid,
             models.Approval.status == "pending",
+            # A request nobody answered in time is over, not "pending".
+            or_(
+                models.Approval.expires_at.is_(None),
+                models.Approval.expires_at > utcnow(),
+            ),
         )
         .count()
     )

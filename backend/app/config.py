@@ -19,7 +19,23 @@ EVIDENCE_SECRET_KEY = _env(
     "aegis-dev-evidence-key-change-in-production",
 )
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = int(_env("AEGIS_TOKEN_TTL_MINUTES", str(60 * 12)))
+
+# Phase 20 -- one switch between "runs on my laptop" and "faces the internet".
+# Development is the default so the test suite and the local demo keep working.
+# Production refuses to start unsafe (see security_posture.py) and closes what a
+# public service must not expose. Read it through is_production() at call time.
+ENV = _env("AEGIS_ENV", "development").strip().lower()
+
+
+def is_production() -> bool:
+    return ENV == "production"
+
+
+# A dashboard session lasts an hour in production: it is a bearer token that a
+# static page keeps in the browser.
+ACCESS_TOKEN_EXPIRE_MINUTES = int(
+    _env("AEGIS_TOKEN_TTL_MINUTES", "60" if ENV == "production" else str(60 * 12))
+)
 AGENT_TOKEN_PREFIX = "aegis_"
 CORS_ORIGINS = [
     origin.strip()
@@ -152,3 +168,81 @@ GMAIL_AGENT_TOKEN = _env("AEGIS_GMAIL_AGENT_TOKEN", "")
 # mounts the OAuth store. When this is set the broker sends gmail there instead
 # of to the CRM protected-tool.
 GMAIL_TOOL_URL = _env("AEGIS_GMAIL_TOOL_URL", "")
+
+
+# ---------------------------------------------------------------------------
+# Phase 20 -- hosted pilot.
+#
+# Every default below is the safe one for a service on the public internet when
+# AEGIS_ENV=production, and the convenient one for a laptop otherwise. Callers
+# read these as `config.NAME` at request time, so tests can move them.
+# ---------------------------------------------------------------------------
+
+_PRODUCTION = ENV == "production"
+
+
+def _csv(name: str) -> list[str]:
+    return [item.strip() for item in _env(name, "").split(",") if item.strip()]
+
+
+# Registration by invitation only. Empty in production means registration is
+# closed, which is the right failure: nobody signs up by accident.
+INVITE_CODES = _csv("AEGIS_INVITE_CODES")
+
+# Sliding-window limit per client address on login and register; 0 disables it.
+# In-process, so each worker counts alone: a ceiling, not a guarantee.
+# ponytail: the edge (Cloudflare) does the real limiting; a shared store if needed.
+AUTH_RATE_PER_MIN = int(_env("AEGIS_AUTH_RATE_PER_MIN", "10" if _PRODUCTION else "0"))
+
+# Requests declaring a larger body are refused with 413; 0 disables the check.
+# Chunked bodies carry no length: the reverse proxy enforces the same cap.
+MAX_BODY_BYTES = int(
+    _env("AEGIS_MAX_BODY_BYTES", str(64 * 1024) if _PRODUCTION else "0")
+)
+
+# A production secret shorter than this, or containing a placeholder, is refused.
+MIN_SECRET_LENGTH = 32
+
+# Demo organization, demo admin and demo agents. Never in production.
+SEED_DEMO = _flag("AEGIS_SEED_DEMO", not _PRODUCTION)
+
+# The Gmail pilot (OAuth routes on the control plane). Opt-in in production.
+ENABLE_GMAIL = _flag("AEGIS_ENABLE_GMAIL", not _PRODUCTION)
+
+# Send-like actions are judged on the recipients in the request, not on the
+# destination the agent declares. Strict mode (production's default) applies this
+# to every organization -- one that never listed its domains sees every recipient
+# as external -- and BLOCKs a send that names no recipient. Outside strict mode
+# the derivation applies once an organization has set its domains.
+REQUIRE_DERIVED_DESTINATION = _flag("AEGIS_REQUIRE_DERIVED_DESTINATION", _PRODUCTION)
+
+# Pending approvals one agent may hold open. A stuck or hostile agent cannot
+# fill the operator's queue past this.
+MAX_PENDING_APPROVALS_PER_AGENT = int(_env("AEGIS_MAX_PENDING_APPROVALS", "25"))
+
+# The reviewer's preview of what they approve is deleted this long after the
+# decision (or after the request expired undecided).
+APPROVAL_PREVIEW_RETENTION_DAYS = int(
+    _env("AEGIS_APPROVAL_PREVIEW_RETENTION_DAYS", "7")
+)
+
+# Public addresses, used in notification links and connection snippets.
+PUBLIC_APP_URL = _env("AEGIS_PUBLIC_APP_URL", "").rstrip("/")
+PUBLIC_GATEWAY_URL = _env("AEGIS_PUBLIC_GATEWAY_URL", "").rstrip("/")
+
+# Where the built dashboard lives. Empty: /app/static (the image), then frontend/dist.
+STATIC_DIR = _env("AEGIS_STATIC_DIR", "")
+
+# Approval notifications by email. No host: the dashboard still shows everything.
+SMTP_HOST = _env("AEGIS_SMTP_HOST", "")
+SMTP_PORT = int(_env("AEGIS_SMTP_PORT", "587"))
+SMTP_USER = _env("AEGIS_SMTP_USER", "")
+SMTP_PASSWORD = _env("AEGIS_SMTP_PASSWORD", "")
+SMTP_FROM = _env("AEGIS_SMTP_FROM", "")
+SMTP_STARTTLS = _flag("AEGIS_SMTP_STARTTLS", True)
+
+# Database pool. Bounded, and it fails fast (503) instead of holding a request
+# for the SQLAlchemy default of 30 s while every worker thread piles up behind it.
+DB_POOL_SIZE = int(_env("AEGIS_DB_POOL_SIZE", "10"))
+DB_MAX_OVERFLOW = int(_env("AEGIS_DB_MAX_OVERFLOW", "10"))
+DB_POOL_TIMEOUT = float(_env("AEGIS_DB_POOL_TIMEOUT", "5"))

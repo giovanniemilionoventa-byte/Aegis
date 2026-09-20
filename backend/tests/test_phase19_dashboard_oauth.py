@@ -187,7 +187,8 @@ def test_4b_the_dashboard_is_not_handed_the_google_client_id(client, tenant, fak
     from app import config
 
     body = client.post("/api/gmail/oauth/start", headers=tenant.operator).json()
-    assert body["authorization_url"] == "/api/gmail/oauth/start"
+    # Phase 20: the route now carries a one-use ticket (see the test_20 series).
+    assert body["authorization_url"].startswith("/api/gmail/oauth/start?ticket=")
     assert config.GOOGLE_OAUTH_CLIENT_ID not in json.dumps(body)
     assert "accounts.google.com" not in json.dumps(body)
 
@@ -340,6 +341,123 @@ def test_12b_a_state_signed_with_the_wrong_key_is_rejected(client, tenant, fake,
     monkeypatch.setattr(config, "SECRET_KEY", "a-different-signing-key")
     with pytest.raises(Exception):
         gmail_router._verify_state(state)
+
+
+# -- 20: starting OAuth carries a ticket, finishing it wants the browser ----------
+#
+# Phase 20. The session token used to travel in the start URL, and the state
+# alone was enough to finish the flow from any browser. Neither is true now.
+
+
+def _ticket_url(client, tenant) -> str:
+    return client.post("/api/gmail/oauth/start", headers=tenant.operator).json()[
+        "authorization_url"
+    ]
+
+
+def _start_flow(client, tenant):
+    """What the dashboard does: ask for a ticket, then navigate to it.
+
+    Returns the state Google would hand back to the callback, and the redirect
+    (whose Set-Cookie went into the test client's jar, like a browser's).
+    """
+    from urllib.parse import parse_qs, urlparse
+
+    redirect = client.get(_ticket_url(client, tenant), follow_redirects=False)
+    assert redirect.status_code == 302, redirect.text
+    state = parse_qs(urlparse(redirect.headers["location"]).query)["state"][0]
+    return state, redirect
+
+
+def _stub_exchange(monkeypatch):
+    """Replace the call to Google's token endpoint. Reaching it means the
+    callback accepted the state and the cookie; the list records each reach."""
+    import httpx
+
+    calls = []
+
+    def post(*args, **kwargs):
+        calls.append(1)
+        raise httpx.ConnectError("no network in tests")
+
+    monkeypatch.setattr(httpx, "post", post)
+    return calls
+
+
+def test_20a_the_session_token_is_not_in_the_start_url(client, tenant, fake):
+    url = _ticket_url(client, tenant)
+    session_token = tenant.operator["Authorization"].split(" ", 1)[1]
+    assert session_token not in url
+    assert url.startswith("/api/gmail/oauth/start?ticket=")
+
+
+def test_20b_a_ticket_works_once(client, tenant, fake):
+    from app import config
+
+    url = _ticket_url(client, tenant)
+    first = client.get(url, follow_redirects=False)
+    assert first.status_code == 302
+    assert first.headers["location"].startswith(config.GOOGLE_AUTH_ENDPOINT)
+    assert client.get(url, follow_redirects=False).status_code == 401
+
+
+def test_20c_a_ticket_expires(client, tenant, fake, monkeypatch):
+    from app.routers import gmail as gmail_router
+
+    monkeypatch.setattr(gmail_router, "TICKET_TTL_SECONDS", -1)
+    assert client.get(_ticket_url(client, tenant), follow_redirects=False).status_code == 401
+
+
+def test_20d_the_old_token_parameter_is_gone_and_a_forged_ticket_is_refused(client, tenant, fake):
+    session_token = tenant.operator["Authorization"].split(" ", 1)[1]
+    by_token = client.get(f"/api/gmail/oauth/start?token={session_token}", follow_redirects=False)
+    assert by_token.status_code == 422  # `ticket` is required; a session token is not accepted
+    forged = client.get("/api/gmail/oauth/start?ticket=not-a-ticket", follow_redirects=False)
+    assert forged.status_code == 401
+
+
+def test_20e_the_start_sets_an_httponly_lax_cookie(client, tenant, fake):
+    _, redirect = _start_flow(client, tenant)
+    cookie = redirect.headers["set-cookie"].lower()
+    assert "aegis_oauth_nonce=" in cookie
+    assert "httponly" in cookie
+    assert "samesite=lax" in cookie
+    assert "path=/api/gmail/oauth" in cookie
+
+
+def test_20f_the_callback_needs_the_browser_that_started_the_flow(client, tenant, fake, monkeypatch):
+    calls = _stub_exchange(monkeypatch)
+    state, _ = _start_flow(client, tenant)
+
+    client.cookies.clear()  # another browser, holding the same state
+    response = client.get(f"/api/gmail/oauth/callback?code=irrelevant&state={state}")
+    assert response.status_code == 200
+    assert "not started from this browser" in response.text
+    assert calls == []  # the code was never exchanged
+
+
+def test_20g_with_the_cookie_the_flow_proceeds_once(client, tenant, fake, monkeypatch):
+    calls = _stub_exchange(monkeypatch)
+    state, _ = _start_flow(client, tenant)  # the cookie is now in the client's jar
+
+    first = client.get(f"/api/gmail/oauth/callback?code=irrelevant&state={state}")
+    # Past the state and cookie checks; it stopped at the (stubbed) exchange.
+    assert "could not reach google" in first.text.lower()
+    assert calls == [1]
+
+    replay = client.get(f"/api/gmail/oauth/callback?code=irrelevant&state={state}")
+    assert "not started from this browser" in replay.text
+    assert calls == [1]  # a state is accepted once
+
+
+def test_20h_a_cookie_from_another_flow_does_not_match(client, tenant, fake, monkeypatch):
+    calls = _stub_exchange(monkeypatch)
+    first_state, _ = _start_flow(client, tenant)
+    _start_flow(client, tenant)  # the jar now holds the second flow's nonce
+
+    response = client.get(f"/api/gmail/oauth/callback?code=irrelevant&state={first_state}")
+    assert "not started from this browser" in response.text
+    assert calls == []
 
 
 # -- 13, 14, 15: the policy is unchanged ------------------------------------
@@ -639,7 +757,7 @@ def test_the_whole_onboarding_path_in_order(client, fake, store_path):
 
     # 5. Connect the mailbox. The dashboard is handed an Aegis route.
     start = client.post("/api/gmail/oauth/start", headers=operator).json()
-    assert start["authorization_url"] == "/api/gmail/oauth/start"
+    assert start["authorization_url"].startswith("/api/gmail/oauth/start?ticket=")
     connect_gmail(organization_id)  # stands in for the Google round trip
 
     # 6. Connected, and STILL not ready: the grant is a separate act.

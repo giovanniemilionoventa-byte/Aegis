@@ -419,6 +419,8 @@ def test_phase12b_trajectory_violation_does_not_produce_eat(monkeypatch):
         contract_version=1,
         authorized_payload={"to": "ada@acme.test"},
         approval_granted=False,
+        final_decision=None,
+        final_reason=None,
     )
     monkeypatch.setattr(
         "app.routers.gateway.authorize_request", lambda *args, **kwargs: outcome
@@ -474,6 +476,8 @@ def test_dispatch_uses_authorized_payload_not_request_copy(monkeypatch):
         contract_version=None,
         authorized_payload=authorized,
         approval_granted=False,
+        final_decision=None,
+        final_reason=None,
     )
     monkeypatch.setattr(
         "app.routers.gateway.authorize_request", lambda *args, **kwargs: outcome
