@@ -1,8 +1,9 @@
 # Fase 20 — pilota ospitato
 
-**Stato:** implementato e provato in locale; **non ancora messo online e l'immagine
-Docker non è stata costruita** (Docker Desktop non si è avviato in questa sessione).
-Branch `phase20-hosted-pilot`, base `975411a` (Fase 19.1). Specifica:
+**Stato:** implementato e provato in locale, anche con Docker (immagine, stack completo
+dietro Caddy, backup e ripristino); **non ancora messo online**, quindi il certificato
+pubblico e un server vero restano da provare. Branch `phase20-hosted-pilot`, base
+`975411a` (Fase 19.1). Specifica:
 [`superpowers/specs/2026-09-19-aegis-phase1-hosted-pilot-design.md`](superpowers/specs/2026-09-19-aegis-phase1-hosted-pilot-design.md).
 Piano: [`superpowers/plans/2026-09-19-aegis-phase1-hosted-pilot.md`](superpowers/plans/2026-09-19-aegis-phase1-hosted-pilot.md).
 Come metterlo online: [`DEPLOY_HOSTED.md`](DEPLOY_HOSTED.md).
@@ -46,7 +47,7 @@ Legenda: la colonna «Provato come» dice come; «Non provato» dice cosa manca.
 | B7 stato OAuth legato al browser (cookie HttpOnly, SameSite=Lax) e usa-una-volta | sì | come B6 | con un account Google reale |
 | B8 log senza query string, indirizzo reale del cliente | sì (`UVICORN_ACCESS_LOG=0`, `UVICORN_PROXY_HEADERS=1`) | uvicorn locale con quelle variabili: nessuna riga di richiesta nei log; limite di frequenza per indirizzo letto da `X-Forwarded-For` | dentro il compose |
 | B9 `agentctl` e `verification` non montati in produzione | sì | smoke (404) | — |
-| C un solo indirizzo: la dashboard servita dal backend | sì (Dockerfile multi-stage, mount con fallback SPA) | locale: `/` 200, `/agents/new` 200, `/api/…` sconosciuto 404 JSON, tentativi di uscire dalla cartella rifiutati (test) | **la costruzione dell'immagine** |
+| C un solo indirizzo: la dashboard servita dal backend | sì (Dockerfile multi-stage, mount con fallback SPA) | locale: `/` 200, `/agents/new` 200, `/api/…` sconosciuto 404 JSON, tentativi di uscire dalla cartella rifiutati (test); **immagine costruita con Docker** (build multi-stage, dashboard compresa) per x86-64 e per arm64 (questa in emulazione), e avviata in produzione | — |
 | D1 scheda «Collega» con comando pronto | sì (`ConnectCard`) | nel browser, con l'agente simulato via `curl` copiato dalla pagina | n8n reale |
 | D2 `last_seen_at` e stato «Collegato» | sì | test; nel browser: da «In attesa della prima chiamata» a «Collegato» in ≤ 4 s | — |
 | D3 preset «Consigliato» | sì | test; nel browser | — |
@@ -60,7 +61,7 @@ Legenda: la colonna «Provato come» dice come; «Non provato» dice cosa manca.
 | F2 limite di concorrenza e pool limitato | sì (variabili del compose, opzioni del pool) | — | **nessun test di carico** |
 | F3 esperimento sulla causa del collasso a 75–100 richieste | **no** | — | la causa resta un'ipotesi |
 | F4 tetto sulla catena di evidenza (costo O(n²)) | **no** | — | — |
-| G server, compose, Caddy, backup | scritti | script provati con un finto `docker`; logica di backup e ripristino provata su un database WAL vero (integrity ok) | **avvio reale, certificato HTTPS, `read_only`, `docker compose cp`, ripristino nel volume** |
+| G server, compose, Caddy, backup | sì | con Docker, lanciando davvero `scripts/deploy-hosted.sh` (nomi `app.localhost` e `gateway.localhost`): build, avvio, servizi «healthy»; HTTPS di Caddy con certificato locale e intestazioni (HSTS, CSP, `X-Frame-Options`, `nosniff`, `no-referrer`); container con utente 10001, file system in sola lettura, nessuna capability; database in WAL nel volume; log senza righe di richiesta e senza errori; lo smoke test di produzione ripetuto attraverso Caddy (stesso esito); `scripts/backup.sh` vero e ripristino con il comando scritto nella guida (dopo il ripristino i dati tornano a quelli del backup) | **certificato pubblico di Let's Encrypt** (serve un dominio vero), un server vero, n8n vero |
 | Interfaccia (richiesta dell'utente dopo la specifica) | shell, menu, tema, focus, bersagli 44 px, italiano/inglese nelle pagine di uso quotidiano, pagina mobile del link | `tsc`, `vite build` da `npm ci`, percorso completo nel browser (scuro, chiaro, telefono), controlli strutturali (etichette, punti di riferimento, un solo `h1`, id unici), contrasti della palette calcolati (tutte le coppie ≥ 4,5:1 testo e ≥ 3:1 bordi) | lettore di schermo, giro solo tastiera su ogni pagina, Safari e Firefox; **le pagine avanzate** (Contratti, Prove, Stato sicurezza, Regole, Registro, Attività, Prova una richiesta, Gmail) sono in inglese e non riviste |
 
 ## Criteri di successo della specifica
@@ -82,8 +83,9 @@ Legenda: la colonna «Provato come» dice come; «Non provato» dice cosa manca.
   `test_phase19_dashboard_oauth.py` (serie `test_20`).
 - **Risultato finale:** 842 passed, 47 skipped in 4 min 24 s (linea di base del piano:
   700 passed, 47 skipped). Le 47 saltate sono quelle che richiedono un demone Docker,
-  come prima. **Girata su Python 3.13 con le dipendenze bloccate, non su 3.11** (il
-  Docker dei test non era disponibile); l'immagine di produzione usa 3.11.
+  come prima. Stesso esito su **Python 3.13** (dipendenze bloccate, sul PC) e su
+  **Python 3.11.16**, la versione dell'immagine di produzione, nel container di test
+  (3 min 4 s).
 - **Test esistenti modificati, e perché:**
   - `test_phase17_approval_loop.py::test_expired_grant_cannot_execute`: una
     approvazione scaduta ora risponde BLOCK e non APPROVAL (A3, voluto). La proprietà
@@ -114,6 +116,14 @@ Legenda: la colonna «Provato come» dice come; «Non provato» dice cosa manca.
   caratteri, un secondo lancio non le cambia); `start.ps1` col demone spento. Il
   secondo ha fatto emergere un difetto vero, corretto: in Windows PowerShell 5.1 lo
   stderr di `docker` faceva terminare lo script con `NativeCommandError`.
+- **Con Docker (dopo la consegna del branch):** costruzione dell'immagine per x86-64 e
+  per arm64 (le macchine gratuite di Oracle sono ARM: i quattro basi usati, `caddy`,
+  `python`, `node` e `alpine`, hanno tutti la variante arm64, e l'immagine arm64 costruita
+  parte in produzione, risponde e registra un'organizzazione, sebbene in emulazione);
+  stack completo con `deploy-hosted.sh`, prova attraverso Caddy, backup e ripristino
+  come sopra. Lo stack locale di sviluppo dell'utente, già acceso sulla porta 8000, non è
+  stato toccato: `scripts\start.ps1` con Docker acceso e la parte Docker dei test
+  saltati (47) non sono stati rieseguiti.
 - **Bug trovati e corretti durante la verifica:** l'effetto «consentita» nella scheda
   dell'agente non diceva che le regole dell'organizzazione possono richiedere comunque
   una persona (ora c'è una nota); il preset «Consigliato» dava permessi Gmail anche
@@ -133,7 +143,8 @@ Legenda: la colonna «Provato come» dice come; «Non provato» dice cosa manca.
 - Cloudflare davanti non è configurato (serve `trusted_proxies` in Caddy).
 - **Non fatti:** A5, quota per organizzazione (B4), F3 (spike di capacità), F4, lettore
   di schermo e giro solo tastiera, pagine avanzate in italiano.
-- Il ripristino da backup descritto nella guida non è stato eseguito.
+- Il ripristino da backup è stato provato in locale con Docker; va comunque provato una
+  volta sul server vero.
 
 ## Cosa resta a te
 

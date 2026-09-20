@@ -35,7 +35,7 @@
 - [x] T8 OAuth: ticket monouso e stato legato al browser (provato con test, non con un account Google reale)
 - [x] T9 Frontend: shell accessibile, menu semplice, italiano, Collega, approvazioni, link mobile (pagine avanzate non riviste)
 - [x] T10 Kit di deploy (Dockerfile multi-stage, compose hosted, Caddy, script, guida) (scritto, non eseguito su un server)
-- [x] T11 Verifica: suite completa, typecheck e build, smoke test in produzione locale; **immagine Docker non costruita** (Docker Desktop non si è avviato), vedi report
+- [x] T11 Verifica: suite completa (3.13 e 3.11), typecheck e build, smoke test in produzione locale e, con Docker, immagine x86-64 e arm64 + stack dietro Caddy + backup e ripristino; restano da provare certificato pubblico, server vero, carico, vedi report
 - [x] T12 Report di fase, avviso, commit e push del branch
 
 ## T1 Modalità produzione

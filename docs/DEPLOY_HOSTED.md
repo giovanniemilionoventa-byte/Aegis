@@ -4,11 +4,11 @@ Obiettivo: Aegis raggiungibile su un indirizzo tuo (`https://app.tuodominio.it`)
 gli agenti dei clienti che chiamano `https://gateway.tuodominio.it`. Un server
 piccolo, un comando.
 
-> **Stato onesto:** pronto da provare, **non ancora messo online da nessuno**. I
-> passi qui sotto sono quelli che gli script fanno; l'avvio del container e il
-> certificato HTTPS reali non sono stati provati (vedi «Cosa è stato verificato» in
-> [PHASE_20_HOSTED_PILOT.md](PHASE_20_HOSTED_PILOT.md)). Prova tutto una volta su un
-> server di prova prima di dare un indirizzo a un cliente.
+> **Stato onesto:** provato in locale con Docker (immagine x86-64 e arm64, stack
+> completo dietro Caddy con HTTPS locale, backup e ripristino), **ma non ancora messo
+> online da nessuno**: il certificato pubblico di Let's Encrypt e un server vero restano
+> da provare (elenco in [PHASE_20_HOSTED_PILOT.md](PHASE_20_HOSTED_PILOT.md)). Fai una
+> prova completa sul tuo server prima di dare un indirizzo a un cliente.
 
 ## Cosa ti serve (30 minuti, una volta)
 
@@ -22,13 +22,39 @@ piccolo, un comando.
 
 Queste tre cose non si possono fare da uno script: sono l'unica parte che resta a te.
 
+## Se usi Oracle Cloud (Always Free)
+
+Si può, con cinque attenzioni. I numeri vengono dalla documentazione Oracle, letta il
+2026-09-20: rileggila prima di iscriverti, cambia.
+
+- **Account:** servono un numero di cellulare e una carta di credito; la carta non viene
+  addebitata se non passi a un piano a pagamento.
+- **Regione:** scegline **una dell'UE** alla registrazione. La regione «di casa» non si
+  cambia più, e le risorse Always Free si creano solo lì.
+- **Macchina:** `VM.Standard.A1.Flex` (ARM), al massimo **2 OCPU e 12 GB** in totale
+  sull'account, con Ubuntu 22.04 o 24.04 per ARM. Le due macchine micro (x86, 1 GB) sono
+  probabilmente troppo piccole per costruire l'immagine. L'immagine è stata costruita e
+  avviata anche per arm64, ma in emulazione, non su un vero Ampere.
+- **Recupero per inattività:** Oracle può recuperare le istanze Always Free «inattive»:
+  per 7 giorni consecutivi CPU (95° percentile), rete e, sulle A1, memoria sotto il 20%.
+  Un pilota con poco traffico rientra probabilmente in questa descrizione. La
+  documentazione che ho letto non dice se un account Pay As You Go ne sia esentato (lo
+  dicono alcune discussioni della community): verificalo prima di fidarti. Per un server
+  che serve un cliente vero considera un VPS a pagamento.
+- **Porte:** apri 80 e 443 nella «Security List» della subnet (regola in ingresso, TCP,
+  origine `0.0.0.0/0`) **e** nel firewall della macchina: sulle immagini Ubuntu di Oracle
+  di solito tutto è chiuso tranne SSH (controlla con
+  `sudo iptables -L INPUT -n --line-numbers`).
+
 ## Installazione
 
 Sul server:
 
 ```bash
-curl -fsSL https://get.docker.com | sh          # installa Docker e Compose (metodo ufficiale)
-git clone <URL-del-repo> aegis && cd aegis
+curl -fsSL https://get.docker.com | sudo sh     # installa Docker e Compose (metodo ufficiale)
+sudo usermod -aG docker $USER                   # poi esci dalla sessione SSH e rientra
+git clone https://github.com/giovanniemilionoventa-byte/Aegis.git aegis && cd aegis
+git checkout phase20-hosted-pilot               # non serve dopo il merge della pull request
 bash scripts/deploy-hosted.sh
 ```
 
@@ -83,7 +109,8 @@ compaiono comunque in dashboard (con il contatore nel menu).
   Crea `backups/aegis-<data>.db.gz` e tiene 14 giorni. **Copia `backups/` anche su
   un'altra macchina**: un backup sullo stesso disco non è un backup, e la catena di
   prove dipende da quel file.
-- **Ripristino** (da provare una volta su un server di prova, prima di averne bisogno):
+- **Ripristino** (provato in locale con Docker: i dati tornano a quelli del backup; provalo
+  una volta anche sul tuo server, prima di averne bisogno):
 
   ```bash
   docker compose -f docker-compose.hosted.yml stop control-plane enforcement-gateway
