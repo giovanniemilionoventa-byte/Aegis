@@ -12,13 +12,23 @@ export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
 }
 
-async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+/** An error that keeps the HTTP status, so a page can say something better than the server's English. */
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
+// `auth: false` is for the public approval link, which is its own credential.
+async function request<T>(path: string, init: RequestInit = {}, auth = true): Promise<T> {
   const headers = new Headers(init.headers);
   headers.set("Content-Type", "application/json");
-  const token = getToken();
+  const token = auth ? getToken() : null;
   if (token) headers.set("Authorization", `Bearer ${token}`);
   const res = await fetch(path, { ...init, headers });
-  if (res.status === 401) {
+  if (res.status === 401 && auth) {
     clearToken();
     if (!path.includes("/auth/login")) {
       window.location.href = "/login";
@@ -28,11 +38,14 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     let detail = res.statusText;
     try {
       const body = await res.json();
-      detail = body.detail || JSON.stringify(body);
+      // FastAPI answers validation errors with a list of {msg, loc, ...}.
+      detail = Array.isArray(body.detail)
+        ? body.detail.map((item: { msg?: string }) => item.msg ?? "").join("; ")
+        : body.detail || JSON.stringify(body);
     } catch {
       /* ignore */
     }
-    throw new Error(detail);
+    throw new ApiError(detail, res.status);
   }
   if (res.status === 204) return undefined as T;
   return (await res.json()) as T;
@@ -82,6 +95,11 @@ export type AgentSetup = {
   agent_id: string;
   agent_name: string;
   status: string;
+  // Phase 20: the address to paste and snippets that work as they are. The
+  // token is never in here; YOUR_AGENT_TOKEN is a placeholder.
+  gateway_url: string | null;
+  authorize_url: string | null;
+  snippets: { curl: string; python: string };
   gateway_base_url_env: string;
   gateway_path_pattern: string;
   auth_header: string;
@@ -122,6 +140,7 @@ export const api = {
     full_name: string;
     email: string;
     password: string;
+    invite_code?: string;
   }) =>
     request<{ access_token: string }>("/api/auth/register", {
       method: "POST",
@@ -158,7 +177,13 @@ export const api = {
     ),
   stats: () => request<Stats>("/api/stats"),
   agents: () => request<Agent[]>("/api/agents"),
-  createAgent: (body: { name: string; provider: string; model: string; description: string }) =>
+  createAgent: (body: {
+    name: string;
+    provider: string;
+    model: string;
+    description: string;
+    preset?: "recommended";
+  }) =>
     request<{ agent: Agent; token: string }>("/api/agents", {
       method: "POST",
       body: JSON.stringify(body),
@@ -188,6 +213,15 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ decision }),
     }),
+  // The signed link from the notification email is its own credential: no login.
+  approvalLink: (token: string) =>
+    request<ApprovalLink>(`/api/approvals/link/${encodeURIComponent(token)}`, {}, false),
+  approvalLinkDecide: (token: string, decision: "ALLOW" | "BLOCK") =>
+    request<ApprovalLink>(
+      `/api/approvals/link/${encodeURIComponent(token)}/decide`,
+      { method: "POST", body: JSON.stringify({ decision }) },
+      false,
+    ),
   contracts: (agentId: string) =>
     request<RuntimeContract[]>(`/api/agents/${agentId}/contracts`),
   activeContract: (agentId: string) =>
@@ -257,6 +291,8 @@ export type Agent = {
   organization_id: string;
   created_at: string;
   revoked_at: string | null;
+  // Last time the agent called Aegis with its token. Not a liveness signal.
+  last_seen_at: string | null;
 };
 export type Permission = {
   id: string;
@@ -339,6 +375,35 @@ export type ApprovalRow = {
   expires_at: string | null;
   consumed_at: string | null;
   consumed_event_id: string | null;
+  // Phase 20: `status` is what a person last did; `effective_status` also
+  // accounts for time (a request nobody answered is "expired").
+  effective_status: string | null;
+  agent_name: string | null;
+  preview: ApprovalPreview | null;
+};
+// What the person deciding needs to see. For a send: recipients, subject and
+// the start of the body. For anything else: a few masked fields.
+export type ApprovalPreview = {
+  to?: string[];
+  cc?: string[];
+  bcc?: string[];
+  subject?: string;
+  body_excerpt?: string;
+  fields?: Record<string, string>;
+};
+export type ApprovalLink = {
+  id: string;
+  agent_name: string | null;
+  resource_kind: string;
+  action: string;
+  scope: string;
+  destination: string | null;
+  reason: string;
+  status: string;
+  effective_status: string | null;
+  created_at: string;
+  expires_at: string | null;
+  preview: ApprovalPreview | null;
 };
 export type ResourceRow = {
   id: string;
@@ -472,6 +537,9 @@ export type HealthReport = {
     weak_secrets: string[];
     secure: boolean;
   };
+  // What this deployment offers: Gmail is a pilot-only connector, and the demo
+  // account exists only outside production.
+  features?: { gmail?: boolean; demo?: boolean };
 };
 
 export type SimulateBody = {

@@ -1,29 +1,36 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { api, type Agent, type RuntimeContract } from "../api";
+import { useT } from "../i18n";
+import { timeAgo } from "../time";
 
 /**
  * Agent registry.
  *
- * This replaces the inline create-and-configure form that used to live here.
- * Creating an agent and granting it authority are now one guided flow (see
- * NewAgent), because doing them separately made it easy to leave an agent
- * half-configured and then wonder why every request was refused.
+ * "Connected" here means the agent has called Aegis with its key at least once,
+ * and the time says when. It is not a heartbeat: Aegis cannot know the agent is
+ * running right now, so the page never says so.
  *
- * The "Authority" column is the useful one: an agent without an ACTIVE contract
- * has none, whatever its permissions say.
+ * The "Permissions" column is the useful one: an agent without an ACTIVE
+ * contract has none, whatever its permission rows say.
  */
 export default function Agents() {
-  const nav = useNavigate();
-  const [agents, setAgents] = useState<Agent[]>([]);
+  const t = useT();
+  const [agents, setAgents] = useState<Agent[] | null>(null);
   const [contracts, setContracts] = useState<Record<string, RuntimeContract | null>>({});
   const [error, setError] = useState("");
 
   useEffect(() => {
-    api
-      .agents()
-      .then(async (list) => {
+    let live = true;
+    let loadedContracts = false;
+
+    const load = async () => {
+      try {
+        const list = await api.agents();
+        if (!live) return;
         setAgents(list);
+        if (loadedContracts) return;
+        loadedContracts = true;
         const entries = await Promise.all(
           list.map(async (agent) => {
             try {
@@ -33,78 +40,106 @@ export default function Agents() {
             }
           }),
         );
-        setContracts(Object.fromEntries(entries));
-      })
-      .catch((err) => setError(err instanceof Error ? err.message : "failed"));
-  }, []);
+        if (live) setContracts(Object.fromEntries(entries));
+      } catch (err) {
+        if (live) setError(err instanceof Error ? err.message : t("common.failed"));
+      }
+    };
+
+    load();
+    // The first call from a new agent is the moment this list is waiting for.
+    const timer = window.setInterval(() => {
+      if (!document.hidden) load();
+    }, 8000);
+    return () => {
+      live = false;
+      window.clearInterval(timer);
+    };
+  }, [t]);
 
   return (
     <>
-      <div className="row" style={{ justifyContent: "space-between", alignItems: "baseline" }}>
-        <h2 className="page-title">Agents</h2>
-        <button className="btn" onClick={() => nav("/agents/new")}>
-          Add agent
-        </button>
+      <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
+        <h1 className="page-title">{t("agents.title")}</h1>
+        <Link className="btn" to="/agents/new">
+          {t("agents.add")}
+        </Link>
       </div>
-      <p className="page-sub">
-        Identity is distinct from the human owner and from the model provider. An
-        agent has no authority until an operator gives it a contract.
-      </p>
-      {error && <p className="flash">{error}</p>}
+      <p className="page-sub">{t("agents.lead")}</p>
+      {error && (
+        <p className="flash" role="alert">
+          {error}
+        </p>
+      )}
 
       <div className="card">
-        {agents.length === 0 && <div className="empty">No agents yet.</div>}
-        {agents.length > 0 && (
+        {agents === null && !error && <div className="empty">{t("common.loading")}</div>}
+        {agents !== null && agents.length === 0 && (
+          <div className="empty">
+            <p>{t("agents.empty")}</p>
+            <Link className="btn large" to="/agents/new">
+              {t("agents.add")}
+            </Link>
+          </div>
+        )}
+        {agents !== null && agents.length > 0 && (
           <table>
+            <caption className="visually-hidden">{t("agents.title")}</caption>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Kind</th>
-                <th>State</th>
-                <th>Authority</th>
-                <th></th>
+                <th scope="col">{t("agents.colName")}</th>
+                <th scope="col">{t("agents.colStatus")}</th>
+                <th scope="col">{t("agents.colAuthority")}</th>
               </tr>
             </thead>
             <tbody>
               {agents.map((agent) => {
                 const active = contracts[agent.id];
                 const revoked = agent.status !== "active";
-                const verification = agent.provider === "aegis-reference";
                 return (
                   <tr key={agent.id}>
-                    <td>
+                    <th scope="row" style={{ fontWeight: 600 }}>
                       <Link to={`/agents/${agent.id}`}>{agent.name}</Link>
-                    </td>
+                      {agent.provider === "aegis-reference" && (
+                        <>
+                          {" "}
+                          <span className="badge badge-medium">{t("agents.testAgent")}</span>
+                        </>
+                      )}
+                    </th>
                     <td>
-                      {verification ? (
-                        <span className="badge badge-medium">verification harness</span>
+                      {revoked ? (
+                        <span className="status off">
+                          <span className="dot" aria-hidden="true" />
+                          {t("agents.revoked")}
+                        </span>
+                      ) : agent.last_seen_at ? (
+                        <>
+                          <span className="status ok">
+                            <span className="dot" aria-hidden="true" />
+                            {t("agents.connected")}
+                          </span>
+                          <div className="hint">
+                            {t("agents.lastCall", { when: timeAgo(agent.last_seen_at) })}
+                          </div>
+                        </>
                       ) : (
-                        <span className="mono">{agent.provider}</span>
+                        <span className="status wait">
+                          <span className="dot" aria-hidden="true" />
+                          {t("agents.waitingFirst")}
+                        </span>
                       )}
                     </td>
                     <td>
-                      <span className={"badge badge-" + (revoked ? "BLOCK" : "ALLOW")}>
-                        {revoked ? "revoked" : "active"}
-                      </span>
-                    </td>
-                    <td>
                       {revoked ? (
-                        <span className="badge badge-BLOCK">none</span>
+                        "—"
                       ) : active ? (
                         <span className="mono">
                           {active.contract_id} v{active.version}
                         </span>
                       ) : (
-                        <span className="badge badge-BLOCK">no contract — denied</span>
+                        <span className="badge badge-BLOCK">{t("agents.noContract")}</span>
                       )}
-                    </td>
-                    <td>
-                      <button
-                        className="btn secondary small"
-                        onClick={() => nav(`/agents/${agent.id}`)}
-                      >
-                        Open
-                      </button>
                     </td>
                   </tr>
                 );
@@ -113,12 +148,6 @@ export default function Agents() {
           </table>
         )}
       </div>
-
-      <p className="page-sub" style={{ marginTop: 14 }}>
-        An agent marked <em>verification harness</em> runs inside the Aegis agent
-        container and executes a fixed scenario on request. It is a test harness,
-        not a production agent.
-      </p>
     </>
   );
 }

@@ -6,10 +6,11 @@ from typing import Optional
 
 from fastapi import Depends, Header, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from . import models
-from .config import ACCESS_TOKEN_EXPIRE_MINUTES, AGENT_TOKEN_PREFIX, SECRET_KEY
+from . import config, models
+from .config import AGENT_TOKEN_PREFIX, SECRET_KEY
 from .database import get_db
 
 bearer = HTTPBearer(auto_error=False)
@@ -61,7 +62,9 @@ def create_access_token(user_id: str, org_id: str) -> str:
     payload = {
         "sub": user_id,
         "org": org_id,
-        "exp": int((utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)).timestamp()),
+        "exp": int(
+            (utcnow() + timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)).timestamp()
+        ),
         "iat": int(utcnow().timestamp()),
     }
     body = _b64(json.dumps(payload, separators=(",", ":")).encode())
@@ -124,4 +127,27 @@ def get_agent_from_token(
     agent = db.query(models.Agent).filter(models.Agent.id == cred.agent_id).first()
     if not agent or agent.status != "active":
         raise HTTPException(status_code=401, detail="Agent revoked")
+    _touch_last_seen(db, agent)
     return agent
+
+
+# One write per agent per few seconds, not one per request: "last seen" only has
+# to say the agent is alive, and a busy agent must not turn every call into a write.
+LAST_SEEN_EVERY_SECONDS = 10
+
+
+def _touch_last_seen(db: Session, agent: models.Agent) -> None:
+    now = utcnow()
+    seen = agent.last_seen_at
+    if seen is not None:
+        seen = seen.replace(tzinfo=timezone.utc) if seen.tzinfo is None else seen
+        if (now - seen).total_seconds() < LAST_SEEN_EVERY_SECONDS:
+            return
+    db.execute(
+        update(models.Agent)
+        .where(models.Agent.id == agent.id)
+        .values(last_seen_at=now)
+        .execution_options(synchronize_session=False)
+    )
+    db.commit()
+    db.refresh(agent)

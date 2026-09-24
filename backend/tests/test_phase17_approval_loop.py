@@ -308,7 +308,10 @@ def test_expired_grant_cannot_execute(client):
     before = protected_crm.call_count
     late = _invoke(client, token, execution_id=execution_id, request_id=request_id)
     assert late.json()["executed"] is False
-    assert late.json()["decision"] == "APPROVAL"
+    # Phase 20: an approval that expired unused answers BLOCK, not "keep waiting",
+    # so the agent stops instead of waiting out its whole timeout. The property
+    # this test exists for is unchanged: nothing ran.
+    assert late.json()["decision"] == "BLOCK"
     assert protected_crm.call_count == before
 
 

@@ -16,3 +16,4 @@ backend/.pytest_cache/
 .vscode/
 /tmp/
 benchmarks/runtime/
+backups/

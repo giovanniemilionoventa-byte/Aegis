@@ -260,6 +260,20 @@ def test_delete_is_outside_the_runtime_contract(client, fake):
     organization_id = (
         client.get(f"/api/agents/{agent_id}", headers=operator).json()["organization_id"]
     )
+    # Phase 20: every new organization now starts with the starter policies,
+    # including "Gmail delete is never allowed". This test isolates the CONTRACT
+    # layer, so it removes the policy layer first, as the docstring above says.
+    from app import models
+    from app.database import SessionLocal
+
+    session = SessionLocal()
+    try:
+        session.query(models.Policy).filter(
+            models.Policy.organization_id == organization_id
+        ).delete()
+        session.commit()
+    finally:
+        session.close()
     connect_gmail(organization_id)
     tenant = Tenant(
         organization_id=organization_id,

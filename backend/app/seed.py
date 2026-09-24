@@ -22,7 +22,9 @@ def seed_if_empty(db: Session) -> None:
     if db.query(models.Organization).first():
         return
 
-    org = models.Organization(name="Acme Corp", slug="acme")
+    org = models.Organization(
+        name="Acme Corp", slug="acme", internal_domains="acme.test"
+    )
     db.add(org)
     db.flush()
 
@@ -246,6 +248,60 @@ def seed_if_empty(db: Session) -> None:
     print(f"[aegis] sales copilot token written to /tmp/aegis_demo_token.txt")
 
 
+def _exists(db: Session, row) -> bool:
+    """Is there already an equivalent row? Only the kinds seeded twice are known."""
+    if isinstance(row, models.Policy):
+        query = db.query(models.Policy).filter(
+            models.Policy.organization_id == row.organization_id,
+            models.Policy.name == row.name,
+        )
+    elif isinstance(row, models.Resource):
+        query = db.query(models.Resource).filter(
+            models.Resource.organization_id == row.organization_id,
+            models.Resource.kind == row.kind,
+            models.Resource.identifier == row.identifier,
+        )
+    else:
+        return False
+    return query.first() is not None
+
+
+def _add_once(db: Session, row) -> None:
+    if not _exists(db, row):
+        db.add(row)
+
+
+def _add_all_once(db: Session, rows) -> None:
+    for row in rows:
+        _add_once(db, row)
+
+
+def seed_gmail_if_missing(db: Session) -> None:
+    """Bring an existing demo organization up to date with the Gmail setup.
+
+    seed_if_empty returns at once when any organization exists, so a database
+    created before Gmail was configured never got the Gmail agent, and the
+    owner's live run had to call _seed_gmail by hand from inside the container.
+    This runs on every start in development and adds only what is missing.
+    """
+    org = (
+        db.query(models.Organization)
+        .filter(models.Organization.slug == "acme")
+        .first()
+    )
+    if org is None:
+        return
+    owner = (
+        db.query(models.User)
+        .filter(models.User.organization_id == org.id, models.User.email == DEMO_EMAIL)
+        .first()
+    )
+    if owner is None:
+        return
+    _seed_gmail(db, org.id, owner.id)
+    db.commit()
+
+
 def _seed_verification_agent(db: Session, org_id: str, owner_id: str) -> None:
     """Register the agent that lives in the agent container.
 
@@ -363,17 +419,19 @@ def _seed_gmail(db: Session, org_id: str, owner_id: str) -> None:
     """
     from .contract_store import save_contract
 
-    db.add(
+    _add_once(
+        db,
         models.Resource(
             organization_id=org_id,
             kind="gmail",
             name="Gmail Mailbox",
             identifier="gmail://mailbox",
             sensitivity="confidential",
-        )
+        ),
     )
 
-    db.add_all(
+    _add_all_once(
+        db,
         [
             models.Policy(
                 organization_id=org_id,
@@ -405,6 +463,16 @@ def _seed_gmail(db: Session, org_id: str, owner_id: str) -> None:
     if not token:
         # No identity configured, so no agent is registered. The dashboard
         # reports it as not configured rather than implying one exists.
+        return
+
+    if (
+        db.query(models.Agent)
+        .filter(
+            models.Agent.organization_id == org_id,
+            models.Agent.name == "Gmail Assistant",
+        )
+        .first()
+    ):
         return
 
     agent = models.Agent(

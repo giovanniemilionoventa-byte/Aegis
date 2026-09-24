@@ -29,25 +29,75 @@ import hashlib
 import hmac
 import json
 import secrets
+import threading
 import time
 from typing import Optional
 from urllib.parse import urlencode
 
 import httpx
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from .. import config, gmail_store, models
 from ..database import get_db
-from ..security import decode_access_token, get_current_user
+from ..security import get_current_user
 from ..services import gmail_access
 
 router = APIRouter(prefix="/gmail", tags=["gmail"])
 
 STATE_TTL_SECONDS = 600
 _STATE_CONTEXT = b"aegis-gmail-oauth-state:v1"
+
+# Phase 20. Starting OAuth is a browser NAVIGATION, which carries no
+# Authorization header, so the session token used to travel in the URL, where it
+# lands in history, proxy logs and Referer headers. Now the signed-in dashboard
+# asks for a TICKET: random, good for one use and a minute, held in memory. The
+# URL carries the ticket and never the token. (In-process on purpose: the
+# control plane is one process; a restart inside that minute just means "start
+# again".)
+TICKET_TTL_SECONDS = 60
+NONCE_COOKIE = "aegis_oauth_nonce"
+_tickets: dict[str, tuple[str, float]] = {}  # ticket -> (user id, expires at)
+_used_nonces: dict[str, float] = {}  # nonce -> remembered until
+_memory_lock = threading.Lock()
+
+
+def _prune(now: float) -> None:
+    for ticket in [t for t, (_, expires) in _tickets.items() if expires <= now]:
+        del _tickets[ticket]
+    for nonce in [n for n, expires in _used_nonces.items() if expires <= now]:
+        del _used_nonces[nonce]
+
+
+def _issue_ticket(user_id: str) -> str:
+    ticket = secrets.token_urlsafe(32)
+    now = time.time()
+    with _memory_lock:
+        _prune(now)
+        _tickets[ticket] = (user_id, now + TICKET_TTL_SECONDS)
+    return ticket
+
+
+def _redeem_ticket(ticket: str) -> Optional[str]:
+    """The user a ticket was issued to, once. A second use, or a late one, gets None."""
+    now = time.time()
+    with _memory_lock:
+        _prune(now)
+        entry = _tickets.pop(ticket, None)
+    return entry[0] if entry else None
+
+
+def _consume_nonce(nonce: str, remember_until: float) -> bool:
+    """True the first time a nonce is seen, False on a replay of the same state."""
+    now = time.time()
+    with _memory_lock:
+        _prune(now)
+        if nonce in _used_nonces:
+            return False
+        _used_nonces[nonce] = max(remember_until, now)
+    return True
 
 
 class ConnectStart(BaseModel):
@@ -67,17 +117,22 @@ def _b64decode(value: str) -> bytes:
     return base64.urlsafe_b64decode(value + "=" * (-len(value) % 4))
 
 
-def _sign_state(organization_id: str, user_id: str) -> str:
+def _sign_state(organization_id: str, user_id: str, nonce: Optional[str] = None) -> str:
     """A state parameter Google hands back, that only Aegis could have made.
 
     Carries the tenant and the operator so the callback knows whose mailbox is
     being connected without trusting a query parameter, and an expiry so a
     stale authorization link cannot be replayed a day later.
+
+    The nonce is also set as a cookie in the browser that started the flow, and
+    the callback wants both. The signature proves Aegis made the state; the
+    cookie proves this browser is the one that asked for it. Without that, anyone
+    holding a state could finish the flow in someone else's session.
     """
     payload = {
         "org": organization_id,
         "user": user_id,
-        "nonce": secrets.token_urlsafe(16),
+        "nonce": nonce or secrets.token_urlsafe(16),
         "exp": int(time.time()) + STATE_TTL_SECONDS,
     }
     body = _b64(json.dumps(payload, separators=(",", ":"), sort_keys=True).encode())
@@ -181,7 +236,7 @@ def gmail_status(
     }
 
 
-def _authorization_url(user: models.User) -> str:
+def _authorization_url(user: models.User, nonce: str) -> str:
     """Build the Google consent URL.
 
     access_type=offline and prompt=consent are both required to be handed a
@@ -197,14 +252,14 @@ def _authorization_url(user: models.User) -> str:
         "access_type": "offline",
         "prompt": "consent",
         "include_granted_scopes": "false",
-        "state": _sign_state(user.organization_id, user.id),
+        "state": _sign_state(user.organization_id, user.id, nonce),
     }
     return f"{config.GOOGLE_AUTH_ENDPOINT}?{urlencode(params)}"
 
 
 @router.get("/oauth/start")
 def start_oauth_redirect(
-    token: str = Query(..., description="The operator's Aegis access token."),
+    ticket: str = Query(..., description="Single-use ticket from POST /oauth/start."),
     db: Session = Depends(get_db),
 ):
     """Send the operator's browser to Google, from the server.
@@ -220,19 +275,29 @@ def start_oauth_redirect(
     public. What changed is that the dashboard neither receives nor configures
     it. The client SECRET has never left the server and still does not.
 
-    The token is a query parameter because a browser navigation carries no
-    Authorization header. It is the operator's ordinary session token, checked
-    the ordinary way; an agent token is rejected by the control-plane
-    middleware before this function runs.
+    Phase 20. What proves who is asking is a ticket, not the session token: a
+    browser navigation carries no Authorization header, and a session token in a
+    URL is a session token in history and logs. The ticket was issued to an
+    authenticated operator a moment ago, works once, and is worthless after a
+    minute. Agent credentials cannot reach this router at all.
     """
-    try:
-        payload = decode_access_token(token)
-    except HTTPException as exc:
-        raise HTTPException(status_code=401, detail="Not authenticated") from exc
-    user = db.query(models.User).filter(models.User.id == payload["sub"]).first()
+    user_id = _redeem_ticket(ticket)
+    user = db.query(models.User).filter(models.User.id == user_id).first() if user_id else None
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    return RedirectResponse(url=_authorization_url(user), status_code=302)
+
+    nonce = secrets.token_urlsafe(16)
+    response = RedirectResponse(url=_authorization_url(user, nonce), status_code=302)
+    response.set_cookie(
+        NONCE_COOKIE,
+        nonce,
+        max_age=STATE_TTL_SECONDS,
+        httponly=True,
+        samesite="lax",  # sent on Google's top-level redirect back, not on cross-site requests
+        secure=config.is_production(),
+        path="/api/gmail/oauth",
+    )
+    return response
 
 
 @router.post("/oauth/start", response_model=ConnectStart)
@@ -241,17 +306,18 @@ def start_oauth(user: models.User = Depends(get_current_user)):
 
     Kept so the dashboard has one call that both checks configuration and
     returns somewhere to go. What it returns is this deployment's own
-    /api/gmail/oauth/start, which then redirects.
+    /api/gmail/oauth/start with a one-use ticket, which then redirects.
     """
     _require_oauth_client()
     return ConnectStart(
-        authorization_url="/api/gmail/oauth/start",
-        expires_in=STATE_TTL_SECONDS,
+        authorization_url=f"/api/gmail/oauth/start?ticket={_issue_ticket(user.id)}",
+        expires_in=TICKET_TTL_SECONDS,
     )
 
 
 @router.get("/oauth/callback")
 def oauth_callback(
+    request: Request,
     code: Optional[str] = Query(default=None),
     state: Optional[str] = Query(default=None),
     error: Optional[str] = Query(default=None),
@@ -261,6 +327,12 @@ def oauth_callback(
     Entered by the operator's browser, so there is no Authorization header to
     check; the signed state is what establishes which tenant this is for. The
     code is used once, here, and is never logged or stored.
+
+    Phase 20. The state alone was not enough: it is a bearer value, so whoever
+    held one could finish the flow in a different browser and attach their own
+    mailbox to someone else's organization. The callback now also requires the
+    cookie the start route set in the browser that began the flow, and a state
+    is accepted once.
     """
     if error:
         return _page("Gmail not connected", f"Google reported: {error[:120]}")
@@ -268,6 +340,19 @@ def oauth_callback(
         return _page("Gmail not connected", "Google did not return an authorization code.")
 
     claims = _verify_state(state)
+    nonce = str(claims.get("nonce") or "")
+    cookie = request.cookies.get(NONCE_COOKIE, "")
+    if (
+        not nonce
+        or not cookie
+        or not hmac.compare_digest(cookie, nonce)
+        or not _consume_nonce(nonce, float(claims.get("exp", 0)))
+    ):
+        return _page(
+            "Gmail not connected",
+            "This authorization was not started from this browser, or it was already "
+            "used. Start again from the Aegis dashboard.",
+        )
     _require_oauth_client()
 
     try:

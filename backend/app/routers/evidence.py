@@ -18,7 +18,7 @@ Aegis to sign the altered rows.
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from .. import models
@@ -54,13 +54,13 @@ def _execution_or_404(
 def list_executions(
     user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),
-    limit: int = 100,
+    limit: int = Query(100, ge=1, le=500),
 ):
     rows = (
         db.query(models.Execution)
         .filter(models.Execution.organization_id == user.organization_id)
         .order_by(models.Execution.created_at.desc())
-        .limit(min(limit, 500))
+        .limit(limit)
         .all()
     )
     return [

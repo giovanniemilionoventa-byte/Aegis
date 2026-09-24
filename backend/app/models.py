@@ -34,6 +34,10 @@ class Organization(Base):
     id = Column(String, primary_key=True, default=new_id)
     name = Column(String, nullable=False)
     slug = Column(String, unique=True, nullable=False)
+    # Phase 20: comma-separated mail domains that count as "inside" this
+    # organization. Empty means nothing is internal, so every recipient is
+    # external and a send needs a human. Defaults to the registering admin's domain.
+    internal_domains = Column(Text, nullable=True)
     created_at = Column(DateTime, default=utcnow)
 
     users = relationship("User", back_populates="organization")
@@ -92,6 +96,9 @@ class Agent(Base):
     description = Column(Text, default="")
     created_at = Column(DateTime, default=utcnow)
     revoked_at = Column(DateTime, nullable=True)
+    # Phase 20: when this agent last presented a valid credential. It is what
+    # lets the dashboard say "waiting for the first call" and then "connected".
+    last_seen_at = Column(DateTime, nullable=True)
 
     organization = relationship("Organization", back_populates="agents")
     owner = relationship("User", back_populates="owned_agents")
@@ -295,6 +302,13 @@ class Approval(Base):
     expires_at = Column(DateTime, nullable=True)
     consumed_at = Column(DateTime, nullable=True)
     consumed_event_id = Column(String, nullable=True)
+
+    # Phase 20 -- what the reviewer is shown. Sealed at rest (secretbox, bound to
+    # this organization and approval), never part of the evidence chain, and
+    # deleted once preview_purge_at passes: message content is kept only as long
+    # as a person may still need it to decide.
+    preview_sealed = Column(Text, nullable=True)
+    preview_purge_at = Column(DateTime, nullable=True)
 
     organization = relationship("Organization", back_populates="approvals")
 

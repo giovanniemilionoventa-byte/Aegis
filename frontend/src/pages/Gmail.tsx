@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { api, getToken, type GmailStatus } from "../api";
+import { api, type GmailStatus } from "../api";
 
 /**
  * Connecting a real mailbox, and showing an operator what that did and did not
@@ -47,9 +47,9 @@ export default function Gmail() {
       // Checks configuration and returns an Aegis route -- never a Google URL.
       // The server builds the consent URL and answers 302, so this page never
       // handles the Google client id.
+      // The address carries a one-use ticket, never the session token.
       const started = await api.gmailConnect();
-      const token = getToken();
-      window.location.href = `${started.authorization_url}?token=${encodeURIComponent(token ?? "")}`;
+      window.location.href = started.authorization_url;
     } catch (err) {
       setError(err instanceof Error ? err.message : "failed");
     } finally {

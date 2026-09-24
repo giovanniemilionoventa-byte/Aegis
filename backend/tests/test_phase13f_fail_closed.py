@@ -654,6 +654,8 @@ def test_stale_contract_at_dispatch_blocks_execution(monolith, monkeypatch):
             self.contract_version = 1
             self.authorized_payload = {}
             self.approval_granted = False
+            self.final_decision = None
+            self.final_reason = None
 
     event = models.Event(
         organization_id="org-1",

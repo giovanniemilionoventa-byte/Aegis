@@ -7,6 +7,7 @@ from .. import models, schemas
 from ..database import get_db
 from .. import config
 from ..security import create_agent_token, get_current_user, hash_token
+from ..services import starter_pack
 
 router = APIRouter(prefix="/agents", tags=["agents"])
 
@@ -37,6 +38,9 @@ def create_agent(
     user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # Refuse an unknown preset before anything is written.
+    if body.preset is not None and body.preset != starter_pack.RECOMMENDED_PRESET:
+        raise HTTPException(status_code=422, detail=f"Unknown preset '{body.preset}'")
     agent = models.Agent(
         organization_id=user.organization_id,
         owner_id=user.id,
@@ -56,6 +60,8 @@ def create_agent(
         expires_at=_credential_expiry(),
     )
     db.add(cred)
+    if body.preset == starter_pack.RECOMMENDED_PRESET:
+        starter_pack.apply_recommended(db, agent)
     db.commit()
     db.refresh(agent)
     return schemas.AgentCredentialOut(
@@ -203,6 +209,41 @@ def add_permission(
     return perm
 
 
+def _snippets(base: str) -> dict:
+    """Copy-paste connection examples. YOUR_AGENT_TOKEN is a placeholder.
+
+    Both send the same `request_id` on every retry. That is the whole protocol
+    for a human approval: ask, get APPROVAL, wait, ask again with the same
+    request_id, and the answer becomes ALLOW (once) or BLOCK.
+    """
+    curl = (
+        f"curl -X POST {base}/api/authorize \\\n"
+        "  -H 'X-Agent-Token: YOUR_AGENT_TOKEN' \\\n"
+        "  -H 'Content-Type: application/json' \\\n"
+        "  -d '{\"resource_kind\": \"email\", \"action\": \"SEND\", \"scope\": \"external\", "
+        "\"request_id\": \"A-UNIQUE-ID-PER-ACTION\", "
+        "\"payload\": {\"to\": \"cliente@example.com\", \"subject\": \"Oggetto\", \"body\": \"Testo\"}}'"
+    )
+    python = (
+        "import time, uuid, httpx\n\n"
+        f"GATEWAY = \"{base}\"\n"
+        "TOKEN = \"YOUR_AGENT_TOKEN\"\n\n\n"
+        "def allowed(kind, action, scope, payload):\n"
+        "    request_id = str(uuid.uuid4())  # keep it: every retry reuses it\n"
+        "    body = {\"resource_kind\": kind, \"action\": action, \"scope\": scope,\n"
+        "            \"payload\": payload, \"request_id\": request_id}\n"
+        "    for _ in range(60):  # up to ~5 minutes of waiting for a person\n"
+        "        answer = httpx.post(f\"{GATEWAY}/api/authorize\",\n"
+        "                            headers={\"X-Agent-Token\": TOKEN},\n"
+        "                            json=body, timeout=15).json()\n"
+        "        if answer[\"decision\"] != \"APPROVAL\":\n"
+        "            return answer[\"decision\"] == \"ALLOW\"\n"
+        "        time.sleep(5)\n"
+        "    return False  # nobody answered in time: do not act\n"
+    )
+    return {"curl": curl, "python": python}
+
+
 @router.get("/{agent_id}/setup")
 def agent_setup(
     agent_id: str,
@@ -259,10 +300,20 @@ def agent_setup(
                     }
                 )
 
+    gateway_url = config.PUBLIC_GATEWAY_URL or None
+    authorize_url = f"{gateway_url}/api/authorize" if gateway_url else None
+
     return {
         "agent_id": agent.id,
         "agent_name": agent.name,
         "status": agent.status,
+        # Phase 20: the address to paste, and snippets that work as they are.
+        # The token is never in here (see above); the snippets carry a
+        # placeholder and the dashboard fills it in only while the real token is
+        # on screen, right after it was created or rotated.
+        "gateway_url": gateway_url,
+        "authorize_url": authorize_url,
+        "snippets": _snippets(gateway_url or "https://YOUR-GATEWAY-HOST"),
         # The single address an agent uses. Not the control plane, which agent
         # credentials are refused from outright, and not the broker or the tool.
         "gateway_base_url_env": "AEGIS_BASE_URL",
